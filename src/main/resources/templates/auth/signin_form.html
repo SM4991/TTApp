@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<div th:replace="head :: head-content" />
+</head>
+<body class="singin-page">
+	<div class="app-wrapper">
+		<div class="outer-page-wrapper">
+			<div class="page-header">
+				<h3 class="page-title">Sign Up</h3>
+			</div>
+			<div class="page-content">
+				<div class="form-container">
+					<form th:action="@{/process_register}" th:object="${user}" method="post">
+						<div class="form-group">
+							<input type="text" name="name" class="form-control" id="name"
+								placeholder="Name" th:field="*{name}" required minlength="2" maxlength="100">
+						</div>
+						<div class="form-group">
+							<input type="email" name="email" class="form-control" id="email"
+								placeholder="Email ID" th:field="*{email}" required minlength="6" maxlength="255">
+						</div>
+						<div class="form-group">
+							<input type="password" name="password" class="form-control" id="password"
+								placeholder="Password" th:field="*{password}" required minlength="6" maxlength="10" />
+						</div>
+						<div class="btn-group">
+							<button type="submit" class="btn btn-primary">Continue</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="page-footer">
+				Already have an account? <a href="/@{/login}">Login</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

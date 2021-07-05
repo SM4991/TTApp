@@ -1,0 +1,39 @@
+@charset "UTF-8";
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('../fonts/FontsFree-Net-SFProDisplay-Regular.ttf') format('truetype');
+}
+body{
+	background-color: #e2e2e2;
+    margin: 0;
+    font-family: 'SF Pro Display';
+}
+.app-wrapper{
+	margin: 0 auto;
+    max-width: 35%;
+    background-color: white;
+    height: 100vh;
+    overflow-y: auto;
+}
+.btn {
+	display: block;
+    width: 180px;
+    height: 45px;
+    line-height: 30px;
+    margin-bottom: 20px;
+    background-color: #5983E3;
+    font-weight: 500;
+    font-style: normal;
+}
+.form-control {
+	border: 2px #eeeeee solid;
+    padding: 20px;
+}
+::placeholder{
+	color: #bbb5b5 !important;
+	opacity: 1;
+	font-size: 14px;
+}
+.form-group{
+	margin-bottom: 30px;
+}

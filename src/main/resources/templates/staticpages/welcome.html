@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<div th:replace="head :: head-content" />
+</head>
+<body class="welcome-page">
+	<div class="app-wrapper">
+		<div class="banner-wrapper">
+			<img th:src="@{/images/welcome-banner.png}" />
+		</div>
+		<div class="welcome-page-content">
+			<h3 class="page-title">
+				Table Tennis Pro
+			</h3>
+			<div class="page-links">
+				<a href="/login" class="btn btn-primary">Login</a>
+				<a href="/signin" class="">Signin</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

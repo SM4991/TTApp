@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<div th:replace="head :: head-content" />
+</head>
+<body class="login-page">
+	<div class="app-wrapper">
+		<div class="page-wrapper">
+			<div class="page-header">
+				<h3 class="page-title" th:text="${status}"></h3>
+			</div>
+			<div class="page-content">
+				<div class="inner-content first-list-view">
+					<h4 th:text="${error}"></h4>
+					<p th:text="${message}"></p>
+					<p th:text="${path}"></p>
+				</div>
+			</div>
+			<div class="page-footer">
+				<p th:text="${timestamp}"></p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
