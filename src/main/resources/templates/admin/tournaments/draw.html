@@ -2,6 +2,7 @@
 <html>
 <head>
 <div th:replace="commonLayout :: head-content" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <body class="tournament-draw-page">
 	<div class="app-wrapper">
@@ -20,6 +21,12 @@
 									<option th:each="tMatchType: ${tournamentMatchTypes}" th:value="${tMatchType.getMatchType().id}" th:text="${tMatchType.getMatchType().name}"></option>
 								</select>
 							</div>
+							<div class="form-group">
+								<select id="players" name="players" class="form-control">
+									<option value="" selected>Select Player</option>
+									<option th:each="player: ${playerList}" th:value="${player.getId()}" th:text="${player.name}"></option>
+								</select>
+							</div>
 							<div class="btn-group">
 								<button type="submit" class="btn btn-primary">Save</button>
 							</div>
@@ -32,6 +39,7 @@
 		<div th:replace="commonLayout :: errorResponseModal"></div>
 	</div>
 
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script th:src="@{/js/common.js}"></script>
 	<script th:src="@{/js/tournaments.js}"></script>
 </body>

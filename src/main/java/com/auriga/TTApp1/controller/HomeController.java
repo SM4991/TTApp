@@ -19,10 +19,10 @@ public class HomeController {
         return "staticpages/welcome";
     }
 	
-//	@GetMapping("/admin")
-//    public String dashboard() {
-//        return "staticpages/tournaments";
-//    }
+	@GetMapping("/admin")
+    public String dashboard() {
+        return "redirect:/admin/tournaments";
+    }
 	
 //	@GetMapping("/admin/{page_id}")
 //    public String viewPage(@PathVariable("page_id") String page_id) {

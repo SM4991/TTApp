@@ -3,6 +3,9 @@ package com.auriga.TTApp1.model;
 import java.util.Date;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="users")
@@ -10,15 +13,40 @@ public class User {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-     
-    @Column(nullable = false, unique = true, length = 255)
-    private String email;
-     
-    @Column(nullable = false, length = 100)
-    private String password;
-     
+	
+	@NotEmpty(message = "Name can not be empty")
+	@Size(min=2, max=100, message = "Name length should be between 2 to 100 characters.")
     @Column(name = "name", nullable = false, length = 100)
     private String name;
+     
+	@NotEmpty(message = "Email can not be empty")
+	@Email(message = "Please provide a valid email id")
+	@Size(max=255, message = "Email length should not exceed 255 characters.")
+    @Column(nullable = false, unique = true, length = 255)
+    private String email;
+    
+	@NotEmpty(message = "Password can not be empty")
+    @Column(nullable = false, length = 100)
+	@Size(min=6, message="Password should contain atleast 6 characters.")
+    private String password;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "gender", nullable = true)
+	private GenderEnum gender; 
+	
+	@Column(name = "age", nullable = true)
+	private Integer age;
+	
+	@Column(nullable = true, length = 255)
+    private String image;
+    
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+            )
+    private Role role;
     
     private static final long OTP_VALID_DURATION = 5 * 60 * 1000;   // 5 minutes
     
@@ -93,4 +121,38 @@ public class User {
          
         return true;
     }
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public GenderEnum getGender() {
+		return gender;
+	}
+
+	public void setGender(GenderEnum gender) {
+		this.gender = gender;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 }
+
+

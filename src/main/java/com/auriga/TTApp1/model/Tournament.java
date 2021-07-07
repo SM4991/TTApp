@@ -42,14 +42,14 @@ public class Tournament {
     private String name;
     
 	@NotNull(message = "Start Date must not be empty.")
-	@Future(message = "Start Date must be more than today's date.")
+	// @Future(message = "Start Date must be more than today's date.")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = true, name="start_date")
     private Date startDate;
     
 	@NotNull(message = "Registration end date must not be empty.")
     @DateTimeFormat(iso=ISO.DATE, pattern = "yyyy-MM-dd")
-	@Future(message = "Registration end date must be more than today's date.")
+	// @Future(message = "Registration end date must be more than today's date.")
 	@Column(nullable = true, name="reg_end_date")
     private Date regEndDate;
     

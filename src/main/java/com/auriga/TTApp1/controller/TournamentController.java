@@ -1,5 +1,6 @@
 package com.auriga.TTApp1.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.auriga.TTApp1.model.Player;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatchType;
 import com.auriga.TTApp1.service.MatchTypeService;
+import com.auriga.TTApp1.service.PlayerService;
 import com.auriga.TTApp1.service.TournamentService;
 
 @Controller
@@ -26,6 +28,9 @@ public class TournamentController {
 	
 	@Autowired
 	private MatchTypeService matchTypeService;
+	
+	@Autowired
+	private PlayerService playerService;
 	
 	@GetMapping("/admin/tournaments")
 	public String getTournaments() {
@@ -55,8 +60,16 @@ public class TournamentController {
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		
 		ModelAndView modelView = new ModelAndView("admin/tournaments/draw");
+		
 		List<TournamentMatchType> tournamentMatchTypes = tournament.getMatchTypes();
 	    modelView.addObject("tournamentMatchTypes", tournamentMatchTypes);
+	    
+	    List<Player> players = playerService.listAll();
+	    Map<Long, Player> playerList = new HashMap<>();
+	    players.forEach(player -> {
+	    	playerList.put(player.getId(), player);
+	    });
+	    modelView.addObject("playerList", playerList);
 	    
 		return modelView;
 	}

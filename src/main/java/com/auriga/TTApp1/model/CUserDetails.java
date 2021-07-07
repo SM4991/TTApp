@@ -1,8 +1,11 @@
 package com.auriga.TTApp1.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class CUserDetails implements UserDetails {
@@ -15,7 +18,12 @@ public class CUserDetails implements UserDetails {
  
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Role role = user.getRole();
+        List<SimpleGrantedAuthority> authorities = new ArrayList();
+         
+        authorities.add(new SimpleGrantedAuthority(role.getName()));
+         
+        return authorities;
     }
  
     @Override

@@ -11,18 +11,21 @@
 			</div>
 			<div class="page-content">
 				<div class="form-container">
-					<form th:action="@{/process_register}" th:object="${user}" method="post">
+					<form th:action="@{/register}" th:object="${user}" method="post">
 						<div class="form-group">
 							<input type="text" name="name" class="form-control" id="name"
-								placeholder="Name" th:field="*{name}" required minlength="2" maxlength="100">
+								placeholder="Name" th:field="*{name}">
+							<span class="field-error" th:if="${#fields.hasErrors('name')}" th:text="${#fields.errors('name')}"></span>
 						</div>
 						<div class="form-group">
 							<input type="email" name="email" class="form-control" id="email"
-								placeholder="Email ID" th:field="*{email}" required minlength="6" maxlength="255">
+								placeholder="Email ID" th:field="*{email}">
+							<span class="field-error" th:if="${#fields.hasErrors('email')}" th:text="${#fields.errors('email')}"></span>
 						</div>
 						<div class="form-group">
 							<input type="password" name="password" class="form-control" id="password"
-								placeholder="Password" th:field="*{password}" required minlength="6" maxlength="10" />
+								placeholder="Password" th:field="*{password}"/>
+							<span class="field-error" th:if="${#fields.hasErrors('password')}" th:text="${#fields.errors('password')}"></span>
 						</div>
 						<div class="btn-group">
 							<button type="submit" class="btn btn-primary">Continue</button>
