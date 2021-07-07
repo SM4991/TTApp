@@ -37,7 +37,7 @@ public class User {
 	}
 
 	public String getEmail() {
-		System.out.println("Get email - entity");
+//		System.out.println("Get email - entity");
 		return email;
 	}
 
@@ -46,7 +46,7 @@ public class User {
 	}
 
 	public String getPassword() {
-		System.out.println("Get password - entity");
+//		System.out.println("Get password - entity");
 		return password;
 	}
 

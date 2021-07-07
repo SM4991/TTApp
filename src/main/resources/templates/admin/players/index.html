@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<div th:replace="commonLayout :: head-content" />
+</head>
+<body class="player-list-page">
+	<div class="app-wrapper">
+		<div class="page-wrapper">
+			<div class="page-header">
+				<h3 class="page-title">Players</h3>
+			</div>
+			<div class="page-content">
+				<div class="inner-content first-list-view hide">
+					<h4>You have not added players</h4>
+					<div class="btn-group">
+						<a th:href="@{/admin/players/create}" class="btn btn-primary">Add
+							players</a>
+					</div>
+				</div>
+				<div class="list-view hide" id="list-view">
+					<ul class="list-view-wrapper">
+					</ul>
+					<ul class="list-view-pagination-wrapper">
+					</ul>
+				</div>
+				<div class="list-loading hide">Loading...</div>
+			</div>
+			<div th:replace="admin/layout/footer :: page-footer-content" />
+		</div>
+	</div>
+	<div class="hide" id="sample-list-card">
+		<li class="list-view-card">
+			<ul>
+				<li class="list-image-content"><img src="" class="list-image" /></li>
+				<li class="list-detail-content">
+					<ul class="">
+						<li class="main-content"></li>
+						<li class="sub-content"><span class="age-detail"></span> - <span class="gender-detail"></span></li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	</div>
+	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/players.js}"></script>
+	<script>
+		$(document).ready(function() {
+			loadListItems("list-view");
+		});
+	</script>
+</body>
+</html>

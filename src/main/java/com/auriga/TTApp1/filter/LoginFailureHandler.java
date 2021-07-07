@@ -32,13 +32,15 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 			AuthenticationException exception) throws IOException, ServletException {
 		System.out.println("Exception generated: " + exception);
 		
-		String email = request.getParameter("username");
+		String email = request.getParameter("email");
 		request.setAttribute("email", email);
+		System.out.println("Failure Handler email: " + email);
 		
 		String otp = (String) request.getParameter("otp");
 		if (otp != null && otp != "") {
 			request.setAttribute("otp", otp);
 		}
+		System.out.println("Failure Handler otp: " + otp);
 
 		String redirectURL = "/login?error";
 		if (exception.getMessage().contains("OTP")) {

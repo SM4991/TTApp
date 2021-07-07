@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<div th:replace="commonLayout :: head-content" />
+</head>
+<body class="player-list-page">
+	<div class="app-wrapper">
+		<div class="page-wrapper">
+			<div class="page-header">
+				<h3 class="page-title">Add Player</h3>
+			</div>
+			<div class="page-content">
+				<div class="form-wrapper">
+					<div class="form-container">
+						<form action="javascript:void(0)" id="create-form" method="post">
+							<div class="form-group form-image-wrapper">
+								<div class="image-wrapper">
+									<img
+										th:src="@{${@environment.getProperty('players.image.default.path')}}"
+										id="default-form-image" class="default-form-image" />
+								</div>
+								<a href="javascript:void(0)" id="upload_link">Choose Photo</a> 
+								<input type="file" name="file" class="form-control hide" id="file">
+								<input type="hidden" name="image" class="form-control hide" id="image">
+							</div>
+							<div class="form-group">
+								<input type="text" name="name" class="form-control" id="name"
+									placeholder="Name">
+							</div>
+							<div class="form-group">
+								<input type="text" name="email" class="form-control" id="email"
+									placeholder="Email ID">
+							</div>
+							<div class="form-group inline-form-group">
+								<label th:for="gender">Gender</label> <select name="gender"
+									class="form-control" id="gender">
+									<option value="" selected>Choose</option>
+									<option value="Female">Female</option>
+									<option value="Male">Male</option>
+									<option value="Other">Other</option>
+								</select>
+							</div>
+							<div class="form-group inline-form-group">
+								<input type="text" name="age" class="form-control" id="age"
+									placeholder="Age"> <label th:for="age"
+									class="right-label">years</label>
+							</div>
+							<div th:if="${message != null}">
+								<p class="text-primary">[[${message}]]</p>
+							</div>
+							<div class="btn-group">
+								<button type="submit" class="btn btn-primary">Save</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:replace="commonLayout :: successResponseModal"></div>
+		<div th:replace="commonLayout :: errorResponseModal"></div>
+	</div>
+
+	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/players.js}"></script>
+</body>
+</html>

@@ -29,6 +29,10 @@ body{
 	border: 2px #eeeeee solid;
     padding: 20px;
 }
+select.form-control{
+	padding: 5px 10px;
+    height: 44px;
+}
 ::placeholder{
 	color: #bbb5b5 !important;
 	opacity: 1;
@@ -36,4 +40,53 @@ body{
 }
 .form-group{
 	margin-bottom: 30px;
+}
+.modal{
+	width: 25%;
+    margin-left: 60px;
+    left: auto;
+}
+.modal .modal-header{
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+.modal .modal-footer{
+	border-top: 0;
+	padding-bottom: 0;
+	padding-top: 0;
+}
+.btn.btn-no-outline{
+	width: auto;
+    height: auto;
+    line-height: auto;
+    background-color: transparent;
+    font-weight: 500;
+    font-style: normal;
+    color: blue;
+    border: 0;
+}
+.field-error{
+	color: red;
+    display: block;
+    font-size: 14px;
+}
+.hide{
+	display: none;
+}
+
+ul.list-view-pagination-wrapper {
+	text-align: center;
+}
+ul.list-view-pagination-wrapper li{
+	display: inline-block;
+    list-style: none;
+}
+ul.list-view-pagination-wrapper a.btn.btn-pagination{
+	width: auto;
+    height: auto;
+    padding: 2px 5px;
+    line-height: 20px;
+    margin-right: 5px;
+    color: #0062CB;
+    background-color: #fff;
 }

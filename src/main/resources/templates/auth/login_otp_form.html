@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<div th:replace="head :: head-content" />
+<div th:replace="commonLayout :: head-content" />
 </head>
 <body class="login-page">
 	<div class="app-wrapper">
@@ -12,7 +12,7 @@
 			<div class="page-content">
 				<div class="form-container">
 					<form th:action="@{/login}" method="post">
-						<input type="hidden" name="username" th:value="${email}" />
+						<input type="hidden" name="email" th:value="${email}" />
 						<div class="form-group">
 							<input type="text" name="otp" class="form-control" id="otp"
 								placeholder="Enter OTP here">

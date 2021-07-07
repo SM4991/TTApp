@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<div th:replace="commonLayout :: head-content" />
+</head>
+<body class="player-list-page">
+	<div class="app-wrapper">
+		<div class="page-wrapper">
+			<div class="page-header">
+				<h3 class="page-title">Tournament Details</h3>
+			</div>
+			<div class="page-content">
+				<div class="detail-content tournament-detail">
+					<ul class="view-top-content">
+						<li class="main-content" th:text="${tournament.name}"></li>
+						<li class="sub-content">
+							<span class="label">Starts on: </span>
+							<span class="content" th:text="${tournament.startDate}"></span>
+						</li>
+						<li class="sub-content">
+							<span class="label">Last Date of registration: </span>
+							<span class="content" th:text="${tournament.regEndDate}"></span>
+						</li>
+						<li class="sub-content">
+							<span class="label">Max Score: </span>
+							<span class="content" th:text="${tournament.maxScore}"></span>
+						</li>
+						<li class="sub-content">
+							<span class="label">Total Player: </span>
+							<span class="content" th:text="0"></span>
+						</li>
+					</ul>
+					<ul class="tournament-matches-content">
+						<li class="main-content">Matches in tournament</li>
+						<li class="sub-content" th:each="tMatchType : ${tournament.getMatchTypes()}" th:text="${tMatchType.getMatchType().name}"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="page-footer page-footer-full-btn">
+				<a th:href="@{'/admin/tournaments/' + ${tournament.id} + '/draw'}" class="btn btn-primary footer-full-btn">Create Draw</a> 
+			</div>
+		</div>
+	</div>
+	<div class="hide" id="sample-list-card">
+		<li class="list-view-card">
+			<ul>
+				<li class="list-image-content"><img src="" class="list-image" /></li>
+				<li class="list-detail-content">
+					<ul class="">
+						<li class="main-content"></li>
+						<li class="sub-content"><span class="age-detail"></span> - <span class="gender-detail"></span></li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	</div>
+	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/players.js}"></script>
+</body>
+</html>

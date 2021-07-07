@@ -63,7 +63,7 @@ public class BeforeAuthenticationFilter
     public Authentication attemptAuthentication(
             HttpServletRequest request, HttpServletResponse response)
                     throws AuthenticationException {
-    	String email = request.getParameter("username");
+    	String email = request.getParameter("email");
         
         User user_obj = userRepo.findByEmail(email);
         

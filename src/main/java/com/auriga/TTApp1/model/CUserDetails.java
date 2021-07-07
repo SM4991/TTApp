@@ -20,9 +20,9 @@ public class CUserDetails implements UserDetails {
  
     @Override
     public String getPassword() {
-    	System.out.println("Get password called");
+//    	System.out.println("Get password called");
         if (user.isOTPRequired()) {
-        	System.out.println("Get password: "+ user.getOneTimePassword());
+//        	System.out.println("Get password: "+ user.getOneTimePassword());
             return user.getOneTimePassword();
         }
          
@@ -31,7 +31,7 @@ public class CUserDetails implements UserDetails {
  
     @Override
     public String getUsername() {
-		System.out.println("Get username: " + user.getEmail());
+//		System.out.println("Get username: " + user.getEmail());
         return user.getEmail();
     }
  
