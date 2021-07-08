@@ -71,7 +71,14 @@ function loadListItemsByStatus(list_parent_id, status) {
 function loadListItems(list_parent_id, page = 0) {
 	var status = $(".tournament-tabs-list li.active a").attr("data-status");
 	
-	let url = "/admin/api/tournaments?status="+status;
+	let url = "";
+	console.log(authorized);
+	if(authorized == 1){
+		url = "/admin/api/tournaments";
+	} else {
+		url = "/api/tournaments";
+	}
+	url += "?status="+status;
 	if (page > 0) {
 		var request_url = url + "&page=" + page;
 	} else {
@@ -93,7 +100,11 @@ function loadListItems(list_parent_id, page = 0) {
 				li_dom = $("#sample-list-card").clone();
 				let list_html = "";
 				$.each(response.items, function(k, data) {
-					li_dom.find(".main-content").html("<a href='/admin/tournaments/" + data.id + "'>" + data.name + "</a>");
+					if(authorized == 1){
+						li_dom.find(".main-content").html("<a href='/admin/tournaments/" + data.id + "'>" + data.name + "</a>");
+					} else {
+						li_dom.find(".main-content").html("<a href='/tournaments/" + data.id + "'>" + data.name + "</a>");
+					}
 					li_dom.find(".sub-content.start-date-content span.content").text(data.startDate);
 					li_dom.find(".sub-content.reg-end-date-content span.content").text(data.regEndDate);
 

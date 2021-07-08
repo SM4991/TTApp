@@ -43,7 +43,7 @@ public class TournamentRestController {
 	@Value("${spring.list.page.size}")
 	Integer defaultPageSize;
 
-	@RequestMapping(value = "/admin/api/tournaments", method = RequestMethod.GET)
+	@RequestMapping(value = {"/admin/api/tournaments", "/api/tournaments"}, method = RequestMethod.GET)
 	public ResponseEntity<Object> getTournaments(@RequestParam(defaultValue = "1") Integer status, @RequestParam(defaultValue = "1") Integer page) {
 		PaginationService paginatedItems = service.getAllItems(status, page, defaultPageSize, "name");
 		return new ResponseEntity<>(paginatedItems, HttpStatus.OK);

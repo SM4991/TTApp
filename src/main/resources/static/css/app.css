@@ -26,6 +26,10 @@
     text-align: center;
     padding-top: 40px;
 }
+.page-links a{
+	display: block;
+	margin-bottom: 10px;
+} 
 /* Welcome Page Css Ends */
 
 /* Tournaments Page Css Starts */

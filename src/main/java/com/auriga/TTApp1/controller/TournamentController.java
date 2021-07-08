@@ -32,7 +32,7 @@ public class TournamentController {
 	@Autowired
 	private PlayerService playerService;
 	
-	@GetMapping("/admin/tournaments")
+	@GetMapping(value = {"/admin/tournaments", "/tournaments"})
 	public String getTournaments() {
 		return "admin/tournaments/index";
 	}
@@ -45,7 +45,7 @@ public class TournamentController {
 		return modelView;
 	}
 	
-	@RequestMapping(value = "/admin/tournaments/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = {"/admin/tournaments/{id}", "/tournaments/{id}"}, method = RequestMethod.GET)
 	public ModelAndView viewPlayer(@PathVariable("id") Long id){
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		

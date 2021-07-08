@@ -7,7 +7,8 @@
 	<div class="app-wrapper">
 		<div class="page-wrapper">
 			<div class="page-header">
-				<a th:href="@{/admin/tournaments}" class="back-link"><i class="material-icons">arrow_back</i></a>
+				<a sec:authorize="isAuthenticated()" th:href="@{/admin/tournaments}" class="back-link"><i class="material-icons">arrow_back</i></a>
+				<a sec:authorize="isAnonymous()" th:href="@{/admin/tournaments}" class="back-link"><i class="material-icons">arrow_back</i></a>
 				<h3 class="page-title">Tournament Details</h3>
 			</div>
 			<div class="page-content">
@@ -37,7 +38,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="page-footer page-footer-full-btn">
+			<div sec:authorize="isAuthenticated()" class="page-footer page-footer-full-btn">
 				<a th:href="@{'/admin/tournaments/' + ${tournament.id} + '/draw'}" class="btn btn-primary footer-full-btn">Create Draw</a> 
 			</div>
 		</div>

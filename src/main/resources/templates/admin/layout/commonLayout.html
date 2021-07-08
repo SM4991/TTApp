@@ -13,14 +13,14 @@
 
 </head>
 <body>
-	<div th:fragment="logout-form">
+	<div sec:authorize="isAuthenticated()" th:fragment="logout-form">
 		<form th:action="@{/logout}" method="post" class="logout-form">
 			<button type="submit" class="logout-btn">
 				<i class="material-icons">power_settings_new</i>
 			</button>
 		</form>
 	</div>
-	<div th:fragment="page-footer-content">
+	<div sec:authorize="isAuthenticated()" th:fragment="page-footer-content">
 		<div class="page-footer">
 			<div class="row">
 				<div class="col-4">
