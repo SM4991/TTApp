@@ -2,6 +2,7 @@
 <head>
     <div th:fragment="head-content">
         <!-- this is header-css -->
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta name="_csrf" th:content="${_csrf.token}"/>
     	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     	<title>TTApp</title>
@@ -17,6 +18,8 @@
     </div>
 </head>
 <body>
+	<!-- Overlay -->
+	<div th:fragment="overlayBlock" class="overlay" id="overlay"><div class="text">Please wait...</div></div>
 	<!-- Success Modal -->
 	<div th:fragment="successResponseModal" class="modal fade" id="successResponseModal" tabindex="-1" role="dialog" aria-labelledby="successResponseModal" aria-hidden="true">
 	  <div class="modal-dialog" role="document">

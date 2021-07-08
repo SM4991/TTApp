@@ -2,7 +2,7 @@ package com.auriga.TTApp1.model;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class PlayerImage extends Player{
+public class UserImage {
 	private MultipartFile file;
 
 	public MultipartFile getFile() {

@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,9 +28,6 @@ public class CUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepo;
 
-	@Autowired
-	private RoleRepository roleRepo;
-
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepo.findByEmail(username);
@@ -37,27 +37,23 @@ public class CUserDetailsService implements UserDetailsService {
 		return new CUserDetails(user);
 	}
 
-	public void register(User user) {
-		//Let's check if user already registered with us
-        if(checkIfUserExist(user.getEmail())){
-            throw new UserAlreadyExistsException("User already exists for this email");
-        }
-		Role role = roleRepo.findByName("ADMIN");
-		
-		user.setRole(role);
-
-		encodePassword(user);
-		userRepo.save(user);
-	}
-
 	public boolean checkIfUserExist(String email) {
 		return userRepo.findByEmail(email) != null ? true : false;
 	}
 
-	private void encodePassword(User user) {
+	protected void encodePassword(User user) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String encodedPassword = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodedPassword);
 	}
+	
+	public Boolean isAuthenticated() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			return true;
+		}
+		return false;
+	}
+	
 }

@@ -15,6 +15,101 @@ body{
     height: 100vh;
     overflow-y: auto;
 }
+/* Outer Page Layout Css Starts */
+.outer-page-wrapper .page-header{
+	position: fixed;
+    top: 0;
+    text-align: center;
+    width: 35%;
+    padding: 40px;
+}
+.outer-page-wrapper .page-content{
+	padding: 100px 20px 0 20px;
+    width: 100%;
+}
+.outer-page-wrapper .page-title{
+	font-size: 24px;
+    line-height: 30px;
+    font-weight: 500;
+}
+.outer-page-wrapper .page-footer{
+	position: fixed;
+    bottom: 0;
+    text-align: center;
+    width: 35%;
+    padding: 20px;
+}
+.outer-page-wrapper .form-container {
+	padding: 100px 20px 0 20px;
+	text-align: center;
+}
+/* Outer Page Layout Css Ends */
+/* Inner Page Layout Css Starts */
+.page-wrapper .page-header{
+	position: fixed;
+    top: 0;
+    text-align: center;
+    width: 35%;
+    background: #fff;
+    -webkit-box-shadow: 0 8px 6px -6px rgb(164 150 150 / 75%);
+    -moz-box-shadow: 0 8px 6px -6px black;
+    box-shadow: 0 8px 6px -6px rgb(164 150 150 / 75%);
+}
+.page-wrapper .page-content{
+	background: #fff;
+    margin-top: 55px;
+    width: 100%;
+    overflow-y: auto;
+}
+.page-wrapper .page-title{
+	font-size: 20px;
+    line-height: 25px;
+    font-weight: 500;
+    padding: 12px;
+    margin: 0;
+}
+.page-wrapper .page-footer{
+	position: fixed;
+    bottom: 0;
+    text-align: center;
+    width: 35%;
+    padding: 5px 30px;
+    background: #fff;
+    -webkit-box-shadow: 0 -8px 6px -6px rgb(164 150 150 / 75%);
+    -moz-box-shadow: 0 -8px 6px -6px black;
+    box-shadow: 0 -8px 6px -6px rgb(164 150 150 / 75%);
+}
+/* Inner Page Layout Css Ends */
+
+/* Tablet */
+@media only screen and (min-width:426px) and (max-width:768px){
+	.app-wrapper {
+		max-width: 50%;
+	} 
+	.page-wrapper .page-header, 
+	.page-wrapper .page-footer,
+	.outer-page-wrapper .page-header, 
+	.outer-page-wrapper .page-footer
+	{
+		width: 50%;
+	}
+}
+
+/* Phone */
+@media only screen and (max-width:425px) {
+	.app-wrapper {
+		max-width: 100%;
+	}
+	.page-wrapper .page-header, 
+	.page-wrapper .page-footer,
+	.outer-page-wrapper .page-header, 
+	.outer-page-wrapper .page-footer
+	{
+		width: 100%;
+	}
+}
+
+
 .btn {
 	display: block;
     width: 180px;
@@ -89,4 +184,61 @@ ul.list-view-pagination-wrapper a.btn.btn-pagination{
     margin-right: 5px;
     color: #0062CB;
     background-color: #fff;
+}
+.overlay {
+  position: fixed; /* Sit on top of the page content */
+  display: none; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+}
+.text{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 30px;
+  color: white;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+}
+
+.page-wrapper .form-container .btn-group {
+	width: 100%
+}
+.page-wrapper .page-header .back-link{
+	color: black;
+    float: left;
+    padding: 10px 0 0 15px;
+}
+.app-wrapper {
+	position: relative;
+}
+.page-wrapper .page-content .floating-btn-group{
+	position: absolute;
+    bottom: 70px;
+    z-index: 1;
+    right: 20px;
+}
+.page-wrapper .page-content .floating-btn-group i{
+	font-size: 40px;
+	-webkit-box-shadow: 0 0 3px 3px rgb(243 240 240 / 75%);
+    -moz-box-shadow: 0 0 3px 3px rgb(243 240 240 / 75%);
+    box-shadow: 0 0 3px 3px rgb(243 240 240 / 75%);
+    border-radius: 50%;
+}
+.logout-form{
+	display: inline-block;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.logout-form button{
+	border: none;
+	background: transparent;
 }

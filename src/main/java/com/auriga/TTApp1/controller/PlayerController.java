@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
-import com.auriga.TTApp1.model.Player;
+import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.service.PlayerService;
 
 import javassist.NotFoundException;
@@ -39,9 +39,7 @@ public class PlayerController extends EntityNotFoundException{
 	
 	@RequestMapping(value = "/admin/players/{id}", method = RequestMethod.GET)
 	public ModelAndView viewPlayer(@PathVariable("id") Long id){
-		Player player = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Player"));
-		
-		if (player == null) throw new ResourceNotFoundException("Player not found");
+		User player = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Player"));
 		
 		ModelAndView modelView = new ModelAndView("admin/players/view");
 	    modelView.addObject("player", player);

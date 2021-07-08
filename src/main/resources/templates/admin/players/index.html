@@ -4,10 +4,12 @@
 <div th:replace="commonLayout :: head-content" />
 </head>
 <body class="player-list-page">
+	<div th:replace="commonLayout :: overlayBlock" />
 	<div class="app-wrapper">
 		<div class="page-wrapper">
 			<div class="page-header">
 				<h3 class="page-title">Players</h3>
+				<div th:replace="admin/layout/commonLayout :: logout-form"></div>
 			</div>
 			<div class="page-content">
 				<div class="inner-content first-list-view hide">
@@ -23,9 +25,11 @@
 					<ul class="list-view-pagination-wrapper">
 					</ul>
 				</div>
-				<div class="list-loading hide">Loading...</div>
+				<div class="floating-btn-group">
+					<a th:href="@{/admin/players/create}"><i class="material-icons">add_circle</i></a>
+				</div>
 			</div>
-			<div th:replace="admin/layout/footer :: page-footer-content" />
+			<div th:replace="admin/layout/commonLayout :: page-footer-content" />
 		</div>
 	</div>
 	<div class="hide" id="sample-list-card">

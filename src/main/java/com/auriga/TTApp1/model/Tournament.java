@@ -1,6 +1,7 @@
 package com.auriga.TTApp1.model;
 
-import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -27,6 +29,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -42,14 +45,14 @@ public class Tournament {
     private String name;
     
 	@NotNull(message = "Start Date must not be empty.")
-	// @Future(message = "Start Date must be more than today's date.")
+	@Future(message = "Start Date must be more than today's date.")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(nullable = true, name="start_date")
+	@Column(nullable = true, name="start_date")
     private Date startDate;
     
 	@NotNull(message = "Registration end date must not be empty.")
-    @DateTimeFormat(iso=ISO.DATE, pattern = "yyyy-MM-dd")
-	// @Future(message = "Registration end date must be more than today's date.")
+	@Future(message = "Registration end date must be more than today's date.")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	@Column(nullable = true, name="reg_end_date")
     private Date regEndDate;
     
@@ -68,6 +71,9 @@ public class Tournament {
     
     @Transient // Custom column not an entity column
     private List<String> matchTypeIds;
+    
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User winner;
 
 	public Long getId() {
 		return id;
@@ -85,16 +91,18 @@ public class Tournament {
 		this.name = name;
 	}
 
-	public Date getStartDate() {
-		return startDate;
+	public String getStartDate() {
+		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		return dateFormat.format(startDate);
 	}
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
-	public Date getRegEndDate() {
-		return regEndDate;
+	public String getRegEndDate() {
+		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		return dateFormat.format(regEndDate);
 	}
 
 	public void setRegEndDate(Date regEndDate) {
@@ -131,5 +139,13 @@ public class Tournament {
 
 	public void setMatchTypeIds(List matchTypeIds) {
 		this.matchTypeIds = matchTypeIds;
+	}
+
+	public User getWinner() {
+		return winner;
+	}
+
+	public void setWinner(User winner) {
+		this.winner = winner;
 	}
 }

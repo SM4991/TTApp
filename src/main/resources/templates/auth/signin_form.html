@@ -11,7 +11,7 @@
 			</div>
 			<div class="page-content">
 				<div class="form-container">
-					<form th:action="@{/register}" th:object="${user}" method="post">
+					<form th:action="@{/register}" th:object="${registrationForm}" method="post">
 						<div class="form-group">
 							<input type="text" name="name" class="form-control" id="name"
 								placeholder="Name" th:field="*{name}">

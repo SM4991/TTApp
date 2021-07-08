@@ -14,9 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.model.MatchType;
-import com.auriga.TTApp1.model.Player;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatchType;
+import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.service.MatchTypeService;
 import com.auriga.TTApp1.service.PlayerService;
 import com.auriga.TTApp1.service.TournamentService;
@@ -61,15 +61,13 @@ public class TournamentController {
 		
 		ModelAndView modelView = new ModelAndView("admin/tournaments/draw");
 		
+		modelView.addObject("tournament", tournament);
+		
 		List<TournamentMatchType> tournamentMatchTypes = tournament.getMatchTypes();
 	    modelView.addObject("tournamentMatchTypes", tournamentMatchTypes);
 	    
-	    List<Player> players = playerService.listAll();
-	    Map<Long, Player> playerList = new HashMap<>();
-	    players.forEach(player -> {
-	    	playerList.put(player.getId(), player);
-	    });
-	    modelView.addObject("playerList", playerList);
+	    List<User> players = playerService.listAll();
+	    modelView.addObject("players", players);
 	    
 		return modelView;
 	}

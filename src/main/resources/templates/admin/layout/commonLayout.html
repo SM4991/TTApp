@@ -13,20 +13,27 @@
 
 </head>
 <body>
+	<div th:fragment="logout-form">
+		<form th:action="@{/logout}" method="post" class="logout-form">
+			<button type="submit" class="logout-btn">
+				<i class="material-icons">power_settings_new</i>
+			</button>
+		</form>
+	</div>
 	<div th:fragment="page-footer-content">
 		<div class="page-footer">
 			<div class="row">
-				<div class="col-sm-4">
+				<div class="col-4">
 					<a th:href="@{/admin/tournaments}" class="footer-icon" th:classappend="${#httpServletRequest.requestURI} == '/admin/tournaments' ? 'active' : ''"> <i
 						class="material-icons">emoji_events</i> <span>Tournaments</span>
 					</a>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-4">
 					<a th:href="@{/admin/players}" class="footer-icon" th:classappend="${#httpServletRequest.requestURI} == '/admin/players' ? 'active' : ''"> <i class="material-icons">portrait</i>
 						<span>Players</span>
 					</a>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-4">
 					<a href="#" class="footer-icon"> <i class="material-icons">perm_identity</i>
 						<span>My Profile</span>
 					</a>

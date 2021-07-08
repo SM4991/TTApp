@@ -14,20 +14,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@NotEmpty(message = "Name can not be empty")
-	@Size(min=2, max=100, message = "Name length should be between 2 to 100 characters.")
-    @Column(name = "name", nullable = false, length = 100)
+	@Column(name = "name", nullable = false, length = 100)
     private String name;
      
-	@NotEmpty(message = "Email can not be empty")
-	@Email(message = "Please provide a valid email id")
-	@Size(max=255, message = "Email length should not exceed 255 characters.")
-    @Column(nullable = false, unique = true, length = 255)
+	@Column(nullable = false, unique = true, length = 255)
     private String email;
     
-	@NotEmpty(message = "Password can not be empty")
-    @Column(nullable = false, length = 100)
-	@Size(min=6, message="Password should contain atleast 6 characters.")
+    @Column(nullable = true, length = 100)
     private String password;
 	
 	@Enumerated(EnumType.STRING)
@@ -39,6 +32,9 @@ public class User {
 	
 	@Column(nullable = true, length = 255)
     private String image;
+	
+	@Column(name="is_login_active", nullable = false, columnDefinition="boolean default 1")
+	private Boolean isLoginActive;
     
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
@@ -47,6 +43,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
             )
     private Role role;
+    
+    @Transient
+	private Integer seed;
     
     private static final long OTP_VALID_DURATION = 5 * 60 * 1000;   // 5 minutes
     
@@ -152,6 +151,22 @@ public class User {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public Boolean getIsLoginActive() {
+		return isLoginActive;
+	}
+
+	public void setIsLoginActive(Boolean isLoginActive) {
+		this.isLoginActive = isLoginActive;
+	}
+
+	public Integer getSeed() {
+		return seed;
+	}
+
+	public void setSeed(Integer seed) {
+		this.seed = seed;
 	}
 }
 

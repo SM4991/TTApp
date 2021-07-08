@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,11 +20,14 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
+import com.auriga.TTApp1.model.RegistrationForm;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.UserRepository;
 import com.auriga.TTApp1.service.CUserDetailsService;
+import com.auriga.TTApp1.service.RegistrationService;
 
 @Controller
 public class AuthController {
@@ -33,6 +37,12 @@ public class AuthController {
 	
 	@Autowired
 	private CUserDetailsService service;
+	
+	@Autowired 
+	private RegistrationService registrationService;
+	
+	@Autowired
+	private CUserDetailsService cUserDetailsService;
 
 //	@GetMapping("/login")
 //	public String showLoginForm() {
@@ -42,6 +52,10 @@ public class AuthController {
 	
 	@GetMapping("/loginotp")
 	public String showLoginOtpForm(HttpServletRequest request, HttpServletResponse response, Model model) {
+		if(cUserDetailsService.isAuthenticated()) {
+			return "redirect:/admin";
+		}
+		
 		String email = (String) request.getSession().getAttribute("email");
 		if (email == null) {
 			return "redirect:/login";
@@ -52,54 +66,45 @@ public class AuthController {
 
 	@GetMapping("/register")
 	public String showRegistrationForm(Model model) {
-		System.out.println(isAuthenticated());
-		model.addAttribute("user", new User());
+		if(cUserDetailsService.isAuthenticated()) {
+			return "redirect:/admin";
+		}
+
+		model.addAttribute("registrationForm", new RegistrationForm());
 
 		return "auth/signin_form";
 	}
 
 	@PostMapping("/register")
-	public String processRegister(@Valid User user, BindingResult bindingResult, Model model) {
+	public String processRegister(@Valid RegistrationForm registrationForm, BindingResult bindingResult, Model model) {
+		if(cUserDetailsService.isAuthenticated()) {
+			return "redirect:/admin";
+		}
+		
 		if(bindingResult.hasErrors()){
-			model.addAttribute("user", user);
+			model.addAttribute("registrationForm", registrationForm);
 			return "auth/signin_form";
 		}
 		try {
-			service.register(user);
+			registrationService.register(registrationForm);
         }catch (UserAlreadyExistsException e){
-            bindingResult.rejectValue("email", "user.email","An account already exists for this email.");
-            model.addAttribute("user", user);
+            bindingResult.rejectValue("email", "registrationForm.email","An account already exists for this email.");
+            model.addAttribute("registrationForm", registrationForm);
             return "auth/signin_form";
         }
-		
-//		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//		String encodedPassword = passwordEncoder.encode(user.getPassword());
-//		user.setPassword(encodedPassword);
-//
-//		userRepo.save(user);
 
 		return "redirect:/admin";
 	}
 
 	@GetMapping("/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null) {
+		if (cUserDetailsService.isAuthenticated()) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			String username = auth.getName();
 
 			new SecurityContextLogoutHandler().logout(request, response, auth);
 		}
 
 		return "redirect:/login";
-	}
-
-	private boolean isAuthenticated() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println(auth);
-		if (auth == null) {
-			return false;
-		}
-		return auth.isAuthenticated();
 	}
 }

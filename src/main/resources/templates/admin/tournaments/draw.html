@@ -2,30 +2,41 @@
 <html>
 <head>
 <div th:replace="commonLayout :: head-content" />
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <body class="tournament-draw-page">
+	<div th:replace="commonLayout :: overlayBlock" />
 	<div class="app-wrapper">
 		<div class="page-wrapper">
 			<div class="page-header">
+				<a th:href="@{'/admin/tournaments/'+${tournament.id}}" class="back-link"><i class="material-icons">arrow_back</i></a>
 				<h3 class="page-title">Create Draw</h3>
 			</div>
 			<div class="page-content">
 				<div class="form-wrapper">
 					<div class="form-container">
-						<form action="javascript:void(0)" id="create-form" method="post">
+						<form action="javascript:void(0)" id="create-draw-form" method="post">
+							<input type="hidden" id="tid" th:value="${tournament.id}" />
 							<div class="form-group">
-								<label th:for="matchType">Match Type:</label>
-								<select id="matchType" name="matchType" class="form-control">
+								<label th:for="matchType">Match Type:</label> <select
+									id="matchType" name="matchType" class="form-control">
 									<option value="" selected>Choose...</option>
-									<option th:each="tMatchType: ${tournamentMatchTypes}" th:value="${tMatchType.getMatchType().id}" th:text="${tMatchType.getMatchType().name}"></option>
+									<option th:each="tMatchType: ${tournamentMatchTypes}"
+										th:value="${tMatchType.getMatchType().id}"
+										th:text="${tMatchType.getMatchType().name}"></option>
 								</select>
 							</div>
 							<div class="form-group">
 								<select id="players" name="players" class="form-control">
 									<option value="" selected>Select Player</option>
-									<option th:each="player: ${playerList}" th:value="${player.getId()}" th:text="${player.name}"></option>
+									<option th:each="player: ${players}" th:value="${player.id}"
+										th:text="${player.name}"></option>
 								</select>
+							</div>
+							<div class="list-view draw-players-list" id="list-view">
+								<ul class="list-view-wrapper">
+								</ul>
 							</div>
 							<div class="btn-group">
 								<button type="submit" class="btn btn-primary">Save</button>
@@ -38,7 +49,24 @@
 		<div th:replace="commonLayout :: successResponseModal"></div>
 		<div th:replace="commonLayout :: errorResponseModal"></div>
 	</div>
-
+	<div class="hide" id="sample-list-card">
+		<li class="list-view-card">
+			<ul>
+				<li class="list-image-content"><img
+					th:src="@{${@environment.getProperty('players.image.default.path')}}"
+					class="list-image" /></li>
+				<li class="list-detail-content">
+					<ul class="">
+						<li class="main-content">Player 1</li>
+						<li class="sub-content"><span class="age-detail">26
+								years</span> - <span class="gender-detail">Male</span></li>
+					</ul>
+				</li>
+				<li class="icon-content remove-btn"><a href="javascript:void(0)"><i
+						class="material-icons">remove_circle</i></a></li>
+			</ul>
+		</li>
+	</div>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script th:src="@{/js/common.js}"></script>
 	<script th:src="@{/js/tournaments.js}"></script>

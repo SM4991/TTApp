@@ -1,3 +1,12 @@
+function toggleLoadingOverlay() {
+	$('#overlay').toggle();
+}
+function hideLoadingOverlay() {
+	$('#overlay').hide();
+}
+function showLoadingOverlay() {
+	$('#overlay').show();
+}
 function httpRequestTokenHeader() {
 	let token = $("meta[name='_csrf']").attr("content");
 	let header = $("meta[name='_csrf_header']").attr("content");
@@ -12,6 +21,34 @@ function resetModal(id) {
 }
 function redirectToUrl(url) {
 	window.location.href = url;
+}
+function handleAjaxError(response) {
+	console.log(response);
+
+	/* Hide overlay */
+	hideLoadingOverlay();
+	if (response.status == 400 && response.responseJSON.error == undefined) {
+		$.each(response.responseJSON, function(key, value) {
+			if ($('[name=' + key + ']').is(':checkbox')) {
+				$('[name=' + key + ']:last').parent().append('<span class="field-error">' + value + '</span>');
+			} else {
+				$('[name=' + key + ']').after('<span class="field-error">' + value + '</span>');
+			}
+		});
+	} else {
+		resetModal("errorResponseModal");
+		if (response.status == 404 || response.status == 400) {
+			if(response.responseJSON.message != "No message") {
+				error_text = response.responseJSON.message;
+			} else {
+				error_text = response.responseJSON.error;
+			}
+		} else {
+			error_text = response.responseText;
+		}
+		$("#errorResponseModal").find(".modal-body").text(error_text);
+		$("#errorResponseModal").modal("show");
+	}
 }
 function formSubmit(event, url, fields, redirect_url) {
 	event.preventDefault();
@@ -51,21 +88,7 @@ function formSubmit(event, url, fields, redirect_url) {
 
 			$("#successResponseModal").modal("show");
 		}, error: function(response) {
-			console.log(response);
-
-			if (response.status == 400) {
-				$.each(response.responseJSON, function(key, value) {
-					if ($('[name=' + key + ']').is(':checkbox')) {
-						$('[name=' + key + ']:last').parent().append('<span class="field-error">' + value + '</span>');
-					} else {
-						$('[name=' + key + ']').after('<span class="field-error">' + value + '</span>');
-					}
-				});
-			} else {
-				resetModal("errorResponseModal");
-				$("#errorResponseModal").find(".modal-body").text(response.responseText);
-				$("#errorResponseModal").modal("show");
-			}
+			handleAjaxError(response);
 		}
 	});
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-$(document).ready(function() {	
+$(document).ready(function() {
 	$("body").on("click", "#list-view .pagination-clickable", function(e) {
 		let page_no = $(this).attr("attr-page");
 		console.log(page_no);
@@ -14,7 +14,7 @@ $(document).ready(function() {
 		event.preventDefault();
 		formSubmit(event, "/admin/api/players", ["name", "age", "email", "gender", "image"], "/admin/players");
 	});
-	
+
 	$("#upload_link").on('click', function(e) {
 		e.preventDefault();
 		$("#file").trigger('click');
@@ -26,7 +26,6 @@ $(document).ready(function() {
 		data.append("file", file);
 
 		console.log(data);
-
 		$.ajax({
 			type: "POST",
 			enctype: 'multipart/form-data',
@@ -58,23 +57,24 @@ function loadListItems(list_parent_id, page = 0) {
 	} else {
 		var request_url = url;
 	}
-	
+
 	var dom_elements = [
 		$(".first-list-view"),
-		$("#" + list_parent_id),
-		$(".list-loading")
+		$("#" + list_parent_id)
 	];
+
+	/* Show overlay */
+	showLoadingOverlay();
 	$.ajax({
 		url: request_url,
 		method: "get",
 		contentType: "application/json",
 		success: function(response) {
-			hideShowDomBlock(dom_elements, $(".list-loading"));
 			if (response.items.length > 0) {
 				li_dom = $("#sample-list-card").clone();
 				let list_html = "";
 				$.each(response.items, function(k, data) {
-					li_dom.find(".main-content").html("<a href='/admin/players/"+data.id+"'>"+data.name+"</a>");
+					li_dom.find(".main-content").html("<a href='/admin/players/" + data.id + "'>" + data.name + "</a>");
 					li_dom.find(".sub-content .age-detail").text(data.age);
 					li_dom.find(".sub-content .gender-detail").text(data.gender);
 
@@ -97,8 +97,12 @@ function loadListItems(list_parent_id, page = 0) {
 			} else {
 				hideShowDomBlock(dom_elements, $(".first-list-view"));
 			}
+			/* Hide overlay */
+			hideLoadingOverlay();
 		}, error: function(response) {
 			console.log(response);
+			/* Hide overlay */
+			toggleLoadingOverlay();
 			resetModal("errorResponseModal");
 			$("#errorResponseModal").find(".modal-body").text(response.responseText);
 			$("#errorResponseModal").modal("show");

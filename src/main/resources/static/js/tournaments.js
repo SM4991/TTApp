@@ -2,7 +2,7 @@
  * 
  */
 $(document).ready(function() {
-	
+
 	$("body").on("click", "#list-view .pagination-clickable", function(e) {
 		let page_no = $(this).attr("attr-page");
 		console.log(page_no);
@@ -11,11 +11,11 @@ $(document).ready(function() {
 		}
 	});
 
-	$("form").on("submit", function(event) {
+	$("form#create-form").on("submit", function(event) {
 		event.preventDefault();
 		formSubmit(event, "/admin/api/tournaments", ["name", "startDate", "regEndDate", "maxScore", "image", "matchTypeIds"], "/admin/tournaments");
 	});
-	
+
 	$("#upload_link").on('click', function(e) {
 		e.preventDefault();
 		$("#file").trigger('click');
@@ -43,39 +43,57 @@ $(document).ready(function() {
 				$("#default-form-image").attr("src", response);
 			},
 			error: function(e) {
-				console.log(response);
-				resetModal("errorResponseModal");
-				$("#errorResponseModal").find(".modal-body").text(response.responseText);
-				$("#errorResponseModal").modal("show");
+				handleAjaxError(response);
 			}
 		});
 	});
+
+	$("#create-draw-form select[name='players']").on("change", function() {
+		addSelectedDrawPlayer("list-view", $(this).val());
+	});
+
+	$("body").on("click", "#create-draw-form .remove-btn", function() {
+		removeSelectedDrawPlayer($(this));
+	});
+
+	$("form#create-draw-form").on("submit", function(event) {
+		event.preventDefault();
+		generateDraw(event, "list-view");
+	});
 });
 
+function loadListItemsByStatus(list_parent_id, status) {
+	$(".tournament-tabs-list li").removeClass("active");
+	$("#trTab"+status).addClass("active");
+	loadListItems(list_parent_id);
+}
+
 function loadListItems(list_parent_id, page = 0) {
-	let url = "/admin/api/tournaments";
+	var status = $(".tournament-tabs-list li.active a").attr("data-status");
+	
+	let url = "/admin/api/tournaments?status="+status;
 	if (page > 0) {
-		var request_url = url + "?page=" + page;
+		var request_url = url + "&page=" + page;
 	} else {
 		var request_url = url;
 	}
-	
+
 	var dom_elements = [
 		$(".first-list-view"),
-		$("#" + list_parent_id),
-		$(".list-loading")
+		$("#" + list_parent_id)
 	];
+	/* Show overlay */
+	showLoadingOverlay();
 	$.ajax({
 		url: request_url,
 		method: "get",
 		contentType: "application/json",
 		success: function(response) {
-			hideShowDomBlock(dom_elements, $(".list-loading"));
 			if (response.items.length > 0) {
 				li_dom = $("#sample-list-card").clone();
 				let list_html = "";
 				$.each(response.items, function(k, data) {
-					li_dom.find(".main-content").html("<a href='/admin/tournaments/"+data.id+"'>"+data.name+"</a>");
+					li_dom.find(".main-content").html("<a href='/admin/tournaments/" + data.id + "'>" + data.name + "</a>");
 					li_dom.find(".sub-content.start-date-content span.content").text(data.startDate);
 					li_dom.find(".sub-content.reg-end-date-content span.content").text(data.regEndDate);
 
@@ -87,7 +105,7 @@ function loadListItems(list_parent_id, page = 0) {
 
 					list_html += li_dom.html();
 				});
-		
+
 				$("#" + list_parent_id + " .list-view-wrapper").html(list_html);
 
 				let paginator_html = paginatorHtml(response);
@@ -98,11 +116,94 @@ function loadListItems(list_parent_id, page = 0) {
 			} else {
 				hideShowDomBlock(dom_elements, $(".first-list-view"));
 			}
+			/* Hide overlay */
+			hideLoadingOverlay();
 		}, error: function(response) {
-			console.log(response);
-			resetModal("errorResponseModal");
-			$("#errorResponseModal").find(".modal-body").text(response.responseText);
-			$("#errorResponseModal").modal("show");
+			handleAjaxError(response);
 		}
 	});
+}
+
+function addSelectedDrawPlayer(list_parent_id, id) {
+	request_url = "/admin/api/players/" + id;
+
+	if (!$("#player" + id).length) {
+		/* Show overlay */
+		showLoadingOverlay();
+		$.ajax({
+			url: request_url,
+			method: "get",
+			contentType: "application/json",
+			success: function(response) {
+				li_dom = $("#sample-list-card").clone();
+
+				li_dom.find(".list-view-card").attr("id", "player" + id);
+				li_dom.find(".list-view-card").attr("data-id", id);
+				li_dom.find(".main-content").html(response.name);
+				li_dom.find(".sub-content .age-detail").text(response.age);
+				li_dom.find(".sub-content .gender-detail").text(response.gender);
+
+				if (response.image != null && response.image != "") {
+					li_dom.find(".list-image-content img").attr("src", response.image);
+				} else {
+					li_dom.find(".list-image-content img").attr("src", "/images/blank-profile-picture.png");
+				}
+
+				$("#" + list_parent_id + " .list-view-wrapper").append(li_dom.html());
+
+				/* Hide overlay */
+				hideLoadingOverlay();
+			}, error: function(response) {
+				handleAjaxError(response);
+			}
+		});
+	}
+}
+
+function removeSelectedDrawPlayer(object) {
+	$(object).parents(".list-view-card").remove();
+}
+
+function generateDraw(event, list_parent_id) {
+	$(".field-error").remove();
+	if ($("#matchType").val() != "") {
+		if ($("#" + list_parent_id + " li.list-view-card").length && $("#" + list_parent_id + " li.list-view-card").length >= 2) {
+			let t_id = $("#tid").val();
+			let request_url = "/admin/api/tournaments/draw";
+			let p_ids = [];
+			$("#" + list_parent_id + " li.list-view-card").each(function() {
+				p_ids.push($(this).attr("data-id"));
+			});
+
+			var form_data = {};
+			form_data["tournamentId"] = t_id;
+			form_data["playerIds"] = p_ids;
+			form_data["matchTypeId"] = $("#matchType").val();
+
+			$.ajax({
+				url: request_url,
+				method: "post",
+				data: JSON.stringify(form_data),
+				contentType: "application/json",
+				headers: httpRequestTokenHeader(),
+				success: function(response) {
+					console.log(response);
+					resetModal("successResponseModal");
+					$("#successResponseModal").find(".modal-body").text(response);
+
+					if (redirect_url != undefined && redirect_url != "") {
+						$("#successResponseModal").find(".modal-footer button").attr("onClick", "redirectToUrl('" + redirect_url + "')");
+					}
+
+					$("#successResponseModal").modal("show");
+				}, error: function(response) {
+					handleAjaxError(response);
+				}
+			});
+		} else {
+			$("#players").parent().append('<span class="field-error">Select atleast 2 players</span>');
+		}
+	} else {
+		$("#matchType").parent().append('<span class="field-error">Select a match type</span>');
+	}
 }

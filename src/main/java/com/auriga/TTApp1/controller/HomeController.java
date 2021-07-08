@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.auriga.TTApp1.repository.UserRepository;
+import com.auriga.TTApp1.service.CUserDetailsService;
 
 @Controller
 public class HomeController {
@@ -14,9 +15,15 @@ public class HomeController {
 	@Value("${spring.application.name}")
     String appName;
 
+	@Autowired
+	private CUserDetailsService cUserDetailsService;
+	
 	@GetMapping("/")
     public String welcome() {
-        return "staticpages/welcome";
+		if(cUserDetailsService.isAuthenticated()) {
+			return "redirect:/admin";
+		}
+        return "welcome";
     }
 	
 	@GetMapping("/admin")
