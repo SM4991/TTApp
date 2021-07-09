@@ -86,7 +86,7 @@ public class TournamentController {
 		return modelView;
 	}
 	
-	@GetMapping("/admin/tournaments/{id}/matches")
+	@GetMapping(value = {"/admin/tournaments/{id}/matches", "/tournaments/{id}/matches"})
 	public ModelAndView viewTournament(@PathVariable("id") Long id) {
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		

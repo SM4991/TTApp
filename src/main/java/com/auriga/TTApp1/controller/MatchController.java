@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.auriga.TTApp1.constants.MatchStatusEnum;
+import com.auriga.TTApp1.exception.ResourceBadRequestException;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatch;
@@ -19,8 +21,10 @@ public class MatchController {
 	private TournamentMatchService service;
 	
 	@RequestMapping(value = {"/admin/matches/{id}", "/matches/{id}"}, method = RequestMethod.GET)
-	public ModelAndView viewPlayer(@PathVariable("id") Long id){
+	public ModelAndView viewMatches(@PathVariable("id") Long id){
 		TournamentMatch match = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Match"));
+		
+		if(match.getStatus() == MatchStatusEnum.INACTIVE) throw new ResourceBadRequestException("Match is in inactive state.");
 		
 		Tournament tournament = match.getTournament();
 		

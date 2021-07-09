@@ -20,7 +20,7 @@ import com.auriga.TTApp1.repository.RoleRepository;
 import com.auriga.TTApp1.repository.UserRepository;
 import com.auriga.TTApp1.service.PaginationService;
 
-@Service()
+@Service
 public class PlayerService{
 	@Autowired
     private UserRepository repo;

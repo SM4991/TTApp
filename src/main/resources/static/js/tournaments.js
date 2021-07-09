@@ -288,11 +288,13 @@ function loadTournamentFixture() {
 }
 
 function getTournamentMatches(object, list_parent_id) {
-
-
 	if ($(object).val() != "") {
 		tid = $("#tid").val();
-		request_url = "/admin/api/tournaments/" + tid + "/" + $(object).val() + "/matches";
+		if (authorized == 1) {
+			request_url = "/admin/api/tournaments/" + tid + "/" + $(object).val() + "/matches";
+		} else {
+			request_url = "/api/tournaments/" + tid + "/" + $(object).val() + "/matches";
+		}
 		/* Show overlay */
 		showLoadingOverlay();
 		$.ajax({
@@ -306,7 +308,11 @@ function getTournamentMatches(object, list_parent_id) {
 				if (response.length > 0) {
 					$.each(response, function(k, match) {
 						let player1 = match.player1 != null ? match.player1 : { name: "-", image: "-", age: "-", gender: "-" };
-						li_dom.find(".list-title").html("<a href='/admin/matches/" + match.id + "'>" + match.tournamentRound.name + " - " + match.name + "</a>");
+						if(authorized == 1) {
+							li_dom.find(".list-title").html("<a href='/admin/matches/" + match.id + "'>" + match.tournamentRound.name + " - " + match.name + "</a>");
+						} else {
+							li_dom.find(".list-title").html("<a href='/matches/" + match.id + "'>" + match.tournamentRound.name + " - " + match.name + "</a>");
+						}
 						li_dom.find(".list-view-card .list-left-block .main-content").text(player1.name);
 						li_dom.find(".list-view-card .list-left-block .sub-content .age-detail").text(player1.age);
 						li_dom.find(".list-view-card .list-left-block .sub-content .gender-detail").text(player1.gender);

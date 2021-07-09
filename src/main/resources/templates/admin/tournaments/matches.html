@@ -8,7 +8,8 @@
 	<div class="app-wrapper">
 		<div class="page-wrapper">
 			<div class="page-header">
-				<a th:href="@{'/admin/tournaments/'+${tournament.id}}" class="back-link"><i class="material-icons">arrow_back</i></a>
+				<a sec:authorize="isAuthenticated()" th:href="@{'/admin/tournaments/'+${tournament.id}}" class="back-link"><i class="material-icons">arrow_back</i></a>
+				<a sec:authorize="isAnonymous()" th:href="@{'/tournaments/'+${tournament.id}}" class="back-link"><i class="material-icons">arrow_back</i></a>
 				<h3 class="page-title">View Matches</h3>
 			</div>
 			<div class="page-content">
@@ -75,6 +76,16 @@
 			</ul>
 			
 		</li>
+	</div>
+	<div sec:authorize="isAuthenticated()">
+		<script>
+			var authorized = 1;
+		</script>
+	</div>
+	<div sec:authorize="isAnonymous">
+		<script>
+			var authorized = 0;
+		</script>
 	</div>
 	<script th:src="@{/js/common.js}"></script>
 	<script th:src="@{/js/tournaments.js}"></script>

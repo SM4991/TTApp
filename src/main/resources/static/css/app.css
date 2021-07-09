@@ -242,14 +242,17 @@ a.footer-icon:hover, a.footer-icon.active {
 	color: red;
 }
 /* Match Scorer Screen CSS starts */
-.match-players-block{
+.match-scorer-wrapper{
+	padding: 20px;
+}
+.match-scorer-wrapper .match-players-block{
 	text-align: center;
 	margin-bottom: 40px;
 }
-.match-players-block .title{
+.match-scorer-wrapper .match-players-block .title{
 	margin-bottom: 20px
 }
-.match-players-block .vs-text{
+.match-scorer-wrapper .match-players-block .vs-text{
 	color: #5d5959;
     border-radius: 50%;
     background: #e4e6e7;
@@ -257,68 +260,89 @@ a.footer-icon:hover, a.footer-icon.active {
     height: 40px;
     line-height: 40px;
 }
-.match-players-block .image-wrapper img{
+.match-scorer-wrapper .match-players-block .image-wrapper img{
 	box-shadow: none;
 }
-.match-sets-block{
+.match-scorer-wrapper .match-sets-block{
 	margin-bottom: 60px;
 }
-.match-set-block{
+.match-scorer-wrapper .match-set-block{
 	text-align: center;
 	margin-bottom: 10px;
 }
-.match-set-block div{
+.match-scorer-wrapper .match-set-block div{
 	display: inline-block;
 }
-.match-set-block .set-inner-block{
+.match-scorer-wrapper .match-set-block .set-inner-block{
 	border: 1px solid #cec7c7;
     border-radius: 4px;
     font-size: 12px;
     padding: 2px 5px;
 }
-.match-set-block .set-inner-block .content{
+.match-scorer-wrapper .match-set-block .set-inner-block .content{
 	min-width: 100px;	
 }
-.match-set-block .set-inner-block .left-score{
+.match-scorer-wrapper .match-set-block .set-inner-block .left-score{
 	margin-left: 10px;
 }
-.match-set-block .set-inner-block .right-score{
+.match-scorer-wrapper .match-set-block .set-inner-block .right-score{
 	margin-right: 10px;
 }
-.match-set-block .left-winner-icon,
-.match-set-block .right-winner-icon{
+.match-scorer-wrapper .match-set-block .left-winner-icon,
+.match-scorer-wrapper .match-set-block .right-winner-icon{
 	font-size: 18px;
     vertical-align: middle;
 }
-.match-set-block .left-winner-icon i,
-.match-set-block .right-winner-icon i{
+.match-scorer-wrapper .match-set-block .left-winner-icon i,
+.match-scorer-wrapper .match-set-block .right-winner-icon i{
 	font-size: 18px;
     vertical-align: middle;
 }
-.match-set-block .right-winner-icon{
+.match-scorer-wrapper .match-set-block .right-winner-icon{
 	padding-left: 10px;	
 }
-.match-set-block .left-winner-icon{
+.match-scorer-wrapper .match-set-block .left-winner-icon{
 	padding-right: 10px;
 }
-.match-points-block{
+.match-scorer-wrapper .match-points-block{
 	text-align: center;
 }
-.match-points-block i {
+.match-scorer-wrapper .match-points-block i {
 	font-size: 35px;
 	vertical-align: middle;
 }
-.match-points-block .content{
+.match-scorer-wrapper .match-points-block .content{
 	font-size: 30px;
 	margin-bottom: 10px;
 }
-.match-points-block .remove-icon{
+.match-scorer-wrapper .match-points-block .remove-icon{
 	color: #d80a0a;
 	margin-bottom: 10px;
 }
-.match-points-block .add-icon{
+.match-scorer-wrapper .match-points-block .add-icon{
 	color: #07a507;
 	margin-bottom: 10px;
+}
+.match-scorer-wrapper .match-status-block{
+	box-shadow: 0 0 2px 2px rgb(227 220 220 / 75%);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    padding: 20px;
+    text-align: center;
+    margin: 20px;
+}
+.match-status-block .match-status-data .btn.btn-primary{
+	width: 100px;
+    height: 30px;
+    line-height: 14px;
+    font-size: 14px;
+    color: white;
+    margin: 0 auto;
+}
+.match-status-block .match-status-data .text-content{
+	font-size: 20px;
+	margin-bottom: 10px;
+	color: #675f5f
 }
 /* Match Scorer Screen CSS ends */
 /* Tournament Match List Css starts */

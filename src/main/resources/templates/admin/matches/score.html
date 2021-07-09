@@ -8,12 +8,15 @@
 	<div class="app-wrapper">
 		<div class="page-wrapper">
 			<div class="page-header">
-				<a th:href="@{/admin/tournaments}" class="back-link"><i
+				<a sec:authorize="isAuthenticated()" th:href="@{/admin/tournaments/}" class="back-link"><i
+					class="material-icons">arrow_back</i></a>
+				<a sec:authorize="isAnonymous()" th:href="@{/tournaments/}" class="back-link"><i
 					class="material-icons">arrow_back</i></a>
 				<h3 class="page-title">Scorer</h3>
 			</div>
 			<div class="page-content">
-				<div class="form-wrapper">
+				<div class="match-scorer-wrapper">
+					<input type="hidden" th:value="${match.id}" id="mid"/>
 					<div class="match-players-block">
 						<div class="row">
 							<div class="col-5">
@@ -41,54 +44,29 @@
 							</div>
 						</div>
 					</div>
-					<div class="match-sets-block">
-						<div class="match-set-block set1-block">
-							<div class="left-winner-icon"><i class="material-icons">add_circle</i></div>
-							<div class="set-inner-block">
-								<div class="left-score">-</div>
-								<div class="content">Set 1</div>
-								<div class="right-score">-</div>
-							</div>
-							<div class="right-winner-icon"><i class="material-icons">add_circle</i></div>
-						</div>
-						<div class="match-set-block set2-block">
-							<div class="set-inner-block">
-								<div class="left-score">-</div>
-								<div class="content">Set 2</div>
-								<div class="right-score">-</div>
-							</div>
-						</div>
-						<div class="match-set-block set3-block">
-							<div class="set-inner-block">
-								<div class="left-score">-</div>
-								<div class="content">Set 3</div>
-								<div class="right-score">-</div>
-							</div>
-						</div>
-					</div>
-					<div class="match-points-block">
-						<div class="row">
-							<div class="col-6">
-								<div class="remove-icon"><i class="material-icons">remove_circle</i></div>
-								<div class="content">0</div>
-								<div class="add-icon"><i class="material-icons">add_circle</i></div>
-							</div>
-							<div class="col-6">
-								<div class="remove-icon"><i class="material-icons">remove_circle</i></div>
-								<div class="content">0</div>
-								<div class="add-icon"><i class="material-icons">add_circle</i></div>
-							</div>
-						</div>
-					</div>
-					<div class="match-startSet-block"></div>
+					<div id="match-detail"></div>
 				</div>
 			</div>
+		</div>
+		<div sec:authorize="isAuthenticated()">
+			<script>
+				var authorized = 1;
+			</script>
+		</div>
+		<div sec:authorize="isAnonymous()">
+			<script>
+				var authorized = 0;
+			</script>
 		</div>
 		<div th:replace="commonLayout :: successResponseModal"></div>
 		<div th:replace="commonLayout :: errorResponseModal"></div>
 	</div>
 
 	<script th:src="@{/js/common.js}"></script>
-	<script th:src="@{/js/players.js}"></script>
+	<script th:src="@{/js/matches.js}"></script>
+	<script>
+		var parent_id = "match-detail";
+		getMatchDetail();
+	</script>
 </body>
 </html>

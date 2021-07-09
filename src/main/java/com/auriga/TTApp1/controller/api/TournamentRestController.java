@@ -120,7 +120,7 @@ public class TournamentRestController {
 //		return new ResponseEntity<>(matches, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/admin/api/tournaments/{id}/{mtId}/matches", method = RequestMethod.GET)
+	@RequestMapping(value = {"/admin/api/tournaments/{id}/{mtId}/matches", "/api/tournaments/{id}/{mtId}/matches"}, method = RequestMethod.GET)
 	public ResponseEntity<Object> viewMatches(@PathVariable("id") Long id, @PathVariable Long mtId) {
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		MatchType matchType = matchTypeService.get(mtId).orElseThrow(() -> new ResourceNotFoundException("Match Type"));
