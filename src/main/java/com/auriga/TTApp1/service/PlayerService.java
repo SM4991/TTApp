@@ -12,8 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.auriga.TTApp1.dto.PlayerDto;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
-import com.auriga.TTApp1.model.PlayerForm;
 import com.auriga.TTApp1.model.Role;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.RoleRepository;
@@ -47,7 +47,7 @@ public class PlayerService{
         return paginationService.paginatedItems(pagedResult, page, pageSize, sortBy);
     }
      
-    public void save(PlayerForm playerForm) {
+    public void save(PlayerDto playerForm) {
     	//Let's check if user already registered with us
         if(cUserDetailsService.checkIfUserExist(playerForm.getEmail())){
             throw new UserAlreadyExistsException("User already exists for this email");

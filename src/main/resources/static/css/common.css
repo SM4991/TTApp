@@ -79,6 +79,14 @@ body{
     -moz-box-shadow: 0 -8px 6px -6px black;
     box-shadow: 0 -8px 6px -6px rgb(164 150 150 / 75%);
 }
+
+.tournament-fixture-page .app-wrapper{
+	max-width: 80%;
+}
+.tournament-fixture-page .page-wrapper .page-header, 
+.tournament-fixture-page .page-wrapper .page-footer{
+	width: 80%;
+}
 /* Inner Page Layout Css Ends */
 
 /* Tablet */
@@ -93,6 +101,14 @@ body{
 	{
 		width: 50%;
 	}
+	
+	.tournament-fixture-page .app-wrapper{
+		max-width: 100%;
+	}
+	.tournament-fixture-page .page-wrapper .page-header, 
+	.tournament-fixture-page .page-wrapper .page-footer{
+		width: 100%;
+	}
 }
 
 /* Phone */
@@ -105,6 +121,14 @@ body{
 	.outer-page-wrapper .page-header, 
 	.outer-page-wrapper .page-footer
 	{
+		width: 100%;
+	}
+	
+	.tournament-fixture-page .app-wrapper{
+		max-width: 100%;
+	}
+	.tournament-fixture-page .page-wrapper .page-header, 
+	.tournament-fixture-page .page-wrapper .page-footer{
 		width: 100%;
 	}
 }

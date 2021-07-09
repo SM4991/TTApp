@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<div th:replace="commonLayout :: head-content" />
+</head>
+<body class="tournament-match-score-page">
+	<div th:replace="commonLayout :: overlayBlock" />
+	<div class="app-wrapper">
+		<div class="page-wrapper">
+			<div class="page-header">
+				<a th:href="@{/admin/tournaments}" class="back-link"><i
+					class="material-icons">arrow_back</i></a>
+				<h3 class="page-title">Scorer</h3>
+			</div>
+			<div class="page-content">
+				<div class="form-wrapper">
+					<div class="match-players-block">
+						<div class="row">
+							<div class="col-5">
+								<div class="title" th:text="${player1.name}"></div>
+								<div class="image-wrapper">
+									<img th:if="${player1.image}" th:src="@{${player1.image}}"
+										id="default-form-image" class="default-form-image" /> <img
+										th:unless="${player1.image}"
+										th:src="@{${@environment.getProperty('players.image.default.path')}}"
+										id="default-form-image" class="default-form-image" />
+								</div>
+							</div>
+							<div class="col-2">
+								<div class="vs-text">V/S</div>
+							</div>
+							<div class="col-5">
+								<div class="title" th:text="${player2.name}"></div>
+								<div class="image-wrapper">
+									<img th:if="${player2.image}" th:src="@{${player2.image}}"
+										id="default-form-image" class="default-form-image" /> <img
+										th:unless="${player2.image}"
+										th:src="@{${@environment.getProperty('players.image.default.path')}}"
+										id="default-form-image" class="default-form-image" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="match-sets-block">
+						<div class="match-set-block set1-block">
+							<div class="left-winner-icon"><i class="material-icons">add_circle</i></div>
+							<div class="set-inner-block">
+								<div class="left-score">-</div>
+								<div class="content">Set 1</div>
+								<div class="right-score">-</div>
+							</div>
+							<div class="right-winner-icon"><i class="material-icons">add_circle</i></div>
+						</div>
+						<div class="match-set-block set2-block">
+							<div class="set-inner-block">
+								<div class="left-score">-</div>
+								<div class="content">Set 2</div>
+								<div class="right-score">-</div>
+							</div>
+						</div>
+						<div class="match-set-block set3-block">
+							<div class="set-inner-block">
+								<div class="left-score">-</div>
+								<div class="content">Set 3</div>
+								<div class="right-score">-</div>
+							</div>
+						</div>
+					</div>
+					<div class="match-points-block">
+						<div class="row">
+							<div class="col-6">
+								<div class="remove-icon"><i class="material-icons">remove_circle</i></div>
+								<div class="content">0</div>
+								<div class="add-icon"><i class="material-icons">add_circle</i></div>
+							</div>
+							<div class="col-6">
+								<div class="remove-icon"><i class="material-icons">remove_circle</i></div>
+								<div class="content">0</div>
+								<div class="add-icon"><i class="material-icons">add_circle</i></div>
+							</div>
+						</div>
+					</div>
+					<div class="match-startSet-block"></div>
+				</div>
+			</div>
+		</div>
+		<div th:replace="commonLayout :: successResponseModal"></div>
+		<div th:replace="commonLayout :: errorResponseModal"></div>
+	</div>
+
+	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/players.js}"></script>
+</body>
+</html>

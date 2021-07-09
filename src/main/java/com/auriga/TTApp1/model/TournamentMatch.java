@@ -14,12 +14,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.auriga.TTApp1.model.enums.MatchStatusEnum;
+
 @Entity
 @Table(name="tournament_matches")
 public class TournamentMatch {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private TournamentRound tournamentRound;
@@ -38,16 +40,16 @@ public class TournamentMatch {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = true)
-	private MatchStatus status;
+	private MatchStatusEnum status;
 	
 	@Column(name="match_order", nullable = false)
 	private Integer order;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -91,11 +93,11 @@ public class TournamentMatch {
 		this.winner = winner;
 	}
 
-	public MatchStatus getStatus() {
+	public MatchStatusEnum getStatus() {
 		return status;
 	}
 
-	public void setStatus(MatchStatus status) {
+	public void setStatus(MatchStatusEnum status) {
 		this.status = status;
 	}
 
@@ -105,5 +107,9 @@ public class TournamentMatch {
 
 	public void setOrder(Integer order) {
 		this.order = order;
+	}
+	
+	public Tournament getTournament() {
+		return getTournamentRound().getTournament();
 	}
 }

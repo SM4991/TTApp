@@ -241,3 +241,83 @@ a.footer-icon:hover, a.footer-icon.active {
 .list-view.draw-players-list li.icon-content a i{
 	color: red;
 }
+/* Match Scorer Screen CSS starts */
+.match-players-block{
+	text-align: center;
+	margin-bottom: 40px;
+}
+.match-players-block .title{
+	margin-bottom: 20px
+}
+.match-players-block .vs-text{
+	color: #5d5959;
+    border-radius: 50%;
+    background: #e4e6e7;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+}
+.match-players-block .image-wrapper img{
+	box-shadow: none;
+}
+.match-sets-block{
+	margin-bottom: 60px;
+}
+.match-set-block{
+	text-align: center;
+	margin-bottom: 10px;
+}
+.match-set-block div{
+	display: inline-block;
+}
+.match-set-block .set-inner-block{
+	border: 1px solid #cec7c7;
+    border-radius: 4px;
+    font-size: 12px;
+    padding: 2px 5px;
+}
+.match-set-block .set-inner-block .content{
+	min-width: 100px;	
+}
+.match-set-block .set-inner-block .left-score{
+	margin-left: 10px;
+}
+.match-set-block .set-inner-block .right-score{
+	margin-right: 10px;
+}
+.match-set-block .left-winner-icon,
+.match-set-block .right-winner-icon{
+	font-size: 18px;
+    vertical-align: middle;
+}
+.match-set-block .left-winner-icon i,
+.match-set-block .right-winner-icon i{
+	font-size: 18px;
+    vertical-align: middle;
+}
+.match-set-block .right-winner-icon{
+	padding-left: 10px;	
+}
+.match-set-block .left-winner-icon{
+	padding-right: 10px;
+}
+.match-points-block{
+	text-align: center;
+}
+.match-points-block i {
+	font-size: 35px;
+	vertical-align: middle;
+}
+.match-points-block .content{
+	font-size: 30px;
+	margin-bottom: 10px;
+}
+.match-points-block .remove-icon{
+	color: #d80a0a;
+	margin-bottom: 10px;
+}
+.match-points-block .add-icon{
+	color: #07a507;
+	margin-bottom: 10px;
+}
+/* Match Scorer Screen CSS ends */

@@ -1,8 +1,10 @@
 package com.auriga.TTApp1.controller.api;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -20,12 +22,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.auriga.TTApp1.dto.TournamentDrawDto;
-import com.auriga.TTApp1.dto.TournamentDrawDto2;
+import com.auriga.TTApp1.dto.TournamentImageDto;
+import com.auriga.TTApp1.exception.ResourceNotFoundException;
+import com.auriga.TTApp1.model.MatchType;
 import com.auriga.TTApp1.model.Tournament;
-import com.auriga.TTApp1.model.TournamentImage;
+import com.auriga.TTApp1.model.TournamentMatch;
+import com.auriga.TTApp1.model.TournamentRound;
+import com.auriga.TTApp1.repository.TournamentMatchRepository;
+import com.auriga.TTApp1.repository.TournamentRoundRepository;
 import com.auriga.TTApp1.service.FileUploadService;
+import com.auriga.TTApp1.service.MatchTypeService;
 import com.auriga.TTApp1.service.PaginationService;
 import com.auriga.TTApp1.service.TournamentService;
 
@@ -33,6 +42,15 @@ import com.auriga.TTApp1.service.TournamentService;
 public class TournamentRestController {
 	@Autowired
 	private TournamentService service;
+	
+	@Autowired
+	private MatchTypeService matchTypeService;
+	
+	@Autowired
+	private TournamentRoundRepository roundRepo;
+	
+	@Autowired
+	private TournamentMatchRepository matchRepo;
 
 	@Autowired
 	private FileUploadService fileUploadService;
@@ -80,13 +98,30 @@ public class TournamentRestController {
 			return new ResponseEntity<>(errorMsgs, HttpStatus.BAD_REQUEST);
 		} else {
 			service.createDrawRounds(dto);
-//			return new ResponseEntity<>("Tournament is added successfully", HttpStatus.OK);
+			return new ResponseEntity<>("Tournament Draw is generated successfully", HttpStatus.OK);
 		}
-		return new ResponseEntity<>("testing", HttpStatus.NOT_FOUND);
+	}
+	
+	@RequestMapping(value = "/admin/api/tournaments/{id}/{mtId}/fixture", method = RequestMethod.GET)
+	public ModelAndView viewFixture(@PathVariable("id") Long id, @PathVariable Long mtId) {
+		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
+		MatchType matchType = matchTypeService.get(mtId).orElseThrow(() -> new ResourceNotFoundException("Match Type"));
+		
+		List<TournamentRound> rounds = roundRepo.findByTournamentAndMatchType(tournament, matchType);
+		List<TournamentRound> roundsList = new ArrayList<>();
+		Map<Long, List<TournamentMatch>> matches = new HashMap();
+		rounds.forEach(round -> {
+			matches.put(round.getId(), matchRepo.findAllByTournamentRound(round));
+		});
+		ModelAndView model = new ModelAndView("/admin/tournaments/fixtureBracket");
+		model.addObject("rounds", rounds);
+		model.addObject("matches", matches);
+		return model;
+//		return new ResponseEntity<>(matches, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/admin/api/tournaments/upload", method = RequestMethod.POST)
-	public ResponseEntity<Object> uploadTournamentImage(@ModelAttribute TournamentImage tournamentImage) {
+	public ResponseEntity<Object> uploadTournamentImage(@ModelAttribute TournamentImageDto tournamentImage) {
 		String image = null;
 		try {
 			MultipartFile file = tournamentImage.getFile();

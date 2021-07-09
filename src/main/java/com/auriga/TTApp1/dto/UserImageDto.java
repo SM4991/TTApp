@@ -1,8 +1,8 @@
-package com.auriga.TTApp1.model;
+package com.auriga.TTApp1.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class TournamentImage {
+public class UserImageDto {
 	private MultipartFile file;
 
 	public MultipartFile getFile() {

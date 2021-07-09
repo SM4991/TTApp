@@ -30,11 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.auriga.TTApp1.dto.PlayerDto;
+import com.auriga.TTApp1.dto.UserImageDto;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
-import com.auriga.TTApp1.model.PlayerForm;
 import com.auriga.TTApp1.model.User;
-import com.auriga.TTApp1.model.UserImage;
 import com.auriga.TTApp1.service.FileUploadService;
 import com.auriga.TTApp1.service.PaginationService;
 import com.auriga.TTApp1.service.PlayerService;
@@ -64,7 +64,7 @@ public class PlayerRestController {
 
 	
 	@RequestMapping(value = "/admin/api/players", method = RequestMethod.POST)
-	public ResponseEntity<Object> createPlayer(@Valid @RequestBody PlayerForm playerForm, BindingResult errorResult) {
+	public ResponseEntity<Object> createPlayer(@Valid @RequestBody PlayerDto playerForm, BindingResult errorResult) {
 		HashMap<String, String> errorMsgs = new HashMap<String, String>();
 		if(errorResult.hasErrors()) {
 			List<FieldError> errors = errorResult.getFieldErrors();
@@ -94,7 +94,7 @@ public class PlayerRestController {
 	}
 	
 	@RequestMapping(value = "/admin/api/players/upload", method = RequestMethod.POST)
-	public ResponseEntity<Object> uploadImage(@ModelAttribute UserImage playerImage) {
+	public ResponseEntity<Object> uploadImage(@ModelAttribute UserImageDto playerImage) {
         String image = null;
         try {
         	MultipartFile file = playerImage.getFile();

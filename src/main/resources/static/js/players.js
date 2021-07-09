@@ -10,7 +10,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$("form").on("submit", function(event) {
+	$("form#create-form").on("submit", function(event) {
 		event.preventDefault();
 		formSubmit(event, "/admin/api/players", ["name", "age", "email", "gender", "image"], "/admin/players");
 	});

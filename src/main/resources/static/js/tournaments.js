@@ -64,21 +64,21 @@ $(document).ready(function() {
 
 function loadListItemsByStatus(list_parent_id, status) {
 	$(".tournament-tabs-list li").removeClass("active");
-	$("#trTab"+status).addClass("active");
+	$("#trTab" + status).addClass("active");
 	loadListItems(list_parent_id);
 }
 
 function loadListItems(list_parent_id, page = 0) {
 	var status = $(".tournament-tabs-list li.active a").attr("data-status");
-	
+
 	let url = "";
 	console.log(authorized);
-	if(authorized == 1){
+	if (authorized == 1) {
 		url = "/admin/api/tournaments";
 	} else {
 		url = "/api/tournaments";
 	}
-	url += "?status="+status;
+	url += "?status=" + status;
 	if (page > 0) {
 		var request_url = url + "&page=" + page;
 	} else {
@@ -100,7 +100,7 @@ function loadListItems(list_parent_id, page = 0) {
 				li_dom = $("#sample-list-card").clone();
 				let list_html = "";
 				$.each(response.items, function(k, data) {
-					if(authorized == 1){
+					if (authorized == 1) {
 						li_dom.find(".main-content").html("<a href='/admin/tournaments/" + data.id + "'>" + data.name + "</a>");
 					} else {
 						li_dom.find(".main-content").html("<a href='/tournaments/" + data.id + "'>" + data.name + "</a>");
@@ -181,6 +181,7 @@ function generateDraw(event, list_parent_id) {
 		if ($("#" + list_parent_id + " li.list-view-card").length && $("#" + list_parent_id + " li.list-view-card").length >= 2) {
 			let t_id = $("#tid").val();
 			let request_url = "/admin/api/tournaments/draw";
+			let redirect_url = "/admin/tournaments/"+t_id;
 			let p_ids = [];
 			$("#" + list_parent_id + " li.list-view-card").each(function() {
 				p_ids.push($(this).attr("data-id"));
@@ -214,6 +215,73 @@ function generateDraw(event, list_parent_id) {
 		} else {
 			$("#players").parent().append('<span class="field-error">Select atleast 2 players</span>');
 		}
+	} else {
+		$("#matchType").parent().append('<span class="field-error">Select a match type</span>');
+	}
+}
+
+function loadTournamentFixture() {
+	$(".field-error").remove();
+	if ($("#matchType").val() != "") {
+		let t_id = $("#tid").val();
+		let request_url = "/admin/api/tournaments/" + t_id + "/" + $("#matchType").val() + "/fixture/";
+
+		$.ajax({
+			url: request_url,
+			method: "get",
+			contentType: "application/json",
+			success: function(response) {
+				console.log(response);
+				$("#bracket").html(response);
+				/*
+				clone = $("#single-match-block").clone();
+					html = "";
+					$.each(response, function(name, matches){
+						html += '<section class="round '+name+'">';
+						var i = 1;
+						var counter = 0;
+						$.each(matches, function(k, match){
+							if(i == 1) {
+								html += '<div class="round-match-group">\
+											<div class="matchups">';								
+							}
+							
+							player1_name = match.player1 != null ? match.player1.name : "Player 1";
+							player2_name = match.player2 != null ? match.player2.name : "Player 2";
+							
+							clone.find(".participant.first-player span.content").text(player1_name);
+							clone.find(".participant.second-player span.content").text(player2_name);
+							html += clone.html();
+							i++;
+							counter++;
+							if(i == 3 || counter == matches.length) {
+								html += '<div class="connector">\
+											<div class="merger"></div>\
+											<div class="line"></div>\
+										</div>\
+									</div>\
+								</div>';
+								i = 1;
+							}
+						});
+						html += '</section>';
+					});
+					$("#bracket").html(html);
+					*/
+				/*
+				resetModal("successResponseModal");
+				$("#successResponseModal").find(".modal-body").text(response);
+
+				if (redirect_url != undefined && redirect_url != "") {
+					$("#successResponseModal").find(".modal-footer button").attr("onClick", "redirectToUrl('" + redirect_url + "')");
+				}
+
+				$("#successResponseModal").modal("show");
+				*/
+			}, error: function(response) {
+				handleAjaxError(response);
+			}
+		});
 	} else {
 		$("#matchType").parent().append('<span class="field-error">Select a match type</span>');
 	}

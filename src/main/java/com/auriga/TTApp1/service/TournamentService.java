@@ -18,14 +18,14 @@ import org.springframework.stereotype.Service;
 import com.auriga.TTApp1.dto.TournamentDrawDto;
 import com.auriga.TTApp1.exception.ResourceAlreadyExistsException;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
-import com.auriga.TTApp1.model.MatchStatus;
 import com.auriga.TTApp1.model.MatchType;
-import com.auriga.TTApp1.model.RoundType;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatch;
 import com.auriga.TTApp1.model.TournamentMatchType;
 import com.auriga.TTApp1.model.TournamentRound;
 import com.auriga.TTApp1.model.User;
+import com.auriga.TTApp1.model.enums.MatchStatusEnum;
+import com.auriga.TTApp1.model.enums.RoundTypeEnum;
 import com.auriga.TTApp1.repository.MatchTypeRepository;
 import com.auriga.TTApp1.repository.TournamentMatchRepository;
 import com.auriga.TTApp1.repository.TournamentRepository;
@@ -76,7 +76,7 @@ public class TournamentService {
 	public void save(Tournament tournament) {
 		repo.save(tournament);
 
-		System.out.println(tournament.getMatchTypeIds());
+//		System.out.println(tournament.getMatchTypeIds());
 		/* Save Match Type for Tournament */
 		tournament.getMatchTypeIds().forEach(item -> {
 			Long id = Long.valueOf(item);
@@ -96,39 +96,6 @@ public class TournamentService {
 
 	public void delete(Tournament tournament) {
 		repo.delete(tournament);
-	}
-
-	public void createDraw(TournamentDrawDto dto) {
-
-		/* Randomize players */
-//		Boolean randomize = true;
-//		if (randomize) {
-//			Long seed = System.nanoTime();
-//			Collections.shuffle(players, new Random(seed));
-//		}
-//		
-		/* Add seeds to players */
-//		Integer i = 0; 
-//		for(User player: players) {
-//			i++;
-//			player.setSeed(i);
-//		}
-		
-		
-		
-		/* Get player1 and player2 for round */
-//		IntStream.range(0, rounds).forEach(index -> {
-//			User player1 = players.get(index);
-//			Integer index2 = (participantCount-1)-index;
-//			User player2 = players.get(index2);
-////			System.out.println(player1.getName() + "" + player1.getSeed());
-////			System.out.println(player2.getName() + "" + player2.getSeed());
-////			System.out.println("----------------");
-//			
-//			if(player1.getId() == player2.getId()) {
-//				//give bye
-//			}
-//		});
 	}
 	
 	public void createDrawRounds(TournamentDrawDto dto) {
@@ -216,7 +183,7 @@ public class TournamentService {
 			tournamentMatch.setOrder((index/2)+1);
 			tournamentMatch.setPlayer1(player1);
 			tournamentMatch.setPlayer2(player2);
-			tournamentMatch.setStatus(MatchStatus.PENDING);
+			tournamentMatch.setStatus(MatchStatusEnum.PENDING);
 			matchRepo.save(tournamentMatch);
 		});
 	}
@@ -228,16 +195,9 @@ public class TournamentService {
 			tournamentMatch.setTournamentRound(round);
 			tournamentMatch.setName("Match"+(index+1));
 			tournamentMatch.setOrder((index/2)+1);
-			tournamentMatch.setStatus(MatchStatus.INACTIVE);
+			tournamentMatch.setStatus(MatchStatusEnum.INACTIVE);
 			matchRepo.save(tournamentMatch);
 		});
-	}
-	
-	public void createMatchSets(TournamentMatch tournamentMatch) {
-//		IntStream.range(0, 3).forEach(index -> {
-//			auri
-//		});
-		
 	}
 	
 	public Integer getMatchCount(Integer participantCount) {
@@ -260,16 +220,16 @@ public class TournamentService {
 		return roundCount;
 	}
 	
-	public RoundType getRoundType(Integer order, Integer roundCount) {
-		RoundType type = null;
+	public RoundTypeEnum getRoundType(Integer order, Integer roundCount) {
+		RoundTypeEnum type = null;
 		if(order <= (roundCount-3)) {
-			type = RoundType.PRE;
+			type = RoundTypeEnum.PRE;
 		} else if (order == roundCount) {
-			type = RoundType.FINAL;
+			type = RoundTypeEnum.FINAL;
 		} else if (order == (roundCount-1)) {
-			type = RoundType.SEMIFINAL;
+			type = RoundTypeEnum.SEMIFINAL;
 		} else if (order == (roundCount-2)) {
-			type = RoundType.QUATERFINAL;
+			type = RoundTypeEnum.QUATERFINAL;
 		} 
 		
 		return type;

@@ -1,4 +1,4 @@
-package com.auriga.TTApp1.model;
+package com.auriga.TTApp1.dto;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-public class RegistrationForm {
+public class RegistrationDto {
 	@NotEmpty(message = "Name can not be empty")
 	@Size(min=2, max=100, message = "Name length should be between 2 to 100 characters.")
     private String name;

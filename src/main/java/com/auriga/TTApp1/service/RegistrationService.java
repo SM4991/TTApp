@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.auriga.TTApp1.dto.RegistrationDto;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
-import com.auriga.TTApp1.model.RegistrationForm;
 import com.auriga.TTApp1.model.Role;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.RoleRepository;
@@ -23,7 +23,7 @@ public class RegistrationService {
 	@Autowired 
 	private CUserDetailsService cUserDetailsService;
 
-	public void register(RegistrationForm registrationForm) {
+	public void register(RegistrationDto registrationForm) {
 		//Let's check if user already registered with us
         if(cUserDetailsService.checkIfUserExist(registrationForm.getEmail())){
             throw new UserAlreadyExistsException("User already exists for this email");

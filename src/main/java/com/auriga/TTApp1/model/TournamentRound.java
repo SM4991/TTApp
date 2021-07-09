@@ -1,5 +1,7 @@
 package com.auriga.TTApp1.model;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,14 +12,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import com.auriga.TTApp1.model.enums.RoundTypeEnum;
 
 @Entity
 @Table(name="tournament_rounds")
 public class TournamentRound {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Tournament tournament;
@@ -30,16 +39,20 @@ public class TournamentRound {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = true)
-	private RoundType type;
+	private RoundTypeEnum type;
 	
 	@Column(name="round_order", nullable=false)
 	private Integer order;
+	
+//	@Transient
+//	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//	private List<TournamentMatch> matches;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -67,11 +80,11 @@ public class TournamentRound {
 		this.name = name;
 	}
 
-	public RoundType getType() {
+	public RoundTypeEnum getType() {
 		return type;
 	}
 
-	public void setType(RoundType type) {
+	public void setType(RoundTypeEnum type) {
 		this.type = type;
 	}
 
@@ -82,4 +95,12 @@ public class TournamentRound {
 	public void setOrder(Integer order) {
 		this.order = order;
 	}
+
+//	public List<TournamentMatch> getMatches() {
+//		return matches;
+//	}
+//
+//	public void setMatches(List<TournamentMatch> matches) {
+//		this.matches = matches;
+//	}
 }

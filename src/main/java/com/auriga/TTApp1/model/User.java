@@ -7,6 +7,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.springframework.beans.factory.annotation.Value;
+
+import com.auriga.TTApp1.model.enums.GenderEnum;
+
 @Entity
 @Table(name="users")
 public class User {

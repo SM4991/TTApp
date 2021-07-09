@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.auriga.TTApp1.dto.RegistrationDto;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
-import com.auriga.TTApp1.model.RegistrationForm;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.UserRepository;
 import com.auriga.TTApp1.service.CUserDetailsService;
@@ -70,13 +70,13 @@ public class AuthController {
 			return "redirect:/admin";
 		}
 
-		model.addAttribute("registrationForm", new RegistrationForm());
+		model.addAttribute("registrationForm", new RegistrationDto());
 
 		return "auth/signin_form";
 	}
 
 	@PostMapping("/register")
-	public String processRegister(@Valid RegistrationForm registrationForm, BindingResult bindingResult, Model model) {
+	public String processRegister(@Valid RegistrationDto registrationForm, BindingResult bindingResult, Model model) {
 		if(cUserDetailsService.isAuthenticated()) {
 			return "redirect:/admin";
 		}

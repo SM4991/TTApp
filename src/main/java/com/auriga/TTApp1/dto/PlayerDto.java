@@ -1,4 +1,4 @@
-package com.auriga.TTApp1.model;
+package com.auriga.TTApp1.dto;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -9,7 +9,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class PlayerForm{
+import com.auriga.TTApp1.model.enums.GenderEnum;
+
+public class PlayerDto{
 	@NotEmpty(message = "Name can not be empty")
 	@Size(min=2, max=100, message = "Name length should be between 2 to 100 characters.")
     private String name;

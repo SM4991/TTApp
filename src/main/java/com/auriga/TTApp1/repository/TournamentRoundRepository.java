@@ -16,4 +16,11 @@ public interface TournamentRoundRepository extends JpaRepository<TournamentRound
 	
 	@Query("SELECT COUNT(tr) from TournamentRound tr where tournament=:tournament and matchType=:matchType")
 	long countByTournamentAndMatchType(@Param("tournament") Tournament tournament, @Param("matchType") MatchType matchType);
+
+	@Query("from TournamentRound tr where tournament=:tournament and matchType=:matchType")
+	List<TournamentRound> findByTournamentAndMatchType(@Param("tournament") Tournament tournament, @Param("matchType") MatchType matchType);
+
+//	@Query("from TournamentRound tr JOIN FETCH tr.matches where tournament=:tournament and matchType=:matchType")
+//	List<TournamentRound> findByTournamentAndMatchTypeAndFetchMatchesEagerly(@Param("tournament") Tournament tournament, @Param("matchType") MatchType matchType);
+
 }
