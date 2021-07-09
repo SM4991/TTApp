@@ -1,4 +1,4 @@
-package com.auriga.TTApp1.model.enums;
+package com.auriga.TTApp1.constants;
 
 public enum RoundTypeEnum {
 	PRE,

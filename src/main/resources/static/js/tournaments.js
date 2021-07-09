@@ -181,7 +181,7 @@ function generateDraw(event, list_parent_id) {
 		if ($("#" + list_parent_id + " li.list-view-card").length && $("#" + list_parent_id + " li.list-view-card").length >= 2) {
 			let t_id = $("#tid").val();
 			let request_url = "/admin/api/tournaments/draw";
-			let redirect_url = "/admin/tournaments/"+t_id;
+			let redirect_url = "/admin/tournaments/" + t_id;
 			let p_ids = [];
 			$("#" + list_parent_id + " li.list-view-card").each(function() {
 				p_ids.push($(this).attr("data-id"));
@@ -284,5 +284,61 @@ function loadTournamentFixture() {
 		});
 	} else {
 		$("#matchType").parent().append('<span class="field-error">Select a match type</span>');
+	}
+}
+
+function getTournamentMatches(object, list_parent_id) {
+
+
+	if ($(object).val() != "") {
+		tid = $("#tid").val();
+		request_url = "/admin/api/tournaments/" + tid + "/" + $(object).val() + "/matches";
+		/* Show overlay */
+		showLoadingOverlay();
+		$.ajax({
+			url: request_url,
+			method: "get",
+			contentType: "application/json",
+			success: function(response) {
+				li_dom = $("#sample-list-card").clone();
+
+				html = "";
+				if (response.length > 0) {
+					$.each(response, function(k, match) {
+						let player1 = match.player1 != null ? match.player1 : { name: "-", image: "-", age: "-", gender: "-" };
+						li_dom.find(".list-title").html("<a href='/admin/matches/" + match.id + "'>" + match.tournamentRound.name + " - " + match.name + "</a>");
+						li_dom.find(".list-view-card .list-left-block .main-content").text(player1.name);
+						li_dom.find(".list-view-card .list-left-block .sub-content .age-detail").text(player1.age);
+						li_dom.find(".list-view-card .list-left-block .sub-content .gender-detail").text(player1.gender);
+						if (player1.image != null && player1.image != "") {
+							li_dom.find(".list-image-content .list-left-block img").attr("src", player1.image);
+						} else {
+							li_dom.find(".list-image-content .list-left-block img").attr("src", "/images/blank-profile-picture.png");
+						}
+
+						let player2 = match.player2 != null ? match.player2 : { name: "-", image: "", age: "-", gender: "-" };
+						li_dom.find(".list-view-card .list-right-block .main-content").text(player2.name);
+						li_dom.find(".list-view-card .list-right-block .sub-content .age-detail").text(player2.age);
+						li_dom.find(".list-view-card .list-right-block .sub-content .gender-detail").text(player2.gender);
+						if (player2.image != null && player2.image != "") {
+							li_dom.find(".list-image-content .list-right-block img").attr("src", player2.image);
+						} else {
+							li_dom.find(".list-image-content .list-right-block img").attr("src", "/images/blank-profile-picture.png");
+						}
+
+						html += li_dom.html();
+					});
+				} else {
+					html = "<h5>No Matches Found</h5>";
+				}
+
+				$("#" + list_parent_id + " .list-view-wrapper").html(html);
+
+				/* Hide overlay */
+				hideLoadingOverlay();
+			}, error: function(response) {
+				handleAjaxError(response);
+			}
+		});
 	}
 }

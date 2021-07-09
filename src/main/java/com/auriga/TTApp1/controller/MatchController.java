@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatch;
+import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.service.TournamentMatchService;
 
 @Controller
@@ -26,8 +27,10 @@ public class MatchController {
 		ModelAndView modelView = new ModelAndView("admin/matches/score");
 		modelView.addObject("match", match);
 		modelView.addObject("player1", match.getPlayer1());
-		System.out.println(match.getPlayer2().getImage());
-		modelView.addObject("player2", match.getPlayer2());
+		
+		User player2 = match.getPlayer2();
+		player2 = player2 == null ? new User() : player2;
+		modelView.addObject("player2", player2);
 		modelView.addObject("tournament", tournament);
 	    
 		return modelView;

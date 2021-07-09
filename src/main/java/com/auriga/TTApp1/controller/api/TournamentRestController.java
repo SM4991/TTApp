@@ -119,6 +119,18 @@ public class TournamentRestController {
 		return model;
 //		return new ResponseEntity<>(matches, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/admin/api/tournaments/{id}/{mtId}/matches", method = RequestMethod.GET)
+	public ResponseEntity<Object> viewMatches(@PathVariable("id") Long id, @PathVariable Long mtId) {
+		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
+		MatchType matchType = matchTypeService.get(mtId).orElseThrow(() -> new ResourceNotFoundException("Match Type"));
+		
+		List<TournamentMatch> matches = matchRepo.findAllActiveTournamentMatch(tournament, matchType);
+		
+		ModelAndView model = new ModelAndView("/admin/tournaments/matches");
+		model.addObject("matches", matches);
+		return new ResponseEntity<>(matches, HttpStatus.OK);
+	}
 
 	@RequestMapping(value = "/admin/api/tournaments/upload", method = RequestMethod.POST)
 	public ResponseEntity<Object> uploadTournamentImage(@ModelAttribute TournamentImageDto tournamentImage) {

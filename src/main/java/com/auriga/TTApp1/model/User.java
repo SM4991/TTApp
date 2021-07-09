@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import com.auriga.TTApp1.model.enums.GenderEnum;
+import com.auriga.TTApp1.constants.GenderEnum;
 
 @Entity
 @Table(name="users")

@@ -321,3 +321,39 @@ a.footer-icon:hover, a.footer-icon.active {
 	margin-bottom: 10px;
 }
 /* Match Scorer Screen CSS ends */
+/* Tournament Match List Css starts */
+.tournament-matches-list.list-view ul.list-view-wrapper {
+	padding: 20px 10px;
+}
+.tournament-matches-list.list-view .list-title{
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+.tournament-matches-list .list-view-card > ul{
+	display: flex;
+	text-align: center;
+}
+.tournament-matches-list .list-block{
+	display: inline-block;
+}
+.tournament-matches-list .list-block{
+	margin: 0 auto;
+}
+.tournament-matches-list .list-block .list-view-card-content li{
+	display: block;
+}
+.tournament-matches-list .list-block.list-center-block {
+	padding: 50px 0;
+}
+.tournament-matches-list .list-block.list-center-block .content {
+	border-radius: 50%;
+    background: #e6dfdf;
+    color: #5f5454;
+    padding: 5px;
+    font-size: 12px;
+}
+.tournament-matches-list .list-block .list-image-content {
+	padding: 0;
+	margin-bottom: 10px;
+}
+/* Tournament Match List Css ends */

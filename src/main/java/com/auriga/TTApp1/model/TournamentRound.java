@@ -19,7 +19,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.auriga.TTApp1.model.enums.RoundTypeEnum;
+import com.auriga.TTApp1.constants.RoundTypeEnum;
 
 @Entity
 @Table(name="tournament_rounds")

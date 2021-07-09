@@ -15,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.auriga.TTApp1.constants.MatchStatusEnum;
+import com.auriga.TTApp1.constants.RoundTypeEnum;
 import com.auriga.TTApp1.dto.TournamentDrawDto;
 import com.auriga.TTApp1.exception.ResourceAlreadyExistsException;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
@@ -24,8 +26,6 @@ import com.auriga.TTApp1.model.TournamentMatch;
 import com.auriga.TTApp1.model.TournamentMatchType;
 import com.auriga.TTApp1.model.TournamentRound;
 import com.auriga.TTApp1.model.User;
-import com.auriga.TTApp1.model.enums.MatchStatusEnum;
-import com.auriga.TTApp1.model.enums.RoundTypeEnum;
 import com.auriga.TTApp1.repository.MatchTypeRepository;
 import com.auriga.TTApp1.repository.TournamentMatchRepository;
 import com.auriga.TTApp1.repository.TournamentRepository;

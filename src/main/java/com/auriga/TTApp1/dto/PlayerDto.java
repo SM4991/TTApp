@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.auriga.TTApp1.model.enums.GenderEnum;
+import com.auriga.TTApp1.constants.GenderEnum;
 
 public class PlayerDto{
 	@NotEmpty(message = "Name can not be empty")

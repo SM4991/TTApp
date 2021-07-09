@@ -33,7 +33,7 @@
 						</li>
 					</ul>
 					<ul class="tournament-matches-content">
-						<li class="main-content">Matches in tournament</li>
+						<li class="main-content"><a th:href="@{'/admin/tournaments/' + ${tournament.id} + '/matches'}">Matches in tournament</a></li>
 						<li class="sub-content" th:each="tMatchType : ${tournament.getMatchTypes()}" th:text="${tMatchType.getMatchType().name}"></li>
 					</ul>
 				</div>

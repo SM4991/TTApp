@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.auriga.TTApp1.model.enums.MatchStatusEnum;
+import com.auriga.TTApp1.constants.MatchStatusEnum;
 
 @Entity
 @Table(name="tournament_matches")
