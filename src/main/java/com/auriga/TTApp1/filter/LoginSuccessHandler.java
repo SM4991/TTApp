@@ -26,7 +26,6 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
             HttpServletResponse response, Authentication authentication)
                 throws IOException, ServletException {
          
-         
         CUserDetails userDetails
                 = (CUserDetails) authentication.getPrincipal();
                  

@@ -34,6 +34,7 @@ public class CUserDetailsService implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found");
 		}
+		System.out.println(user);
 		return new CUserDetails(user);
 	}
 

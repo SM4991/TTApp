@@ -72,15 +72,14 @@ public class BeforeAuthenticationFilter
         User user = user_details.getUser();
          
         if (user != null) {
-        	String otp = request.getParameter("otp");
-        	System.out.println("request url:" + request.getRequestURI());
+        	String otp = request.getParameter("password");
+//        	System.out.println("request url:" + request.getRequestURI());
             if (otp != null) {
-            	System.out.println("Attempt");
                 return super.attemptAuthentication(request, response);
             }
              
             try {
-            	System.out.println("generate otp");
+//            	System.out.println("generate otp");
             	userOtpService.generateOneTimePassword(user);
                 throw new InsufficientAuthenticationException("OTP");
             } catch (MessagingException | UnsupportedEncodingException ex) {

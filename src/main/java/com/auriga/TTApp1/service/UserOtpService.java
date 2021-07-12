@@ -28,7 +28,7 @@ public class UserOtpService {
         String OTP = RandomString.make(8);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String encodedOTP= passwordEncoder.encode(OTP);
-        System.out.println("Generated Otp:" + OTP);
+         System.out.println("Generated Otp:" + OTP);
         user.setOneTimePassword(encodedOTP);
         user.setOtpRequestedTime(new Date());
          

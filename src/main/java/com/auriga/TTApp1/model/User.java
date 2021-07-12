@@ -68,7 +68,6 @@ public class User {
 	}
 
 	public String getEmail() {
-//		System.out.println("Get email - entity");
 		return email;
 	}
 
@@ -77,7 +76,6 @@ public class User {
 	}
 
 	public String getPassword() {
-//		System.out.println("Get password - entity");
 		return password;
 	}
 
@@ -108,21 +106,21 @@ public class User {
 	public void setOtpRequestedTime(Date otpRequestedTime) {
 		this.otpRequestedTime = otpRequestedTime;
 	}
-
+	
 	public boolean isOTPRequired() {
-        if (this.getOneTimePassword() == null) {
-            return false;
-        }
-         
-        long currentTimeInMillis = System.currentTimeMillis();
+		return true;
+	}
+	
+	public boolean isOTPExpired() {
+    	long currentTimeInMillis = System.currentTimeMillis();
         long otpRequestedTimeInMillis = this.otpRequestedTime.getTime();
          
         if (otpRequestedTimeInMillis + OTP_VALID_DURATION < currentTimeInMillis) {
             // OTP expires
-            return false;
+            return true;
         }
          
-        return true;
+        return false;
     }
 
 	public Role getRole() {

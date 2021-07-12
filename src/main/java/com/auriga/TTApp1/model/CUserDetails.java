@@ -8,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.auriga.TTApp1.exception.ResourceBadRequestException;
+
 public class CUserDetails implements UserDetails {
  
     private User user;
@@ -28,18 +30,17 @@ public class CUserDetails implements UserDetails {
  
     @Override
     public String getPassword() {
-//    	System.out.println("Get password called");
-        if (user.isOTPRequired()) {
-//        	System.out.println("Get password: "+ user.getOneTimePassword());
-            return user.getOneTimePassword();
-        }
-         
-        return user.getPassword();
+    	// System.out.println("Get password called");
+        
+    	if (user.isOTPExpired()) throw new ResourceBadRequestException("OTP is expired");
+        
+        return user.getOneTimePassword();
+        
     }
  
     @Override
     public String getUsername() {
-//		System.out.println("Get username: " + user.getEmail());
+		System.out.println("Get username: " + user.getEmail());
         return user.getEmail();
     }
  
