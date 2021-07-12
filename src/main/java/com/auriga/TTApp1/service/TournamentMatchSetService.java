@@ -20,6 +20,7 @@ import com.auriga.TTApp1.model.TournamentMatch;
 import com.auriga.TTApp1.model.TournamentMatchSet;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.RoleRepository;
+import com.auriga.TTApp1.repository.TournamentMatchRepository;
 import com.auriga.TTApp1.repository.TournamentMatchSetRepository;
 import com.auriga.TTApp1.repository.UserRepository;
 
@@ -27,6 +28,9 @@ import com.auriga.TTApp1.repository.UserRepository;
 public class TournamentMatchSetService {
 	@Autowired
     private TournamentMatchSetRepository repo;
+	
+	@Autowired
+    private TournamentMatchRepository matchRepo;
      
     public List<TournamentMatchSet> listAllByMatch(TournamentMatch match) {
     	return repo.findAllByTournamentMatch(match);
@@ -65,7 +69,7 @@ public class TournamentMatchSetService {
 		Integer max_score = match.getTournamentRound().getTournament().getMaxScore();
 		
 		/* If a player reached max score, mark him as winner */
-		if(max_score == score) {
+		if(max_score <= set.getPlayer1Score() || max_score <= set.getPlayer2Score()) {
 			set.setStatus(MatchSetStatusEnum.COMPLETE);
 			status = 2;
 			if(set.getPlayer1Score() > set.getPlayer2Score()) {
@@ -77,9 +81,7 @@ public class TournamentMatchSetService {
 		
 		repo.save(set);
 		
-		if(set.getSetNumber() > 1) {
-			setMatchWinner(match);
-		}
+		setMatchWinner(match, set, max_score);
 		
 		Map<String, Integer> result = new HashMap<>(); 
 		result.put("score", score);
@@ -88,8 +90,21 @@ public class TournamentMatchSetService {
 		return result;
 	}
 	
-	public void setMatchWinner(TournamentMatch match) {
-//		User winner = 
+	public void setMatchWinner(TournamentMatch match, TournamentMatchSet set, Integer max_score) {
+		/* If match set is 2/3 and any of the player's score has exceeded max score, set him/her as winner */
+		if(set.getSetNumber() > 1 && (max_score <= set.getPlayer1Score() || max_score <= set.getPlayer2Score())) {
+			User winner = getMatchWinner(match);
+			if(winner != null) {
+				match.setWinner(winner);
+				matchRepo.save(match);
+			}
+		}
+	}
+	
+	public User getMatchWinner(TournamentMatch match) {
+		User winner = repo.findTournamentMatchWinner(match);
+		
+		return winner;
 	}
      
     public Optional<TournamentMatchSet> get(Long id) {

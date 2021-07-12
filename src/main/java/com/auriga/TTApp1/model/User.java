@@ -112,6 +112,8 @@ public class User {
 	}
 	
 	public boolean isOTPExpired() {
+		if(this.otpRequestedTime == null) return false;
+		
     	long currentTimeInMillis = System.currentTimeMillis();
         long otpRequestedTimeInMillis = this.otpRequestedTime.getTime();
          
@@ -169,6 +171,11 @@ public class User {
 
 	public void setSeed(Integer seed) {
 		this.seed = seed;
+	}
+
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", email=" + email + "]";
 	}
 }
 

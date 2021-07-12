@@ -22,9 +22,9 @@
 							<div class="col-5">
 								<div class="title" th:text="${player1.name}"></div>
 								<div class="image-wrapper">
-									<img th:if="${player1.image}" th:src="@{${player1.image}}"
+									<img th:if="${player1.image != ''}" th:src="@{${player1.image}}"
 										id="default-form-image" class="default-form-image" /> <img
-										th:unless="${player1.image}"
+										th:unless="${player1.image != ''}"
 										th:src="@{${@environment.getProperty('players.image.default.path')}}"
 										id="default-form-image" class="default-form-image" />
 								</div>
@@ -35,9 +35,9 @@
 							<div class="col-5">
 								<div class="title" th:text="${player2.name}"></div>
 								<div class="image-wrapper">
-									<img th:if="${player2.image}" th:src="@{${player2.image}}"
+									<img th:if="${player2.image != ''}" th:src="@{${player2.image}}"
 										id="default-form-image" class="default-form-image" /> <img
-										th:unless="${player2.image}"
+										th:unless="${player2.image != ''}"
 										th:src="@{${@environment.getProperty('players.image.default.path')}}"
 										id="default-form-image" class="default-form-image" />
 								</div>
