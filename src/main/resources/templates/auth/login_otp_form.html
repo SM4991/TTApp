@@ -12,10 +12,11 @@
 			<div class="page-content">
 				<div class="form-container">
 					<form th:action="@{/login}" method="post">
-						<input type="hidden" name="email" th:value="${email}" />
+						<input type="hidden" name="email" th:value="${session.lemail}" />
 						<div class="form-group">
 							<input type="text" name="password" class="form-control" id="password"
-								placeholder="Enter OTP here">
+								placeholder="Enter OTP here" th:value="${session.lotp}" required>
+							<span class="field-error" th:if="${param.error}" th:text="${session.lerror}"></span>
 						</div>
 						<div class="btn-group">
 							<button type="submit" class="btn btn-primary">Continue</button>

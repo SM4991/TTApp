@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,9 +31,7 @@ public class CUserDetails implements UserDetails {
  
     @Override
     public String getPassword() {
-    	// System.out.println("Get password called");
-        
-    	if (user.isOTPExpired()) throw new ResourceBadRequestException("OTP is expired");
+    	if (user.isOTPExpired()) throw new AuthenticationServiceException("OTP is expired");
         
         return user.getOneTimePassword();
         
@@ -40,7 +39,6 @@ public class CUserDetails implements UserDetails {
  
     @Override
     public String getUsername() {
-		System.out.println("Get username: " + user.getEmail());
         return user.getEmail();
     }
  

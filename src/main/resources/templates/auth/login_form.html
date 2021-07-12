@@ -14,10 +14,9 @@
 					<form th:action="@{/login}" method="post">
 						<div class="form-group">
 							<input type="text" name="email" class="form-control" id="email"
-								placeholder="Email ID">
-						</div>
-						<div th:if="${message != null}">
-							<p class="text-primary">[[${message}]]</p>
+								placeholder="Email ID" th:value="${session.lemail}" required>
+							<span class="field-error" th:if="${param.error}">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</span>
+							
 						</div>
 						<div class="btn-group">
 							<button type="submit" class="btn btn-primary">Continue</button>

@@ -15,10 +15,10 @@ public class MvcConfig implements WebMvcConfigurer {
 	@Value("${spring.public.upload.folder}")
 	private String uploadFolder;
 	
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/login").setViewName("auth/login_form");
-    }
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/login").setViewName("auth/login_form");
+//    }
     
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 
+import com.auriga.TTApp1.exception.ResourceBadRequestException;
 import com.auriga.TTApp1.model.CUserDetails;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.UserRepository;
@@ -63,7 +65,14 @@ public class BeforeAuthenticationFilter
     public Authentication attemptAuthentication(
             HttpServletRequest request, HttpServletResponse response)
                     throws AuthenticationException {
+    	HttpSession session = request.getSession();
+    	
+    	/* Reset session attributes for login request */
+    	resetLoginRequestSessionData(session);
+    	
     	String email = request.getParameter("email");
+    	
+    	session.setAttribute("lemail", email);
         
         User user_obj = userRepo.findByEmail(email);
         
@@ -72,16 +81,21 @@ public class BeforeAuthenticationFilter
         User user = user_details.getUser();
          
         if (user != null) {
+        	session.setAttribute("luser", user);
+        	
+        	/* If otp is set, attempt authentication */
         	String otp = request.getParameter("password");
-//        	System.out.println("request url:" + request.getRequestURI());
             if (otp != null) {
-                return super.attemptAuthentication(request, response);
+            	session.setAttribute("lotp", otp);
+            	
+                return super.attemptAuthentication(request, response);            	
             }
              
+            
             try {
-//            	System.out.println("generate otp");
+            	/* Send otp if user found by email */
             	userOtpService.generateOneTimePassword(user);
-                throw new InsufficientAuthenticationException("OTP");
+                throw new InsufficientAuthenticationException("Insufficient OTP");
             } catch (MessagingException | UnsupportedEncodingException ex) {
                 throw new AuthenticationServiceException(
                             "Error while sending OTP email.");
@@ -89,6 +103,13 @@ public class BeforeAuthenticationFilter
         }
          
         return super.attemptAuthentication(request, response);
+    }
+    
+    public void resetLoginRequestSessionData(HttpSession session) {
+    	session.setAttribute("lemail", null);
+    	session.setAttribute("lotp", null);
+    	session.setAttribute("luser", null);
+    	session.setAttribute("lerror", null);
     }
 }
 

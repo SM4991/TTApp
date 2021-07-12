@@ -2,6 +2,7 @@ package com.auriga.TTApp1.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.auriga.TTApp1.dto.RegistrationDto;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
+import com.auriga.TTApp1.filter.BeforeAuthenticationFilter;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.UserRepository;
 import com.auriga.TTApp1.service.CUserDetailsService;
@@ -43,12 +45,16 @@ public class AuthController {
 	
 	@Autowired
 	private CUserDetailsService cUserDetailsService;
+	
+	@Autowired
+	private BeforeAuthenticationFilter authenticationFilter;
 
-//	@GetMapping("/login")
-//	public String showLoginForm() {
-//		System.out.println("login form");
-//		return "auth/login_form";
-//	}
+	@GetMapping("/login")
+	public String showLoginForm(HttpServletRequest request) {
+		authenticationFilter.resetLoginRequestSessionData(request.getSession());
+		System.out.println("login form");
+		return "auth/login_form";
+	}
 	
 	@GetMapping("/loginotp")
 	public String showLoginOtpForm(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -56,11 +62,11 @@ public class AuthController {
 			return "redirect:/admin";
 		}
 		
-		String email = (String) request.getSession().getAttribute("email");
-		if (email == null) {
-			return "redirect:/login";
-		}
-		model.addAttribute("email", email);
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("luser");
+		
+		if(user == null) return "redirect:/login";
+		
 		return "auth/login_otp_form";
 	}
 
