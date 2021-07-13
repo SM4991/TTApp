@@ -117,7 +117,6 @@ public class TournamentRestController {
 		model.addObject("rounds", rounds);
 		model.addObject("matches", matches);
 		return model;
-//		return new ResponseEntity<>(matches, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = {"/admin/api/tournaments/{id}/{mtId}/matches", "/api/tournaments/{id}/{mtId}/matches"}, method = RequestMethod.GET)

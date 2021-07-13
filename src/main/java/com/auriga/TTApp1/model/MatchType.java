@@ -39,6 +39,6 @@ public class MatchType {
 
 	@Override
 	public String toString() {
-		return name;
+		return "Match Type: "+name;
 	}
 }

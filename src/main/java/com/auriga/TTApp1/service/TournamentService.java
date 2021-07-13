@@ -23,7 +23,6 @@ import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.model.MatchType;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatch;
-import com.auriga.TTApp1.model.TournamentMatchType;
 import com.auriga.TTApp1.model.TournamentRound;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.MatchTypeRepository;
@@ -74,20 +73,17 @@ public class TournamentService {
 	}
 
 	public void save(Tournament tournament) {
+		List<MatchType> matchTypes = new ArrayList();
+		tournament.getMatchTypeIds().forEach(item -> {
+			Long id = Long.valueOf(item);
+			matchTypes.add(matchTypeRepo.getById(id));
+		});
+		
+		tournament.setMatchTypes(matchTypes);
 		repo.save(tournament);
 
 //		System.out.println(tournament.getMatchTypeIds());
-		/* Save Match Type for Tournament */
-		tournament.getMatchTypeIds().forEach(item -> {
-			Long id = Long.valueOf(item);
-			MatchType matchType = matchTypeRepo.getById(id);
-
-			TournamentMatchType tMatchType = new TournamentMatchType();
-			tMatchType.setTournament(tournament);
-			tMatchType.setMatchType(matchType);
-
-			matchTypeRepo.save(tMatchType);
-		});
+		
 	}
 
 	public Optional<Tournament> get(Long id) {

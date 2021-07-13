@@ -1,5 +1,6 @@
 package com.auriga.TTApp1.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.model.MatchType;
 import com.auriga.TTApp1.model.Tournament;
-import com.auriga.TTApp1.model.TournamentMatchType;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.service.MatchTypeService;
 import com.auriga.TTApp1.service.PlayerService;
@@ -46,11 +46,12 @@ public class TournamentController {
 	}
 	
 	@RequestMapping(value = {"/admin/tournaments/{id}", "/tournaments/{id}"}, method = RequestMethod.GET)
-	public ModelAndView viewPlayer(@PathVariable("id") Long id){
+	public ModelAndView viewTournament(@PathVariable("id") Long id){
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		
 		ModelAndView modelView = new ModelAndView("admin/tournaments/view");
 	    modelView.addObject("tournament", tournament);
+	    modelView.addObject("matchTypes", tournament.getMatchTypes());
 	    
 		return modelView;
 	}
@@ -62,12 +63,9 @@ public class TournamentController {
 		ModelAndView modelView = new ModelAndView("admin/tournaments/draw");
 		
 		modelView.addObject("tournament", tournament);
-		
-		List<TournamentMatchType> tournamentMatchTypes = tournament.getMatchTypes();
-	    modelView.addObject("tournamentMatchTypes", tournamentMatchTypes);
+	    modelView.addObject("matchTypes", tournament.getMatchTypes());
 	    
-	    List<User> players = playerService.listAll();
-	    modelView.addObject("players", players);
+	    modelView.addObject("players", playerService.listAll());
 	    
 		return modelView;
 	}
@@ -79,23 +77,19 @@ public class TournamentController {
 		ModelAndView modelView = new ModelAndView("admin/tournaments/fixture");
 		
 		modelView.addObject("tournament", tournament);
-		
-		List<TournamentMatchType> tournamentMatchTypes = tournament.getMatchTypes();
-	    modelView.addObject("tournamentMatchTypes", tournamentMatchTypes);
+	    modelView.addObject("matchTypes", tournament.getMatchTypes());
 	    
 		return modelView;
 	}
 	
 	@GetMapping(value = {"/admin/tournaments/{id}/matches", "/tournaments/{id}/matches"})
-	public ModelAndView viewTournament(@PathVariable("id") Long id) {
+	public ModelAndView viewTournamentMatches(@PathVariable("id") Long id) {
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		
 		ModelAndView modelView = new ModelAndView("admin/tournaments/matches");
 		
 		modelView.addObject("tournament", tournament);
-		
-		List<TournamentMatchType> tournamentMatchTypes = tournament.getMatchTypes();
-	    modelView.addObject("tournamentMatchTypes", tournamentMatchTypes);
+	    modelView.addObject("matchTypes", tournament.getMatchTypes());
 	    
 		return modelView;
 	}

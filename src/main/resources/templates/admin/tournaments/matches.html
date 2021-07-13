@@ -21,9 +21,9 @@
 								<label th:for="matchType">Match Type:</label> <select
 									id="matchType" name="matchType" class="form-control" onChange="getTournamentMatches($(this), 'list-view')">
 									<option value="" selected>Choose...</option>
-									<option th:each="tMatchType: ${tournamentMatchTypes}"
-										th:value="${tMatchType.getMatchType().id}"
-										th:text="${tMatchType.getMatchType().name}"></option>
+									<option th:each="matchType: ${matchTypes}"
+										th:value="${matchType.id}"
+										th:text="${matchType.name}"></option>
 								</select>
 							</div>
 							<div class="list-view tournament-matches-list" id="list-view">

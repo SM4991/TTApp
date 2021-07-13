@@ -37,7 +37,7 @@
 							<a sec:authorize="isAuthenticated()" th:href="@{'/admin/tournaments/' + ${tournament.id} + '/matches'}">Matches in tournament</a>
 							<a sec:authorize="isAnonymous()" th:href="@{'/tournaments/' + ${tournament.id} + '/matches'}">Matches in tournament</a>
 						</li>
-						<li class="sub-content" th:each="tMatchType : ${tournament.getMatchTypes()}" th:text="${tMatchType.getMatchType().name}"></li>
+						<li class="sub-content" th:each="matchType : ${matchTypes}" th:text="${matchType.name}"></li>
 					</ul>
 				</div>
 			</div>

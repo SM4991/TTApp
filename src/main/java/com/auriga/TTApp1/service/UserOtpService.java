@@ -37,7 +37,7 @@ public class UserOtpService {
         sendOTPEmail(user, OTP);
     }
      
-    public void sendOTPEmail(User user, String OTP) {
+    public void sendOTPEmail(User user, String OTP) throws MessagingException {
     	String to = user.getEmail();
     	
     	String subject = "Here's your One Time Password (OTP) - Expire in 5 minutes!";

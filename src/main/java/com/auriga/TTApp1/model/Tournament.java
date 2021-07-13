@@ -11,6 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,6 +27,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -64,10 +69,13 @@ public class Tournament {
     @Column(nullable = true, length = 255)
     private String image;
     
-    @OneToMany(mappedBy = "tournament", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
-    	      CascadeType.REFRESH }, fetch = FetchType.LAZY)
-    @JsonIgnore //Stop loading match types in recursion
-	private List<TournamentMatchType> matchTypes;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tournaments_match_types",
+            joinColumns = @JoinColumn(name = "tournament_id"),
+            inverseJoinColumns = @JoinColumn(name = "match_type_id")
+            )
+    private List<MatchType> matchTypes;
     
     @Transient // Custom column not an entity column
     private List<String> matchTypeIds;
@@ -125,16 +133,16 @@ public class Tournament {
 		this.image = image;
 	}
 
-	public List<TournamentMatchType> getMatchTypes() {
+	public List<String> getMatchTypeIds() {
+		return matchTypeIds;
+	}
+
+	public List<MatchType> getMatchTypes() {
 		return matchTypes;
 	}
 
-	public void setMatchTypes(List<TournamentMatchType> matchTypes) {
+	public void setMatchTypes(List<MatchType> matchTypes) {
 		this.matchTypes = matchTypes;
-	}
-
-	public List<String> getMatchTypeIds() {
-		return matchTypeIds;
 	}
 
 	public void setMatchTypeIds(List matchTypeIds) {
