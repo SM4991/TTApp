@@ -2,6 +2,7 @@ package com.auriga.TTApp1.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -41,6 +42,10 @@ public class CUserDetailsService implements UserDetailsService {
 	public boolean checkIfUserExist(String email) {
 		return userRepo.findByEmail(email) != null ? true : false;
 	}
+	
+	public Optional<User> get(Long id) {
+        return userRepo.findById(id);
+    }
 
 	protected void encodePassword(User user) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

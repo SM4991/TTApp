@@ -106,7 +106,7 @@ public class AuthController {
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
 		if (cUserDetailsService.isAuthenticated()) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			String username = auth.getName();
+//			String username = auth.getName();
 
 			new SecurityContextLogoutHandler().logout(request, response, auth);
 		}

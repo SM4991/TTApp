@@ -24,17 +24,17 @@
 		<div class="page-footer">
 			<div class="row">
 				<div class="col-4">
-					<a th:href="@{/admin/tournaments}" class="footer-icon" th:classappend="${#httpServletRequest.requestURI} == '/admin/tournaments' ? 'active' : ''"> <i
+					<a th:href="@{/admin/tournaments}" class="footer-icon" th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/tournaments')} ? 'active' : ''"> <i
 						class="material-icons">emoji_events</i> <span>Tournaments</span>
 					</a>
 				</div>
 				<div class="col-4">
-					<a th:href="@{/admin/players}" class="footer-icon" th:classappend="${#httpServletRequest.requestURI} == '/admin/players' ? 'active' : ''"> <i class="material-icons">portrait</i>
+					<a th:href="@{/admin/players}" class="footer-icon" th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/players')} ? 'active' : ''"> <i class="material-icons">portrait</i>
 						<span>Players</span>
 					</a>
 				</div>
 				<div class="col-4">
-					<a href="#" class="footer-icon"> <i class="material-icons">perm_identity</i>
+					<a th:href="@{/admin/users/profile}" class="footer-icon" th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/users/profile')} ? 'active' : ''"> <i class="material-icons">perm_identity</i>
 						<span>My Profile</span>
 					</a>
 				</div>

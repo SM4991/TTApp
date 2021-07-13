@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<div th:replace="commonLayout :: head-content" />
+</head>
+<body class="player-list-page">
+	<div class="app-wrapper">
+		<div class="page-wrapper">
+			<div class="page-header">
+				<a th:href="@{/admin/players}" class="back-link"><i class="material-icons">arrow_back</i></a>
+				<h3 class="page-title">My Profile</h3>
+			</div>
+			<div class="page-content">
+				<div class="detail-content">
+					<ul class="view-top-content">
+						<li class="view-img-content">
+							<img th:if="${user.image != null && user.image != ''}" th:src="@{${user.image}}"
+										id="image" class="image" />
+							<img th:unless="${user.image != null && user.image != ''}" th:src="@{${@environment.getProperty('players.image.default.path')}}"
+										id="image" class="image" />
+						</li>
+						<li class="view-detail-content">
+							<ul>
+								<li class="main-content" th:text="${user.name}"></li>
+								<li class="sub-content" th:if="${user.age != null && user.age != ''}"><span th:text="${user.age}"></span> years</li>
+								<li class="sub-content" th:if="${user.gender != null && user.gender != ''}" th:text="${user.gender}"></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="view-mid-content">
+						<li>
+							<span class="label">Email: </span>
+							<span class="content" th:text="${user.email}"></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="hide" id="sample-list-card">
+		<li class="list-view-card">
+			<ul>
+				<li class="list-image-content"><img src="" class="list-image" /></li>
+				<li class="list-detail-content">
+					<ul class="">
+						<li class="main-content"></li>
+						<li class="sub-content"><span class="age-detail"></span> - <span class="gender-detail"></span></li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	</div>
+	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/players.js}"></script>
+</body>
+</html>
