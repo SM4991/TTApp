@@ -77,7 +77,7 @@ public class Tournament {
             )
     private List<MatchType> matchTypes;
     
-    @NotNull(message="Select atleast one match type")
+//    @NotNull(message="Select atleast one match type")
     @Transient // Custom column not an entity column
     private List<String> matchTypeIds;
     

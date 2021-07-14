@@ -38,7 +38,7 @@ public class TournamentRound {
 	private String name;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "status", nullable = true)
+	@Column(name = "type", nullable = true)
 	private RoundTypeEnum type;
 	
 	@Column(name="round_order", nullable=false)

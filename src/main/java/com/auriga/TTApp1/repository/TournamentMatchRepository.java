@@ -28,4 +28,5 @@ public interface TournamentMatchRepository extends JpaRepository<TournamentMatch
 
 	List<TournamentMatch> findAllByTournamentRound(TournamentRound round);
 	
+	TournamentMatch findByTournamentRoundAndOrder(TournamentRound round, Integer order);
 }

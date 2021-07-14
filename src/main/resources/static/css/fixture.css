@@ -115,3 +115,6 @@ div.tournament>div>div>ul>li span.image-wrapper img{
 div.tournament>div>div>ul>li span.text-content {	
 	padding-left: 10px;
 }
+div.tournament>div>div.match-block.active-link{
+	cursor: pointer;
+}

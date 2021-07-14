@@ -115,12 +115,13 @@ public class TournamentRestController {
 			
 			Map<Integer, List<TournamentMatch>> order_matches = new HashMap();
 			r_matches.forEach(match -> {
-				if(order_matches.containsKey(match.getOrder())) {
-					order_matches.get(match.getOrder()).add(match);
+				Integer order = (match.getOrder()/2)+(match.getOrder()%2);
+				if(order_matches.containsKey(order)) {
+					order_matches.get(order).add(match);
 				} else {
 					List<TournamentMatch> list = new ArrayList();
 					list.add(match);
-					order_matches.put(match.getOrder(), list);
+					order_matches.put(order, list);
 				}
 			});
 			

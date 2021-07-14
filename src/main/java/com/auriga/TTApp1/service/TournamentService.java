@@ -169,7 +169,7 @@ public class TournamentService {
 			
 			tournamentMatch.setTournamentRound(round);
 			tournamentMatch.setName("Match "+(index+1));
-			tournamentMatch.setOrder((index/2)+1);
+			tournamentMatch.setOrder(index+1);
 			tournamentMatch.setPlayer1(player1);
 			tournamentMatch.setPlayer2(player2);
 			tournamentMatch.setStatus(MatchStatusEnum.PENDING);
@@ -183,7 +183,7 @@ public class TournamentService {
 			TournamentMatch tournamentMatch = new TournamentMatch();
 			tournamentMatch.setTournamentRound(round);
 			tournamentMatch.setName("Match"+(index+1));
-			tournamentMatch.setOrder((index/2)+1);
+			tournamentMatch.setOrder(index+1);
 			tournamentMatch.setStatus(MatchStatusEnum.INACTIVE);
 			matchRepo.save(tournamentMatch);
 		});

@@ -231,18 +231,22 @@ function loadTournamentFixture() {
 			method: "get",
 			contentType: "application/json",
 			success: function(response) {
-				console.log(response);
-				// $("#bracket").html(response);
+				
 				let dom = $("<div>").attr("id", 'tournament');
 				dom.attr("class", "tournament");
 				let html = '';
 				$.each(response, function(roundId, orderMatches){
 					html += '<div class="round '+roundId+'">';
 					let morder = 1;
-					$.each(orderMatches, function(order, matches){
-						
+					$.each(orderMatches, function(order, matches){		
 						$.each(matches, function(index, match){
-							html += '<div class="match-block"><ul class="match-player-list">';	
+							if(match.status != 'INACTIVE'){
+								html += '<div class="match-block active-link" onClick="location.href=\'/admin/matches/'+match.id+'\'">';
+							} else {
+								html += '<div class="match-block">';
+							}
+							
+							html += '<ul class="match-player-list">';	
 							//Player 1
 							let player1_class = match.player1 != undefined && match.player1 != null ? "active" : "inactive";
 							let player1_name = match.player1 != undefined && match.player1 != null ? match.player1.name : "Player 1";
