@@ -26,7 +26,6 @@ public interface TournamentMatchRepository extends JpaRepository<TournamentMatch
 	@Query("from TournamentMatch tm INNER JOIN TournamentRound tr on tr.id = tm.tournamentRound WHERE tr.tournament=:tournament AND tr.matchType=:matchType AND tm.status != 'INACTIVE'")
 	List<TournamentMatch> findAllActiveTournamentMatch(Tournament tournament, MatchType matchType);
 	
-	@Query("from TournamentMatch tm WHERE tm.tournamentRound=:round")
 	List<TournamentMatch> findAllByTournamentRound(TournamentRound round);
 	
 }

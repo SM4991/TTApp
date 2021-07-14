@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.auriga.TTApp1.exception.ResourceBadRequestException;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.model.MatchType;
 import com.auriga.TTApp1.model.Tournament;
@@ -40,6 +41,9 @@ public class TournamentController {
 	@GetMapping("/admin/tournaments/create")
 	public ModelAndView createTournaments() {
 		List<MatchType> matchTypes = matchTypeService.getAllForListing();
+		if(matchTypes.size() == 0) {
+			throw new ResourceBadRequestException("Match types does not exists, Please contact the administrator.");
+		}
 		ModelAndView modelView = new ModelAndView("admin/tournaments/create");
 	    modelView.addObject("matchTypes", matchTypes);
 		return modelView;

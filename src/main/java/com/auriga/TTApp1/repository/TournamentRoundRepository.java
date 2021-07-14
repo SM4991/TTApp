@@ -14,13 +14,7 @@ import com.auriga.TTApp1.model.TournamentRound;
 @Repository
 public interface TournamentRoundRepository extends JpaRepository<TournamentRound, Long> {
 	
-	@Query("SELECT COUNT(tr) from TournamentRound tr where tournament=:tournament and matchType=:matchType")
-	long countByTournamentAndMatchType(@Param("tournament") Tournament tournament, @Param("matchType") MatchType matchType);
+	long countByTournamentAndMatchType(Tournament tournament, MatchType matchType);
 
-	@Query("from TournamentRound tr where tournament=:tournament and matchType=:matchType")
-	List<TournamentRound> findByTournamentAndMatchType(@Param("tournament") Tournament tournament, @Param("matchType") MatchType matchType);
-
-//	@Query("from TournamentRound tr JOIN FETCH tr.matches where tournament=:tournament and matchType=:matchType")
-//	List<TournamentRound> findByTournamentAndMatchTypeAndFetchMatchesEagerly(@Param("tournament") Tournament tournament, @Param("matchType") MatchType matchType);
-
+	List<TournamentRound> findByTournamentAndMatchType(Tournament tournament, MatchType matchType);
 }

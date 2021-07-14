@@ -63,6 +63,7 @@ function formSubmit(event, url, fields, redirect_url) {
 			$("[name=" + field + "]:checked").each(function() {
 				form_data[field].push($(this).val());
 			});
+			form_data[field] = form_data[field].length > 0 ? form_data[field] : null;
 		} else {
 			form_data[field] = ele.val();
 		}

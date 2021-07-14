@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.auriga.TTApp1.dto.RegistrationDto;
+import com.auriga.TTApp1.exception.ResourceBadRequestException;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
 import com.auriga.TTApp1.model.CUserDetails;
 import com.auriga.TTApp1.model.Role;
@@ -89,8 +90,10 @@ public class RegistrationService {
 	}
 	
 	public Role getAdminRole() {
-    	return roleRepo.findByName("ADMIN");
-    }
+    	Role role =  roleRepo.findByName("ADMIN");
+    	if(role == null) throw new ResourceBadRequestException("User role is missing, Please contact the administrator.");
+    	return role;
+	}
 
 	public void resetRegisterRequestSessionData(HttpSession session) {
     	session.setAttribute("ruser", null);

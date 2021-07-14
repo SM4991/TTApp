@@ -15,7 +15,6 @@ import com.auriga.TTApp1.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {	
-	@Query("from User where email=?1")
 	User findByEmail(String email);
 	
 	@Query("from User where email=?1 and is_login_active = 1")

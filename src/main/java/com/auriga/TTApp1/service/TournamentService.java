@@ -81,9 +81,6 @@ public class TournamentService {
 		
 		tournament.setMatchTypes(matchTypes);
 		repo.save(tournament);
-
-//		System.out.println(tournament.getMatchTypeIds());
-		
 	}
 
 	public Optional<Tournament> get(Long id) {

@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.auriga.TTApp1.dto.PlayerDto;
+import com.auriga.TTApp1.exception.ResourceBadRequestException;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
 import com.auriga.TTApp1.model.Role;
 import com.auriga.TTApp1.model.User;
@@ -75,6 +77,8 @@ public class PlayerService{
     }
     
     public Role getPlayerRole() {
-    	return roleRepo.findByName("PLAYER");
+    	Role role = roleRepo.findByName("PLAYER");
+    	if(role == null) throw new ResourceBadRequestException("Player role is missing, Please contact the administrator.");
+    	return role;
     }
 }

@@ -31,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.auriga.TTApp1.dto.RegistrationDto;
+import com.auriga.TTApp1.exception.ResourceBadRequestException;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
 import com.auriga.TTApp1.filter.BeforeAuthenticationFilter;
 import com.auriga.TTApp1.model.RegistrationOtpDto;
@@ -114,7 +115,7 @@ public class AuthController {
 			bindingResult.rejectValue("email", "registrationForm.email", "An account already exists for this email.");
 			model.addAttribute("registrationForm", registrationForm);
 			return "auth/signin_form";
-		} catch(UnsupportedEncodingException | MessagingException e) {
+		} catch(ResourceBadRequestException | UnsupportedEncodingException | MessagingException e) {
 			bindingResult.rejectValue("email", "registrationForm.email", e.getMessage());
 			model.addAttribute("registrationForm", registrationForm);
 			return "auth/signin_form";
