@@ -31,11 +31,11 @@ public class CUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepo.findByEmail(username);
+		User user = userRepo.findActiveByEmail(username);
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found");
 		}
-		System.out.println(user);
+
 		return new CUserDetails(user);
 	}
 

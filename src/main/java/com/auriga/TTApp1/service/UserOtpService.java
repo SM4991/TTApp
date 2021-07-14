@@ -42,12 +42,22 @@ public class UserOtpService {
     	
     	String subject = "Here's your One Time Password (OTP) - Expire in 5 minutes!";
         
-        String content = "<p>Hello " + user.getName() + "</p>"
-                + "<p>For security reason, you're required to use the following "
-                + "One Time Password to login:</p>"
-                + "<p><b>" + OTP + "</b></p>"
-                + "<br>"
-                + "<p>Note: this OTP is set to expire in 5 minutes.</p>";
+    	String content;
+    	if(user.getIsLoginActive()) {
+    		content = "<p>Hello " + user.getName() + "</p>"
+                    + "<p>For security reason, you're required to use the following "
+                    + "One Time Password to login:</p>"
+                    + "<p><b>" + OTP + "</b></p>"
+                    + "<br>"
+                    + "<p>Note: this OTP is set to expire in 5 minutes.</p>";
+    	} else {
+    		content = "<p>Hello " + user.getName() + "</p>"
+                    + "<p>For security reason, you're required to use the following "
+                    + "One Time Password to complete registration:</p>"
+                    + "<p><b>" + OTP + "</b></p>"
+                    + "<br>"
+                    + "<p>Note: this OTP is set to expire in 5 minutes.</p>";
+    	}
         
         emailService.sendMessage(to, subject, content);
     }

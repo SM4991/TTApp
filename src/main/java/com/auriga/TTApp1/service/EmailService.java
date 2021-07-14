@@ -26,14 +26,8 @@ public class EmailService {
         helper.setSubject(subject);
         helper.setText(message, true);
         
-//		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-//		simpleMailMessage.setFrom("contact@ttapp.com");
-//		simpleMailMessage.setTo(to);
-//		simpleMailMessage.setSubject(subject);
-//		simpleMailMessage.setText(message);
-
 		// Uncomment to send mail
-		javaMailSender.send(msg);
+//		javaMailSender.send(msg);
 	}
 }
 

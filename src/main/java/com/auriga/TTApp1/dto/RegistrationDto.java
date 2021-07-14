@@ -16,9 +16,9 @@ public class RegistrationDto {
 	@Size(max=255, message = "Email length should not exceed 255 characters.")
     private String email;
     
-	@NotEmpty(message = "Password can not be empty")
-	@Size(min=6, message="Password should contain atleast 6 characters.")
-    private String password;
+//	@NotEmpty(message = "Password can not be empty")
+//	@Size(min=6, message="Password should contain atleast 6 characters.")
+//    private String password;
 
 	public String getName() {
 		return name;
@@ -36,11 +36,11 @@ public class RegistrationDto {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
+//	public String getPassword() {
+//		return password;
+//	}
+//
+//	public void setPassword(String password) {
+//		this.password = password;
+//	}
 }

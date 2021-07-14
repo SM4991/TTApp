@@ -77,6 +77,7 @@ public class Tournament {
             )
     private List<MatchType> matchTypes;
     
+//    @NotNull
     @Transient // Custom column not an entity column
     private List<String> matchTypeIds;
     

@@ -14,10 +14,12 @@ import com.auriga.TTApp1.model.Role;
 import com.auriga.TTApp1.model.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {	
+	@Query("from User where email=?1")
+	User findByEmail(String email);
 	
 	@Query("from User where email=?1 and is_login_active = 1")
-	User findByEmail(String email);
+	User findActiveByEmail(String email);
 	
 	@Query("from User u where u.role=:role and u.email=:email")
 	User findPlayerByEmail(@Param("email") String email, @Param("role") Role role);

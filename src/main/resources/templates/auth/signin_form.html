@@ -22,11 +22,6 @@
 								placeholder="Email ID" th:field="*{email}">
 							<span class="field-error" th:if="${#fields.hasErrors('email')}" th:text="${#fields.errors('email')}"></span>
 						</div>
-						<div class="form-group">
-							<input type="password" name="password" class="form-control" id="password"
-								placeholder="Password" th:field="*{password}"/>
-							<span class="field-error" th:if="${#fields.hasErrors('password')}" th:text="${#fields.errors('password')}"></span>
-						</div>
 						<div class="btn-group">
 							<button type="submit" class="btn btn-primary">Continue</button>
 						</div>
@@ -35,7 +30,7 @@
 			</div>
 
 			<div class="page-footer">
-				Already have an account? <a href="/@{/login}">Login</a>
+				Already have an account? <a th:href="@{/login}">Login</a>
 			</div>
 		</div>
 	</div>

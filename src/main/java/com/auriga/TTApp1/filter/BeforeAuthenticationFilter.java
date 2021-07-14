@@ -74,7 +74,7 @@ public class BeforeAuthenticationFilter
     	
     	session.setAttribute("lemail", email);
         
-        User user_obj = userRepo.findByEmail(email);
+        User user_obj = userRepo.findActiveByEmail(email);
         
         CUserDetails user_details = new CUserDetails(user_obj);
         
