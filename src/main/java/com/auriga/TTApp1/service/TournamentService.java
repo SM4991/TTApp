@@ -108,21 +108,19 @@ public class TournamentService {
 		
 		Integer participantCount = players.size();
 		
-		Integer matchCount = getMatchCount(participantCount);
+		Map<Integer, Integer> roundMatchCount = getRoundMatchCount(participantCount);
 		
-		/* Get round count */
-		Integer roundCount = getRoundCount(matchCount);
+		Integer totalRound = roundMatchCount.size();
 		
 		/* Save Round Entries */
-		IntStream.range(0, roundCount).forEach(ri -> {
-			Integer order = ri+1;
+		roundMatchCount.forEach((order, matchCount) -> {
 			
 			TournamentRound round = new TournamentRound();
 			round.setTournament(tournament);
 			round.setMatchType(matchType);
 			round.setOrder(order);
-			round.setName(getRoundName(order, roundCount));
-			round.setType(getRoundType(order, roundCount));
+			round.setName(getRoundName(order, totalRound));
+			round.setType(getRoundType(order, totalRound));
 			
 			roundRepo.save(round);
 			
@@ -134,8 +132,6 @@ public class TournamentService {
 		if(round.getOrder() == 1) {
 			createPlayerMatches(round, players, matchCount);
 		} else {
-			Integer divident = (round.getOrder()-1)*2;
-			matchCount = matchCount > divident ? (matchCount/divident)+(matchCount%divident) : 1;
 			createNonPlayerMatches(round, matchCount);
 		}
 	}
@@ -193,24 +189,23 @@ public class TournamentService {
 		});
 	}
 	
-	public Integer getMatchCount(Integer participantCount) {
+	public Map<Integer, Integer> getRoundMatchCount(Integer participantCount) {
 		Integer matchCount = (int) Math.ceil(participantCount/2);
 		matchCount = matchCount*2 < participantCount ? (matchCount+1) : matchCount;
-		return matchCount;
-	}
-	
-	public Integer getRoundCount(Integer matchCount) {
-		Integer count = matchCount;
-		Integer roundCount = 0;
-		if(matchCount%2 > 0) {
-			count -= 1;
-			roundCount += 1;
+		
+		Map<Integer, Integer> list = new HashMap<Integer, Integer>();
+		Integer round = 1;
+		while(matchCount > 0) {
+			list.put(round, matchCount);
+			
+			if(matchCount > 1) {
+				matchCount = (matchCount/2)+(matchCount%2);
+				round++;
+			} else {
+				break;
+			}
 		}
-		while(count > 0) {
-			roundCount++;
-			count = count/2;
-		}
-		return roundCount;
+		return list;
 	}
 	
 	public RoundTypeEnum getRoundType(Integer order, Integer roundCount) {

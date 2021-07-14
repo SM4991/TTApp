@@ -112,4 +112,9 @@ public class TournamentMatch {
 	public Tournament getTournament() {
 		return getTournamentRound().getTournament();
 	}
+	
+	@Override
+	public String toString() {
+		return "Tournament Match: " + name;
+	}
 }

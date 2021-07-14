@@ -1,152 +1,117 @@
 @charset "UTF-8";
 
-.bracket {
-	display: inline-block;
-	white-space: nowrap;
-	font-size: 0;
+div.tournament {
+	display: flex;
+	flex-direction: row;
 }
 
-.bracket .round {
-	display: inline-block;
-	vertical-align: middle;
+div.tournament>div {
+	flex: 1;
 }
 
-.bracket .round .round-match-group>div {
-	display: inline-block;
-	vertical-align: middle;
+div.tournament>div>div {
+	position: relative;
 }
 
-.bracket .round .round-match-group>div.matchups .matchup:last-child {
-	margin-bottom: 0 !important;
+div.tournament>div+div {
+	flex: 1;
+	display: flex;
+	flex-flow: column;
+	padding-left: 20px;
 }
 
-.bracket .round .round-match-group>div.matchups .matchup .participants {
-	border-radius: 0.25rem;
-	overflow: hidden;
+div.tournament>div:first-child>div+div {
+	padding-top: 10px;
 }
 
-.bracket .round .round-match-group>div.matchups .matchup .participants .participant
-	{
-	box-sizing: border-box;
-	color: #858585;
-	border: 1px solid #919292; border-radius : 5px;
-	background: white;
-	width: 11rem;
-    height: 40px;
+div.tournament>div:first-child>div{
+	margin-bottom: 20px;
+}
+
+div.tournament>div+div>div {
+	flex: 1;
+	display: flex;
+	flex-flow: row wrap;
+	align-content: center;
+}
+
+div.tournament>div>div+div:after {
+	content: "";
+	position: absolute;
+	bottom: 50%;
+	right: -10px;
+	width: 1px;
+	height: 100%;
+	background-color: #919292;
+}
+
+div.tournament>div:first-child>div+div:after {
+	height: 103px;
+    bottom: 35px;
+}
+
+div.tournament>div>div>ul {
+	position: relative;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+div.tournament>div>div>ul:after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: -11px;
+	right: -10px;
+	height: 1px;
+	background-color: #919292;
+}
+
+div.tournament>div:first-child>div>ul:after {
+	left: 2px;
+	right: -9px;
+}
+
+div.tournament>div:last-child>div>ul:after {
+	right: 0;
+}
+
+div.tournament>div>div>ul>li {
+	font-size: 15px;
+	line-height: 1em;
+	position: relative;
+	list-style: none;
+	margin: 0;
+	padding: 5px;
+	background-color: #fff;
+	color: #212529;
+	border: 1px solid #919292; 
+	border-radius : 5px;
 	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
-	border-radius: 5px;
 }
-.bracket .round .round-match-group>div.matchups .matchup .participants .participant .image-wrapper{
+div.tournament>div>div>ul>li.player1 {
+	background: #f3f3f3;
+	border-bottom: 0;
+}
+div.tournament>div>div>ul>li.player2 {
+	border-top: 0;
+}
+div.tournament>div>div>ul>li.player.inactive{ 
+	color: #858585;
+}
+div.tournament>div>div>ul>li span {	
 	display:inline-block;
 }
-.bracket .round .round-match-group>div.matchups .matchup .participants .participant .image-wrapper img{
+div.tournament>div>div>ul>li span.image-wrapper {	
+	margin-bottom: 0;
+}
+div.tournament>div>div>ul>li span.image-wrapper img{
 	width: 25px;
 	height: 25px;
 	border-radius: 50%;
 	box-shadow: none;
 }
-
-.bracket .round .round-match-group>div.matchups .matchup .participants .participant.first-player
-	{
-	background: #f3f3f3;
-}
-.bracket .round .round-match-group>div.matchups .matchup .participants .participant.second-player
-	{
-	border-top: 0;
-}
-
-.bracket .round .round-match-group>div.matchups .matchup .participants .participant.loser
-	{
-	color: #dc563f;
-	border-color: #dc563f;
-}
-
-/*
-.bracket .round .round-match-group>div.matchups .matchup .participants .participant:not(:last-child)
-	{
-	border-bottom: thin solid #f0f2f2;
-}
-*/
-
-.bracket .round .round-match-group>div.matchups .matchup .participants .participant span
-	{
-	margin: 0 10px;
-	line-height: 2.2rem;
-	font-size: 14px;
-}
-
-/*
-.bracket .round .round-match-group>div.connector.filled .line, .bracket .round .round-match-group>div.connector.filled.bottom .merger:after,
-	.bracket .round .round-match-group>div.connector.filled.top .merger:before {
-	border-color: #60c645;
-}
-*/
-
-.bracket .round .round-match-group>div.connector .line, .bracket .round .round-match-group>div.connector .merger
-	{
-	box-sizing: border-box;
-	width: 2rem;
-	display: inline-block;
-	vertical-align: top;
-}
-
-.bracket .round .round-match-group>div.connector .line {
-	border-bottom: thin solid #c0c0c8;
-	height: 4rem;
-}
-
-.bracket .round .round-match-group>div.connector .merger {
-	position: relative;
-	height: 8rem;
-}
-
-.bracket .round .round-match-group>div.connector .merger:before, .bracket .round .round-match-group>div.connector .merger:after
-	{
-	content: "";
-	display: block;
-	box-sizing: border-box;
-	width: 100%;
-	height: 50%;
-	border: 0 solid;
-	border-color: #c0c0c8;
-}
-
-.bracket .round .round-match-group>div.connector .merger:before {
-	border-right-width: thin;
-	border-top-width: thin;
-}
-
-.bracket .round .round-match-group>div.connector .merger:after {
-	border-right-width: thin;
-	border-bottom-width: thin;
-}
-
-.bracket .round:nth-child(1) .round-match-group:not(:last-child) {
-	margin-bottom: 2rem;
-}
-
-.bracket .round:nth-child(1) .round-match-group .matchups .matchup:not(:last-child)
-	{
-	margin-bottom: 2rem;
-}
-
-.bracket .round:nth-child(2) .round-match-group .matchups .matchup:not(:last-child)
-	{
-	margin-bottom: 10rem;
-}
-
-.bracket .round:nth-child(2) .round-match-group .connector .merger {
-	height: 16rem;
-}
-
-.bracket .round:nth-child(2) .round-match-group .connector .line {
-	height: 8rem;
-}
-
-.bracket .round:nth-child(3) .round-match-group .connector .merger {
-	height: 3rem;
-}
-
-.bracket .round:nth-child(3) .round-match-group .connector .line {
-	height: 1.5rem;
+div.tournament>div>div>ul>li span.text-content {	
+	padding-left: 10px;
 }

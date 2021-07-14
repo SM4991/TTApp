@@ -105,4 +105,9 @@ public class TournamentMatchSet {
 	public void setStatus(MatchSetStatusEnum status) {
 		this.status = status;
 	}
+	
+	@Override
+	public String toString() {
+		return "Match Set: " + name;
+	}
 }

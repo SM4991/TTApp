@@ -232,52 +232,51 @@ function loadTournamentFixture() {
 			contentType: "application/json",
 			success: function(response) {
 				console.log(response);
-				$("#bracket").html(response);
-				/*
-				clone = $("#single-match-block").clone();
-					html = "";
-					$.each(response, function(name, matches){
-						html += '<section class="round '+name+'">';
-						var i = 1;
-						var counter = 0;
-						$.each(matches, function(k, match){
-							if(i == 1) {
-								html += '<div class="round-match-group">\
-											<div class="matchups">';								
-							}
+				// $("#bracket").html(response);
+				let dom = $("<div>").attr("id", 'tournament');
+				dom.attr("class", "tournament");
+				let html = '';
+				$.each(response, function(roundId, orderMatches){
+					html += '<div class="round '+roundId+'">';
+					let morder = 1;
+					$.each(orderMatches, function(order, matches){
+						
+						$.each(matches, function(index, match){
+							html += '<div class="match-block"><ul class="match-player-list">';	
+							//Player 1
+							let player1_class = match.player1 != undefined && match.player1 != null ? "active" : "inactive";
+							let player1_name = match.player1 != undefined && match.player1 != null ? match.player1.name : "Player 1";
+							let player1_img = match.player1 != undefined && match.player1 != null && match.player1.image != "" && match.player1.image != null ? match.player1.image : "/images/blank-profile-picture.png";
+							html += '<li class="player player1 '+player1_class+'">\
+								<span class="image-wrapper">\
+									<img src="'+player1_img+'" id="default-form-image" class="default-form-image" />\
+								</span>\
+								<span class="text-content">\
+								'+player1_name+'\
+								</span></li>';
+								
+							//Player 2
+							let player2_class = match.player2 != undefined && match.player2 != null ? "active" : "inactive";
+							let player2_name = match.player2 != undefined && match.player2 != null ? match.player2.name : "Player 2";
+							let player2_img = match.player2 != undefined && match.player2 != null && match.player2.image != "" && match.player2.image != null ? match.player2.name : "/images/blank-profile-picture.png";
 							
-							player1_name = match.player1 != null ? match.player1.name : "Player 1";
-							player2_name = match.player2 != null ? match.player2.name : "Player 2";
-							
-							clone.find(".participant.first-player span.content").text(player1_name);
-							clone.find(".participant.second-player span.content").text(player2_name);
-							html += clone.html();
-							i++;
-							counter++;
-							if(i == 3 || counter == matches.length) {
-								html += '<div class="connector">\
-											<div class="merger"></div>\
-											<div class="line"></div>\
-										</div>\
-									</div>\
-								</div>';
-								i = 1;
-							}
+							html += '<li class="player player2 '+player2_class+'">\
+								<span class="image-wrapper">\
+									<img src="'+player2_img+'" id="default-form-image" class="default-form-image" />\
+								</span>\
+								<span class="text-content">\
+								'+player2_name+'\
+								</span></li>';
+							html += '</ul></div>';
 						});
-						html += '</section>';
+						
 					});
-					$("#bracket").html(html);
-					*/
-				/*
-				resetModal("successResponseModal");
-				$("#successResponseModal").find(".modal-body").text(response);
-
-				if (redirect_url != undefined && redirect_url != "") {
-					$("#successResponseModal").find(".modal-footer button").attr("onClick", "redirectToUrl('" + redirect_url + "')");
-				}
-
-				$("#successResponseModal").modal("show");
-				*/
+					html += '</div>';
+				});
+				$(dom).html(html);
+				
+				$("#tournament-wrapper").append(dom);
+				
 			}, error: function(response) {
 				handleAjaxError(response);
 			}

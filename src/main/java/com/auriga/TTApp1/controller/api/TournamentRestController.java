@@ -103,20 +103,31 @@ public class TournamentRestController {
 	}
 	
 	@RequestMapping(value = "/admin/api/tournaments/{id}/{mtId}/fixture", method = RequestMethod.GET)
-	public ModelAndView viewFixture(@PathVariable("id") Long id, @PathVariable Long mtId) {
+	public ResponseEntity<Object> viewFixture(@PathVariable("id") Long id, @PathVariable Long mtId) {
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		MatchType matchType = matchTypeService.get(mtId).orElseThrow(() -> new ResourceNotFoundException("Match Type"));
 		
 		List<TournamentRound> rounds = roundRepo.findByTournamentAndMatchType(tournament, matchType);
-		List<TournamentRound> roundsList = new ArrayList<>();
-		Map<Long, List<TournamentMatch>> matches = new HashMap();
+		Map<Long, Map<Integer, List<TournamentMatch>>> matches = new HashMap();
+		
 		rounds.forEach(round -> {
-			matches.put(round.getId(), matchRepo.findAllByTournamentRound(round));
+			List<TournamentMatch> r_matches = matchRepo.findAllByTournamentRound(round);
+			
+			Map<Integer, List<TournamentMatch>> order_matches = new HashMap();
+			r_matches.forEach(match -> {
+				if(order_matches.containsKey(match.getOrder())) {
+					order_matches.get(match.getOrder()).add(match);
+				} else {
+					List<TournamentMatch> list = new ArrayList();
+					list.add(match);
+					order_matches.put(match.getOrder(), list);
+				}
+			});
+			
+			matches.put(round.getId(), order_matches);
 		});
-		ModelAndView model = new ModelAndView("/admin/tournaments/fixtureBracket");
-		model.addObject("rounds", rounds);
-		model.addObject("matches", matches);
-		return model;
+		
+		return new ResponseEntity(matches, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = {"/admin/api/tournaments/{id}/{mtId}/matches", "/api/tournaments/{id}/{mtId}/matches"}, method = RequestMethod.GET)

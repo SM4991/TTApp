@@ -19,250 +19,43 @@
 				<div class="form-wrapper">
 					<div class="form-container">
 						<div class="form-group">
-							<input type="hidden" id="tid" class="tid" th:value="${tournament.id}"/>
-							<label th:for="matchType">Match Type:</label> <select
-								id="matchType" name="matchType" class="form-control" onChange="loadTournamentFixture()">
+							<input type="hidden" id="tid" class="tid"
+								th:value="${tournament.id}" /> <label th:for="matchType">Match
+								Type:</label> <select id="matchType" name="matchType"
+								class="form-control" onChange="loadTournamentFixture()">
 								<option value="" selected>Choose...</option>
-								<option th:each="tMatchType: ${tournamentMatchTypes}"
-									th:value="${tMatchType.getMatchType().id}"
-									th:text="${tMatchType.getMatchType().name}"></option>
+								<option th:each="matchType: ${matchTypes}"
+									th:value="${matchType.id}" th:text="${matchType.name}"></option>
 							</select>
 						</div>
-						
-						<div class="bracket" id="bracket">
-						</div>
-	
-						<!-- 
-						<div class="bracket">
-							<section class="round quarterfinals">
-								<div class="round-match-group">
-									<div class="matchups">
-										<div class="matchup">
-											<div class="participants">
-												<div class="participant first-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Uno</span>
-												</div>
-												<div class="participant second-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Ocho</span>
-												</div>
-											</div>
-										</div>
-										<div class="matchup">
-											<div class="participants">
-												<div class="participant first-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Dos</span>
-												</div>
-												<div class="participant second-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Siete</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="connector">
-										<div class="merger"></div>
-										<div class="line"></div>
-									</div>
-								</div>
-								<div class="round-match-group">
-									<div class="matchups">
-										<div class="matchup">
-											<div class="participants">
-												<div class="participant first-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Treis</span>
-												</div>
-												<div class="participant second-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Seis</span>
-												</div>
-											</div>
-										</div>
-										<div class="matchup">
-											<div class="participants">
-												<div class="participant first-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Cuatro</span>
-												</div>
-												<div class="participant second-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Cinco</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="connector">
-										<div class="merger"></div>
-										<div class="line"></div>
-									</div>
-								</div>
-							</section>
-							<section class="round semifinals">
-								<div class="round-match-group">
-									<div class="matchups">
-										<div class="matchup">
-											<div class="participants">
-												<div class="participant first-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Uno</span>
-												</div>
-												<div class="participant second-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Dos</span>
-												</div>
-											</div>
-										</div>
-										<div class="matchup">
-											<div class="participants">
-												<div class="participant first-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Seis</span>
-												</div>
-												<div class="participant second-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Cinco</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="connector">
-										<div class="merger"></div>
-										<div class="line"></div>
-									</div>
-								</div>
-							</section>
-							<section class="round finals">
-								<div class="round-match-group">
-									<div class="matchups">
-										<div class="matchup">
-											<div class="participants">
-												<div class="participant first-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Uno</span>
-												</div>
-												<div class="participant second-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Seis</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="connector">
-										<div class="merger"></div>
-										<div class="line"></div>
-									</div>
-								</div>
-							</section>
-							<section class="round winners">
-								<div class="round-match-group">
-									<div class="matchups">
-										<div class="matchup">
-											<div class="participants">
-												<div class="participant first-player">
-													<span class="image-wrapper">
-														<img
-															th:src="@{${@environment.getProperty('players.image.default.path')}}"
-															id="default-form-image" class="default-form-image" />
-													</span>
-													<span>Uno</span>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</section>
-						</div>
+
+						<div class="tournament-wrapper" id="tournament-wrapper"></div>
 					</div>
-						-->
+				</div>
+			</div>
+			<div th:replace="commonLayout :: successResponseModal"></div>
+			<div th:replace="commonLayout :: errorResponseModal"></div>
+		</div>
+		<div class="hide" id="single-match-block">
+			<div class="matchup">
+				<div class="participants">
+					<div class="participant first-player">
+						<span class="image-wrapper"> <img
+							th:src="@{${@environment.getProperty('players.image.default.path')}}"
+							id="default-form-image" class="default-form-image" />
+						</span> <span class="content"></span>
+					</div>
+					<div class="participant second-player">
+						<span class="image-wrapper"> <img
+							th:src="@{${@environment.getProperty('players.image.default.path')}}"
+							id="default-form-image" class="default-form-image" />
+						</span> <span class="content"></span>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div th:replace="commonLayout :: successResponseModal"></div>
-		<div th:replace="commonLayout :: errorResponseModal"></div>
-	</div>
-	<div class="hide" id="single-match-block">
-		<div class="matchup">
-			<div class="participants">
-				<div class="participant first-player">
-					<span class="image-wrapper">
-						<img
-							th:src="@{${@environment.getProperty('players.image.default.path')}}"
-							id="default-form-image" class="default-form-image" />
-					</span>
-					<span class="content"></span>
-				</div>
-				<div class="participant second-player">
-					<span class="image-wrapper">
-						<img
-							th:src="@{${@environment.getProperty('players.image.default.path')}}"
-							id="default-form-image" class="default-form-image" />
-					</span>
-					<span class="content"></span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script th:src="@{/js/common.js}"></script>
-	<script th:src="@{/js/tournaments.js}"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script th:src="@{/js/common.js}"></script>
+		<script th:src="@{/js/tournaments.js}"></script>
 </body>
 </html>

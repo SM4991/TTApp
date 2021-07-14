@@ -103,4 +103,9 @@ public class TournamentRound {
 //	public void setMatches(List<TournamentMatch> matches) {
 //		this.matches = matches;
 //	}
+	
+	@Override
+	public String toString() {
+		return "Tournament Round: " + name;
+	}
 }

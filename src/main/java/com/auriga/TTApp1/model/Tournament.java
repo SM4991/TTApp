@@ -157,4 +157,9 @@ public class Tournament {
 	public void setWinner(User winner) {
 		this.winner = winner;
 	}
+
+	@Override
+	public String toString() {
+		return "Tournament: " + name;
+	}
 }

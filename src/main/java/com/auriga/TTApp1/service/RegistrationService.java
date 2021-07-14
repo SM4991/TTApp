@@ -74,7 +74,6 @@ public class RegistrationService {
 		
 		CUserDetails userDetail = new CUserDetails(user);
 		
-		System.out.println(userDetail.getPassword());
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     	if(passwordEncoder.matches(otp, userDetail.getPassword())) {
     		return true;
