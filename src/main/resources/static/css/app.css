@@ -310,6 +310,7 @@ a.footer-icon:hover, a.footer-icon.active {
 .match-scorer-wrapper .match-points-block i {
 	font-size: 35px;
 	vertical-align: middle;
+	cursor: pointer;
 }
 .match-scorer-wrapper .match-points-block .content{
 	font-size: 30px;
@@ -338,6 +339,7 @@ a.footer-icon:hover, a.footer-icon.active {
     font-size: 14px;
     color: white;
     margin: 0 auto;
+    cursor: pointer;
 }
 .match-status-block .match-status-data .text-content{
 	font-size: 20px;

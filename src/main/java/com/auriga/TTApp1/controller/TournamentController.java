@@ -18,12 +18,16 @@ import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.model.MatchType;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.User;
+import com.auriga.TTApp1.repository.TournamentRoundRepository;
 import com.auriga.TTApp1.service.MatchTypeService;
 import com.auriga.TTApp1.service.PlayerService;
 import com.auriga.TTApp1.service.TournamentService;
 
 @Controller
 public class TournamentController {
+	@Autowired
+	private TournamentRoundRepository roundRepo;
+	
 	@Autowired
 	private TournamentService service;
 	
@@ -54,8 +58,26 @@ public class TournamentController {
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		
 		ModelAndView modelView = new ModelAndView("admin/tournaments/view");
-	    modelView.addObject("tournament", tournament);
-	    modelView.addObject("matchTypes", tournament.getMatchTypes());
+	    List<MatchType> matchTypes = tournament.getMatchTypes();
+		User winner = tournament.getWinner();
+		
+		modelView.addObject("tournament", tournament);
+		modelView.addObject("matchTypes", matchTypes);
+	    modelView.addObject("winner", winner);
+	    modelView.addObject("forbidCreateDraw", false);
+	    
+	    if(winner == null) {
+	    	tournament.getMatchTypes().forEach(type -> {
+		    	Long count = roundRepo.countByTournamentAndMatchType(tournament, type);
+		    	if(count > 0) {
+		    		modelView.addObject("forbidCreateDraw", true);
+		    		System.out.println("in");
+		    	}
+		    });
+	    } else {
+	    	modelView.addObject("forbidCreateDraw", true);
+	    	System.out.println("in2");
+	    }
 	    
 		return modelView;
 	}

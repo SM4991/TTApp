@@ -24,6 +24,7 @@ import com.auriga.TTApp1.model.MatchType;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatch;
 import com.auriga.TTApp1.model.TournamentMatchSet;
+import com.auriga.TTApp1.model.TournamentRound;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.TournamentMatchRepository;
 import com.auriga.TTApp1.service.TournamentMatchService;
@@ -50,11 +51,14 @@ public class MatchRestController {
 		ModelAndView modelView = new ModelAndView("admin/matches/score_form");
 		
 		Tournament tournament = match.getTournament();
+		TournamentRound round = match.getTournamentRound();
 		
 		List<TournamentMatchSet> sets = setService.listAllByMatch(match);
 		
 		Integer diff = 3 - sets.size();
 		
+		modelView.addObject("tournament", tournament);
+		modelView.addObject("round", round);
 		modelView.addObject("match", match);
 		modelView.addObject("sets", sets);
 		modelView.addObject("diff", diff);

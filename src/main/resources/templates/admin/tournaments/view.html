@@ -27,6 +27,10 @@
 							<span class="label">Max Score: </span>
 							<span class="content" th:text="${tournament.maxScore}"></span>
 						</li>
+						<li class="sub-content" th:if="${tournament.getWinner() != null}">
+							<span class="label">Winner: </span>
+							<span class="content" th:text="${tournament.getWinner().name}"></span>
+						</li>
 					</ul>
 					<ul class="tournament-matches-content">
 						<li class="main-content">
@@ -34,10 +38,14 @@
 							<a sec:authorize="isAnonymous()" th:href="@{'/tournaments/' + ${tournament.id} + '/matches'}">Matches in tournament</a>
 						</li>
 						<li class="sub-content" th:each="matchType : ${matchTypes}" th:text="${matchType.name}"></li>
+						<li class="main-content">
+							<a sec:authorize="isAuthenticated()" th:href="@{'/admin/tournaments/' + ${tournament.id} + '/fixture'}">View Fixture</a>
+							<a sec:authorize="isAnonymous()" th:href="@{'/tournaments/' + ${tournament.id} + '/fixture'}">View Fixture</a>
+						</li>
 					</ul>
 				</div>
 			</div>
-			<div sec:authorize="isAuthenticated()" class="page-footer page-footer-full-btn">
+			<div sec:authorize="isAuthenticated()" class="page-footer page-footer-full-btn" th:unless="${forbidCreateDraw}">
 				<a th:href="@{'/admin/tournaments/' + ${tournament.id} + '/draw'}" class="btn btn-primary footer-full-btn">Create Draw</a> 
 			</div>
 		</div>

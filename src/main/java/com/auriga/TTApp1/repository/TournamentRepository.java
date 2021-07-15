@@ -15,12 +15,12 @@ import com.auriga.TTApp1.model.TournamentMatch;
 
 @Repository
 public interface TournamentRepository extends JpaRepository<Tournament, Long> {
-	@Query("from Tournament t WHERE DATE(t.startDate) <= DATE(NOW())")
+	@Query("from Tournament t WHERE DATE(t.startDate) <= DATE(NOW()) AND t.winner IS NULL")
 	Page<Tournament> findAllOngoing(Pageable paging);
 	
-	@Query("from Tournament t WHERE DATE(t.startDate) > DATE(NOW())")
+	@Query("from Tournament t WHERE DATE(t.startDate) > DATE(NOW()) AND t.winner IS NULL")
 	Page<Tournament> findAllUpcoming(Pageable paging);
 	
-	@Query("from Tournament t WHERE DATE(t.startDate) > DATE(NOW()) AND t.winner IS NOT NULL ")
+	@Query("from Tournament t WHERE DATE(t.startDate) > DATE(NOW()) AND t.winner IS NOT NULL")
 	Page<Tournament> findAllPrevious(Pageable paging);
 }

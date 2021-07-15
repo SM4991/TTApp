@@ -81,7 +81,7 @@ public class Tournament {
     @Transient // Custom column not an entity column
     private List<String> matchTypeIds;
     
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private User winner;
 
 	public Long getId() {

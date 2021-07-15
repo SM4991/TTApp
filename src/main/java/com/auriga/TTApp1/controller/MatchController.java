@@ -12,6 +12,7 @@ import com.auriga.TTApp1.exception.ResourceBadRequestException;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatch;
+import com.auriga.TTApp1.model.TournamentRound;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.service.TournamentMatchService;
 
@@ -21,7 +22,7 @@ public class MatchController {
 	private TournamentMatchService service;
 	
 	@RequestMapping(value = {"/admin/matches/{id}", "/matches/{id}"}, method = RequestMethod.GET)
-	public ModelAndView viewMatches(@PathVariable("id") Long id){
+	public ModelAndView viewMatch(@PathVariable("id") Long id){
 		TournamentMatch match = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Match"));
 		
 		if(match.getStatus() == MatchStatusEnum.INACTIVE) throw new ResourceBadRequestException("Match is in inactive state.");

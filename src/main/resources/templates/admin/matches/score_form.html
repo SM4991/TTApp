@@ -62,15 +62,22 @@
 	<div th:unless="${actionSet != null}" class="match-status-block">
 		<!-- If match is complete -->
 		<div th:if="${winner != null}" class="match-status-data">
-			<div class="text-content"><span th:text="${winner.name}"></span> won the match.</div>
+			<div class="text-content">
+				<span th:text="${winner.name}"></span> 
+				won 
+				<span th:if="${round.type == T(com.auriga.TTApp1.constants.RoundTypeEnum).FINAL}" th:text="${tournament.name}"></span> 
+				<span th:unless="${round.type == T(com.auriga.TTApp1.constants.RoundTypeEnum).FINAL}" th:text="${match.name+ ' of ' +round.name}"></span>.
+				</div>
 		</div>
 		<!-- If one of the set is complete and next one should start -->
-		<div sec:authorize="isAuthenticated()" th:if="${completeSet != null && winner == null}" class="match-status-data">
-			<div class="text-content"><span th:text="${completeSet.getWinner().name}"></span> won the <span th:text="${completeSet.name}"></span>.</div>
-			<button class="btn btn-primary" th:text="${'Start Set '+nextSet}" th:attr="onclick=|startSet($(this), '${nextSet}')|"></button> 
-		</div>
-		<div sec:authorize="isAnonymous()" th:if="${completeSet != null && winner == null}" class="match-status-data">
-			<div class="text-content"><span th:text="${completeSet.getWinner().name}"></span> won the <span th:text="${completeSet.name}"></span>.</div>	
+		<div th:if="${completeSet != null && winner == null}" class="match-status-data">
+			<div class="text-content">
+				<span th:text="${completeSet.getWinner().name}"></span> 
+				won  
+				<span th:if="${round.type == 'FINAL'}" th:text="${tournament.name}"></span>
+				<span th:unless="${round.type == 'FINAL'}" th:text="${completeSet.name}"></span>.
+			</div>
+			<button sec:authorize="isAuthenticated()" class="btn btn-primary" th:text="${'Start Set '+nextSet}" th:attr="onclick=|startSet($(this), '${nextSet}')|"></button> 
 		</div>
 		<!-- If no set has started yet -->
 		<div sec:authorize="isAuthenticated()" th:if="${completeSet == null && winner == null}" class="match-status-data">
