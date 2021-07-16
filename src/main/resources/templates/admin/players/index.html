@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<div th:replace="commonLayout :: head-content" />
+<th:block th:replace="fragments/common :: headFragment" />
 </head>
 <body class="player-list-page">
-	<div th:replace="commonLayout :: overlayBlock" />
+	<th:block th:replace="fragments/common :: overlayFragment" />
 	<div class="app-wrapper">
 		<div class="page-wrapper">
 			<div class="page-header">
 				<h3 class="page-title">Players</h3>
-				<div th:replace="admin/layout/commonLayout :: logout-form"></div>
+				<th:block th:replace="fragments/authenticated :: logoutFormFragment" />
 			</div>
 			<div class="page-content">
 				<div class="inner-content first-list-view hide">
@@ -29,7 +29,7 @@
 					<a th:href="@{/admin/players/create}"><i class="material-icons">add_circle</i></a>
 				</div>
 			</div>
-			<div th:replace="admin/layout/commonLayout :: page-footer-content" />
+			<th:block th:replace="fragments/authenticated :: pageFooterFragment" />
 		</div>
 	</div>
 	<div class="hide" id="sample-list-card">

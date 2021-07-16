@@ -1,0 +1,38 @@
+<th:block th:if="${paginatedItems.items.size() > 0}">
+	<div class="list-view" id="list-view">
+		<ul class="list-view-wrapper">
+			<li class="list-view-card"
+				th:each="tournament: ${paginatedItems.items}">
+				<ul>
+					<li class="list-image-content"><img
+						th:src="${tournament.getImageUrl()}" class="list-image" /></li>
+					<li class="list-detail-content">
+						<ul class="">
+							<li class="main-content">
+								<a sec:authorize="isAuthenticated()" th:href="@{${'/admin/tournaments/'+tournament.id}}" th:text="${tournament.name}"></a>
+								<a sec:authorize="isAnonymous()" th:href="@{${'/tournaments/'+tournament.id}}" th:text="${tournament.name}"></a>
+							</li>
+							<li class="sub-content start-date-content"><span class="label">Starts
+									on :</span><span class="content" th:text="${tournament.startDate}"></span></li>
+							<li class="sub-content reg-end-date-content"><span
+								class="label">Last date of registration :</span><span
+								class="content" th:text="${tournament.regEndDate}"></span></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+		<th:block th:replace="fragments/authenticated :: paginationFragment (paginator=${paginatedItems})"/>
+	</div>
+</th:block>
+<th:block th:unless="${paginatedItems.items.size() > 0}">
+	<div sec:authorize="isAuthenticated()" class="inner-content first-list-view">
+		<h4>Create you first tournament</h4>
+		<div class="btn-group">
+			<a href="/admin/tournaments/create" class="btn btn-primary">Create now</a>
+		</div>
+	</div>
+	<div sec:authorize="isAnonymous()" class="inner-content first-list-view">
+		<h4>No tournaments found.</h4>
+	</div>
+</th:block>

@@ -21,6 +21,6 @@ public interface TournamentRepository extends JpaRepository<Tournament, Long> {
 	@Query("from Tournament t WHERE DATE(t.startDate) > DATE(NOW()) AND t.winner IS NULL")
 	Page<Tournament> findAllUpcoming(Pageable paging);
 	
-	@Query("from Tournament t WHERE DATE(t.startDate) > DATE(NOW()) AND t.winner IS NOT NULL")
+	@Query("from Tournament t WHERE DATE(t.startDate) >= DATE(NOW()) AND t.winner IS NOT NULL")
 	Page<Tournament> findAllPrevious(Pageable paging);
 }

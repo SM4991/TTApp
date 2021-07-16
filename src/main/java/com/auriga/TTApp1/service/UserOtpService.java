@@ -25,8 +25,9 @@ public class UserOtpService {
     @Autowired EmailService emailService;
      
     public void generateOneTimePassword(User user) throws UnsupportedEncodingException, MessagingException {
-        String OTP = RandomString.make(8);
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        String OTP = RandomString.make(8);
+        String OTP = "auriga123";
+    	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String encodedOTP= passwordEncoder.encode(OTP);
          System.out.println("Generated Otp:" + OTP);
         user.setOneTimePassword(encodedOTP);

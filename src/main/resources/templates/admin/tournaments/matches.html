@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<div th:replace="commonLayout :: head-content" />
+<th:block th:replace="fragments/common :: headFragment" />
 </head>
 <body class="tournament-draw-page">
-	<div th:replace="commonLayout :: overlayBlock" />
+	<th:block th:replace="fragments/common :: overlayFragment" />
 	<div class="app-wrapper">
 		<div class="page-wrapper">
 			<div class="page-header">
@@ -41,8 +41,8 @@
 				</div>
 			</div>
 		</div>
-		<div th:replace="commonLayout :: successResponseModal"></div>
-		<div th:replace="commonLayout :: errorResponseModal"></div>
+		<th:block th:replace="fragments/common :: successResponseModalFragment" />
+		<th:block th:replace="fragments/common :: errorResponseModalFragment" />
 	</div>
 	<div class="hide" id="sample-list-card">
 		<li class="list-title">Round - Match</li>

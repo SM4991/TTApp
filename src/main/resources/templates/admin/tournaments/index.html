@@ -1,82 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-<div th:replace="commonLayout :: head-content" />
+	<th:block th:replace="fragments/common :: headFragment" />
 </head>
 <body class="player-list-page">
-	<div th:replace="commonLayout :: overlayBlock" />
+    <th:block th:replace="fragments/common :: overlayFragment" />
 	<div class="app-wrapper">
 		<div class="page-wrapper">
 			<div class="page-header">
 				<h3 class="page-title">Tournaments</h3>
-				<div th:replace="admin/layout/commonLayout :: logout-form"></div>
+				<th:block th:replace="fragments/authenticated :: logoutFormFragment" />
 			</div>
 			<div class="page-content">
 				<ul class="nav nav-tabs tournament-tabs-list">
 					<li id="trTab1" class="active"><a href="javascript:void(0)"
-						data-status="1" onclick="loadListItemsByStatus('list-view', 1);">Ongoing</a></li>
+						data-status="1" onclick="loadListItemsByStatus('page-list-data', 1);">Ongoing</a></li>
 					<li id="trTab2"><a href="#" data-status="2"
-						onclick="loadListItemsByStatus('list-view', 2);">Upcoming</a></li>
+						onclick="loadListItemsByStatus('page-list-data', 2);">Upcoming</a></li>
 					<li id="trTab3"><a href="#" data-status="3"
-						onclick="loadListItemsByStatus('list-view', 3);">Previous</a></li>
+						onclick="loadListItemsByStatus('page-list-data', 3);">Previous</a></li>
 				</ul>
-				<div sec:authorize="isAuthenticated()" class="inner-content first-list-view hide">
-					<h4>Create you first tournament</h4>
-					<div class="btn-group">
-						<a th:href="@{/admin/tournaments/create}" class="btn btn-primary">Create
-							now</a>
-					</div>
-				</div>
-				<div sec:authorize="isAnonymous()" class="inner-content first-list-view hide">
-					<h4>No tournaments found.</h4>
-				</div>
-				<div class="list-view hide" id="list-view">
-					<ul class="list-view-wrapper">
-					</ul>
-					<ul class="list-view-pagination-wrapper">
-					</ul>
-					<div sec:authorize="isAuthenticated()" class="floating-btn-group">
-						<a th:href="@{/admin/tournaments/create}"><i
-							class="material-icons">add_circle</i></a>
-					</div>
-				</div>
+				<div class="page-list-data" id="page-list-data"></div>
 			</div>
-			<div th:replace="admin/layout/commonLayout :: page-footer-content" />
+			<th:block th:replace="fragments/authenticated :: pageFooterFragment" />
 		</div>
-	</div>
-	<div class="hide" id="sample-list-card">
-		<li class="list-view-card">
-			<ul>
-				<li class="list-image-content"><img src="" class="list-image" /></li>
-				<li class="list-detail-content">
-					<ul class="">
-						<li class="main-content"></li>
-						<li class="sub-content start-date-content"><span
-							class="label">Starts on :</span><span class="content"></span></li>
-						<li class="sub-content reg-end-date-content"><span
-							class="label">Last date of registration :</span><span
-							class="content"></span></li>
-					</ul>
-				</li>
-			</ul>
-		</li>
-	</div>
-	
-	<div sec:authorize="isAuthenticated()">
-		<script>
-			var authorized = 1;
-		</script>
-	</div>
-	<div sec:authorize="isAnonymous">
-		<script>
-			var authorized = 0;
-		</script>
 	</div>
 	<script th:src="@{/js/common.js}"></script>
 	<script th:src="@{/js/tournaments.js}"></script>
 	<script>
 		$(document).ready(function() {
-			loadListItemsByStatus("list-view", "1");
+			loadListItemsByStatus("page-list-data", "1");
 		});
 	</script>
 </body>

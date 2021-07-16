@@ -64,9 +64,15 @@ public class TournamentRestController {
 	Integer defaultPageSize;
 
 	@RequestMapping(value = {"/admin/api/tournaments", "/api/tournaments"}, method = RequestMethod.GET)
-	public ResponseEntity<Object> getTournaments(@RequestParam(defaultValue = "1") Integer status, @RequestParam(defaultValue = "1") Integer page) {
+	public ModelAndView getTournaments(@RequestParam(defaultValue = "1") Integer status, @RequestParam(defaultValue = "1") Integer page) {
 		PaginationService paginatedItems = service.getAllItems(status, page, defaultPageSize, "name");
-		return new ResponseEntity<>(paginatedItems, HttpStatus.OK);
+		
+		ModelAndView model = new ModelAndView("/admin/tournaments/partialList");
+		model.addObject("paginatedItems", paginatedItems);
+		
+		return model;
+		
+//		return new ResponseEntity<>(paginatedItems, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/admin/api/tournaments", method = RequestMethod.POST)

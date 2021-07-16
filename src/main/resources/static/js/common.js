@@ -69,8 +69,9 @@ function formSubmit(event, url, fields, redirect_url) {
 		}
 	});
 
-	console.log(form_data);
-
+	/* Show overlay */
+	showLoadingOverlay();
+	
 	$.ajax({
 		url: url,
 		method: "post",
@@ -79,7 +80,9 @@ function formSubmit(event, url, fields, redirect_url) {
 		contentType: "application/json",
 		headers: httpRequestTokenHeader(),
 		success: function(response) {
-			console.log(response);
+			/* Hide overlay */
+			hideLoadingOverlay();
+			
 			resetModal("successResponseModal");
 			$("#successResponseModal").find(".modal-body").text(response);
 
@@ -88,6 +91,30 @@ function formSubmit(event, url, fields, redirect_url) {
 			}
 
 			$("#successResponseModal").modal("show");
+		}, error: function(response) {
+			handleAjaxError(response);
+		}
+	});
+}
+
+function loadListHtml(element_id, request_url, page = 0) {
+	page_url = "";
+	if (page > 0) {
+		page_url = url.indexOf('?') > -1 ? "&page=" + page : "?page=" + page;	
+	}
+	var request_url = request_url + page_url;
+
+	/* Show overlay */
+	showLoadingOverlay();
+	$.ajax({
+		url: request_url,
+		method: "get",
+		contentType: "application/json",
+		success: function(response) {
+			$("#" + element_id).html(response);
+			
+			/* Hide overlay */
+			hideLoadingOverlay();
 		}, error: function(response) {
 			handleAjaxError(response);
 		}

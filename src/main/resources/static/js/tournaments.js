@@ -3,11 +3,10 @@
  */
 $(document).ready(function() {
 
-	$("body").on("click", "#list-view .pagination-clickable", function(e) {
+	$("body").on("click", "#page-list-data .pagination-clickable", function(e) {
 		let page_no = $(this).attr("attr-page");
-		console.log(page_no);
 		if (page_no != undefined && page_no != "") {
-			loadListItems("list-view", page_no);
+			loadListItems("page-list-data", page_no);
 		}
 	});
 
@@ -62,77 +61,24 @@ $(document).ready(function() {
 	});
 });
 
-function loadListItemsByStatus(list_parent_id, status) {
+function loadListItemsByStatus(element_id, status) {
 	$(".tournament-tabs-list li").removeClass("active");
 	$("#trTab" + status).addClass("active");
-	loadListItems(list_parent_id);
+	loadListItems(element_id);
 }
 
-function loadListItems(list_parent_id, page = 0) {
+function loadListItems(element_id, page = 0) {
 	var status = $(".tournament-tabs-list li.active a").attr("data-status");
 
 	let url = "";
-	console.log(authorized);
 	if (authorized == 1) {
 		url = "/admin/api/tournaments";
 	} else {
 		url = "/api/tournaments";
 	}
 	url += "?status=" + status;
-	if (page > 0) {
-		var request_url = url + "&page=" + page;
-	} else {
-		var request_url = url;
-	}
 
-	var dom_elements = [
-		$(".first-list-view"),
-		$("#" + list_parent_id)
-	];
-	/* Show overlay */
-	showLoadingOverlay();
-	$.ajax({
-		url: request_url,
-		method: "get",
-		contentType: "application/json",
-		success: function(response) {
-			if (response.items.length > 0) {
-				li_dom = $("#sample-list-card").clone();
-				let list_html = "";
-				$.each(response.items, function(k, data) {
-					if (authorized == 1) {
-						li_dom.find(".main-content").html("<a href='/admin/tournaments/" + data.id + "'>" + data.name + "</a>");
-					} else {
-						li_dom.find(".main-content").html("<a href='/tournaments/" + data.id + "'>" + data.name + "</a>");
-					}
-					li_dom.find(".sub-content.start-date-content span.content").text(data.startDate);
-					li_dom.find(".sub-content.reg-end-date-content span.content").text(data.regEndDate);
-
-					if (data.image != null && data.image != "") {
-						li_dom.find(".list-image-content img").attr("src", data.image);
-					} else {
-						li_dom.find(".list-image-content img").attr("src", "/images/blank-profile-picture.png");
-					}
-
-					list_html += li_dom.html();
-				});
-
-				$("#" + list_parent_id + " .list-view-wrapper").html(list_html);
-
-				let paginator_html = paginatorHtml(response);
-
-				$("#" + list_parent_id + " .list-view-pagination-wrapper").html(paginator_html);
-
-				hideShowDomBlock(dom_elements, $("#" + list_parent_id));
-			} else {
-				hideShowDomBlock(dom_elements, $(".first-list-view"));
-			}
-			/* Hide overlay */
-			hideLoadingOverlay();
-		}, error: function(response) {
-			handleAjaxError(response);
-		}
-	});
+	loadListHtml(element_id, url, page);
 }
 
 function addSelectedDrawPlayer(list_parent_id, id) {
@@ -192,6 +138,8 @@ function generateDraw(event, list_parent_id) {
 			form_data["playerIds"] = p_ids;
 			form_data["matchTypeId"] = $("#matchType").val();
 
+			/* Show overlay */
+			showLoadingOverlay();
 			$.ajax({
 				url: request_url,
 				method: "post",
@@ -199,7 +147,9 @@ function generateDraw(event, list_parent_id) {
 				contentType: "application/json",
 				headers: httpRequestTokenHeader(),
 				success: function(response) {
-					console.log(response);
+					/* Hide overlay */
+					hideLoadingOverlay();
+			
 					resetModal("successResponseModal");
 					$("#successResponseModal").find(".modal-body").text(response);
 

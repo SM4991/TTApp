@@ -1,0 +1,67 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+	<th-block th:fragment="logoutFormFragment">
+		<div sec:authorize="isAuthenticated()">
+			<form th:action="@{/logout}" method="post" class="logout-form">
+				<button type="submit" class="logout-btn">
+					<i class="material-icons">power_settings_new</i>
+				</button>
+			</form>
+		</div>
+	</th-block>
+	<th-block th:fragment="pageFooterFragment">
+		<div sec:authorize="isAuthenticated()" class="page-footer">
+			<div class="row">
+				<div class="col-4">
+					<a th:href="@{/admin/tournaments}" class="footer-icon" th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/tournaments')} ? 'active' : ''"> <i
+						class="material-icons">emoji_events</i> <span>Tournaments</span>
+					</a>
+				</div>
+				<div class="col-4">
+					<a th:href="@{/admin/players}" class="footer-icon" th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/players')} ? 'active' : ''"> <i class="material-icons">portrait</i>
+						<span>Players</span>
+					</a>
+				</div>
+				<div class="col-4">
+					<a th:href="@{/admin/users/profile}" class="footer-icon" th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/users/profile')} ? 'active' : ''"> <i class="material-icons">perm_identity</i>
+						<span>My Profile</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</th-block>
+	<th:block th:fragment="paginationFragment (paginator)">
+		<ul class="list-view-pagination-wrapper">
+			<li>
+				<a class='btn btn-primary btn-pagination'
+				th:classAppend="${paginator.currentPage > 1 ? 'pagination-clickable' : ''}"
+				href='javascript:void(0)' th:attr="attr-page=1">First</a>
+			</li>
+			<li>
+				<a class='btn btn-primary btn-pagination'
+				th:classAppend="${paginator.currentPage > 1 ? 'pagination-clickable' : ''}"
+				href='javascript:void(0)' th:attr="attr-page=${paginator.currentPage - 1}">Previous</a>
+			</li>
+			<th:block th:each="i: ${#numbers.sequence(1, paginator.totalPages)}">
+				<li>
+					<a class='btn btn-primary btn-pagination' 
+						th:classAppend="${paginator.currentPage != i ? 'pagination-clickable' : 'active'}" 
+						href='javascript:void(0)'  th:attr="attr-page=${i}" th:text="${i}"></a>
+				</li>
+			</th:block>
+			<li>
+				<a class='btn btn-primary btn-pagination'
+				th:classAppend="${paginator.currentPage < paginator.totalPages ? 'pagination-clickable' : ''}"
+				href='javascript:void(0)' th:attr="attr-page=${paginator.currentPage + 1}">Next</a>
+			</li>
+			<li>
+				<a class='btn btn-primary btn-pagination'
+				th:classAppend="${paginator.currentPage < paginator.totalPages ? 'pagination-clickable' : ''}"
+				href='javascript:void(0)' th:attr="attr-page=${paginator.totalPages}">Last</a>
+			</li>
+		</ul>
+	</th:block>
+</body>
+</html>

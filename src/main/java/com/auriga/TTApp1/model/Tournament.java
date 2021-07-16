@@ -31,10 +31,13 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.auriga.TTApp1.util.DateUtil;
+import com.auriga.TTApp1.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -153,6 +156,10 @@ public class Tournament {
 			return true;
 		}
 		return false;
+	}
+	
+	public String getImageUrl() {
+		return FileUtil.getTournamentImageUrl(this.getImage());
 	}
 
 	@Override
