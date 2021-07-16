@@ -54,6 +54,7 @@ body{
     -webkit-box-shadow: 0 8px 6px -6px rgb(164 150 150 / 75%);
     -moz-box-shadow: 0 8px 6px -6px black;
     box-shadow: 0 8px 6px -6px rgb(164 150 150 / 75%);
+	z-index: 1;
 }
 .page-wrapper .page-content{
 	background: #fff;
@@ -265,4 +266,7 @@ ul.list-view-pagination-wrapper a.btn.btn-pagination{
 .logout-form button{
 	border: none;
 	background: transparent;
+}
+.no-results-block{
+	text-align: center;
 }

@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.Transient;
+
 import com.auriga.TTApp1.constants.MatchStatusEnum;
 
 @Entity
@@ -44,6 +46,12 @@ public class TournamentMatch {
 	
 	@Column(name="match_order", nullable = false)
 	private Integer order;
+	
+	@Column(name="bye_given")
+	private Boolean byeGiven;
+	
+	@Transient
+	private String fixtureClass;
 
 	public Long getId() {
 		return id;
@@ -100,6 +108,10 @@ public class TournamentMatch {
 	public void setStatus(MatchStatusEnum status) {
 		this.status = status;
 	}
+	
+	public String getStatusText() {
+		return MatchStatusEnum.getEnumText(this.status);
+	}
 
 	public Integer getOrder() {
 		return order;
@@ -109,10 +121,26 @@ public class TournamentMatch {
 		this.order = order;
 	}
 	
+	public Boolean getByeGiven() {
+		return byeGiven;
+	}
+
+	public void setByeGiven(Boolean byeGiven) {
+		this.byeGiven = byeGiven;
+	}
+
 	public Tournament getTournament() {
 		return getTournamentRound().getTournament();
-	}
+	} 
 	
+	public String getFixtureClass() {
+		return fixtureClass;
+	}
+
+	public void setFixtureClass(String fixtureClass) {
+		this.fixtureClass = fixtureClass;
+	}
+
 	@Override
 	public String toString() {
 		return "Tournament Match: " + name;

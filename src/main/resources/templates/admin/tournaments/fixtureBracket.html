@@ -1,0 +1,66 @@
+<div class="round" th:classAppend=${rounds.get(roundMatches.key).name}
+	th:each="roundMatches: ${matches}" th:if="${matches.size() > 0}">
+	<div class="match-block"
+		th:classAppend="${'match-order-'+match.order+' '+match.fixtureClass}"
+		th:each="match: ${roundMatches.value}">
+		<ul class="match-player-list"
+			th:classAppend="${match.status == T(com.auriga.TTApp1.constants.MatchStatusEnum).INACTIVE ? 'inactive' : 'active'}"
+			th:attr="onclick=|redirectToUrl('/admin/matches/${match.id}')|">
+			<li th:if="${match.getPlayer1() == null}" class="player player1">
+				<span class="image-wrapper"> <img
+					th:src="@{${@environment.getProperty('tournaments.image.default.path')}}"
+					id="default-form-image" class="default-form-image" />
+			</span> <span class="text-content">-</span>
+			</li>
+			<li th:unless="${match.getPlayer1() == null}" class="player player1">
+				<span class="image-wrapper"> <img
+					th:if="${match.getPlayer1().image == null}"
+					th:src="@{${@environment.getProperty('tournaments.image.default.path')}}"
+					id="default-form-image" class="default-form-image" /> <img
+					th:unless="${match.getPlayer1().image == null}"
+					th:src="@{${match.getPlayer1().image}}" id="default-form-image"
+					class="default-form-image" />
+			</span> <span class="text-content" th:text="${match.getPlayer1().name}"></span>
+			</li>
+			<li th:if="${match.getPlayer2() == null}" class="player player2">
+				<span class="image-wrapper"> <img
+					th:src="@{${@environment.getProperty('tournaments.image.default.path')}}"
+					id="default-form-image" class="default-form-image" />
+			</span> <span class="text-content">-</span>
+			</li>
+			<li th:unless="${match.getPlayer2() == null}" class="player player2">
+				<span class="image-wrapper"> <img
+					th:if="${match.getPlayer2().image == null}"
+					th:src="@{${@environment.getProperty('tournaments.image.default.path')}}"
+					id="default-form-image" class="default-form-image" /> <img
+					th:unless="${match.getPlayer2().image == null}"
+					th:src="@{${match.getPlayer2().image}}" id="default-form-image"
+					class="default-form-image" />
+			</span> <span class="text-content" th:text="${match.getPlayer2().name}"></span>
+			</li>
+		</ul>
+		<p class="match-status" th:classAppend="${'status-'+match.status}"
+			th:if="${match.status == T(com.auriga.TTApp1.constants.MatchStatusEnum).LIVE || match.status == T(com.auriga.TTApp1.constants.MatchStatusEnum).COMPLETE}"
+			th:text="${match.getStatusText()}"></p>
+	</div>
+</div>
+<div class="round winner" th:if="${matches.size() > 0}">
+	<div class="match-block match-block-1 match-block-common">
+		<ul class="match-player-list">
+			<li class="player player1 inactive"
+				th:if="${tournament.getWinner() == null}"><span
+				class="image-wrapper"> <img
+					th:src="@{${@environment.getProperty('tournaments.image.default.path')}}"
+					id="default-form-image" class="default-form-image" />
+			</span> <span class="text-content">-</span></li>
+			<li class="player player1"
+				th:unless="${tournament.getWinner() == null}"><span
+				class="image-wrapper"> <img
+					th:src="@{${@environment.getProperty('tournaments.image.default.path')}}"
+					id="default-form-image" class="default-form-image" />
+			</span> <span class="text-content" th:text="${tournament.getWinner().name}"></span>
+			</li>
+		</ul>
+	</div>
+</div>
+<div class="no-results-block"  th:if="${matches.size() == 0}">No matches found</div>

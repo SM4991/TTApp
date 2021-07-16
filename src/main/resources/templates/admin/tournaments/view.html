@@ -7,61 +7,64 @@
 	<div class="app-wrapper">
 		<div class="page-wrapper">
 			<div class="page-header">
-				<a sec:authorize="isAuthenticated()" th:href="@{/admin/tournaments}" class="back-link"><i class="material-icons">arrow_back</i></a>
-				<a sec:authorize="isAnonymous()" th:href="@{/admin/tournaments}" class="back-link"><i class="material-icons">arrow_back</i></a>
+				<a sec:authorize="isAuthenticated()" th:href="@{/admin/tournaments}"
+					class="back-link"><i class="material-icons">arrow_back</i></a> <a
+					sec:authorize="isAnonymous()" th:href="@{/tournaments}"
+					class="back-link"><i class="material-icons">arrow_back</i></a>
 				<h3 class="page-title">Tournament Details</h3>
 			</div>
 			<div class="page-content">
 				<div class="detail-content tournament-detail">
 					<ul class="view-top-content">
 						<li class="main-content" th:text="${tournament.name}"></li>
-						<li class="sub-content">
-							<span class="label">Starts on: </span>
-							<span class="content" th:text="${tournament.startDate}"></span>
-						</li>
-						<li class="sub-content">
-							<span class="label">Last Date of registration: </span>
-							<span class="content" th:text="${tournament.regEndDate}"></span>
-						</li>
-						<li class="sub-content">
-							<span class="label">Max Score: </span>
-							<span class="content" th:text="${tournament.maxScore}"></span>
-						</li>
+						<li class="sub-content"><span class="label">Starts on:
+						</span> <span class="content" th:text="${tournament.startDate}"></span></li>
+						<li class="sub-content"><span class="label">Last Date
+								of registration: </span> <span class="content"
+							th:text="${tournament.regEndDate}"></span></li>
+						<li class="sub-content"><span class="label">Max Score:
+						</span> <span class="content" th:text="${tournament.maxScore}"></span></li>
 						<li class="sub-content" th:if="${tournament.getWinner() != null}">
-							<span class="label">Winner: </span>
-							<span class="content" th:text="${tournament.getWinner().name}"></span>
+							<span class="label">Winner: </span> <span class="content"
+							th:text="${tournament.getWinner().name}"></span>
 						</li>
 					</ul>
 					<ul class="tournament-matches-content">
-						<li class="main-content">
-							<a sec:authorize="isAuthenticated()" th:href="@{'/admin/tournaments/' + ${tournament.id} + '/matches'}">Matches in tournament</a>
-							<a sec:authorize="isAnonymous()" th:href="@{'/tournaments/' + ${tournament.id} + '/matches'}">Matches in tournament</a>
-						</li>
-						<li class="sub-content" th:each="matchType : ${matchTypes}" th:text="${matchType.name}"></li>
-						<li class="main-content">
-							<a sec:authorize="isAuthenticated()" th:href="@{'/admin/tournaments/' + ${tournament.id} + '/fixture'}">View Fixture</a>
-							<a sec:authorize="isAnonymous()" th:href="@{'/tournaments/' + ${tournament.id} + '/fixture'}">View Fixture</a>
+						<li class="main-content">Matches in tournament</li>
+						<li class="sub-content" th:each="matchType : ${matchTypes}">
+							<ul>
+								<li class="text-content" th:text="${matchType.name}"></li>
+								<li class="match-icon icon-content">
+									<a sec:authorize="isAuthenticated()"
+									th:href="@{'/admin/tournaments/' + ${tournament.id} + '/matches/' + ${matchType.id}}">
+										<i class="material-icons">remove_red_eye</i></a> 
+									<a sec:authorize="isAnonymous()"
+									th:href="@{'/tournaments/' + ${tournament.id} + '/matches/' + ${matchType.id}}">
+										<i class="material-icons">remove_red_eye</i>
+									</a>
+								</li>
+								<li class="fixture-icon icon-content">
+									<a sec:authorize="isAuthenticated()"
+									th:href="@{'/admin/tournaments/' + ${tournament.id} + '/fixture/' + ${matchType.id}}">
+										<i class="material-icons">track_changes</i>
+									</a> 
+									<a sec:authorize="isAnonymous()"
+									th:href="@{'/tournaments/' + ${tournament.id} + '/fixture/' + ${matchType.id}}">
+										<i class="material-icons">track_changes</i>
+									</a>
+								</li>
+							</ul>
 						</li>
 					</ul>
 				</div>
 			</div>
-			<div sec:authorize="isAuthenticated()" class="page-footer page-footer-full-btn" th:unless="${forbidCreateDraw}">
-				<a th:href="@{'/admin/tournaments/' + ${tournament.id} + '/draw'}" class="btn btn-primary footer-full-btn">Create Draw</a> 
+			<div sec:authorize="isAuthenticated()"
+				class="page-footer page-footer-full-btn"
+				th:unless="${forbidCreateDraw}">
+				<a th:href="@{'/admin/tournaments/' + ${tournament.id} + '/draw'}"
+					class="btn btn-primary footer-full-btn">Create Draw</a>
 			</div>
 		</div>
-	</div>
-	<div class="hide" id="sample-list-card">
-		<li class="list-view-card">
-			<ul>
-				<li class="list-image-content"><img src="" class="list-image" /></li>
-				<li class="list-detail-content">
-					<ul class="">
-						<li class="main-content"></li>
-						<li class="sub-content"><span class="age-detail"></span> - <span class="gender-detail"></span></li>
-					</ul>
-				</li>
-			</ul>
-		</li>
 	</div>
 	<script th:src="@{/js/common.js}"></script>
 	<script th:src="@{/js/tournaments.js}"></script>

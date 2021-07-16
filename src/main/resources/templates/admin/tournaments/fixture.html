@@ -11,7 +11,9 @@
 	<div class="app-wrapper">
 		<div class="page-wrapper">
 			<div class="page-header">
-				<a th:href="@{'/admin/tournaments/'+${tournament.id}}"
+				<a sec:authorize="isAuthenticated()" th:href="@{'/admin/tournaments/'+${tournament.id}}"
+					class="back-link"><i class="material-icons">arrow_back</i></a> <a
+					sec:authorize="isAnonymous()" th:href="@{'/tournaments/'+${tournament.id}}"
 					class="back-link"><i class="material-icons">arrow_back</i></a>
 				<h3 class="page-title">Fixture</h3>
 			</div>
@@ -20,12 +22,14 @@
 					<div class="form-container">
 						<div class="form-group">
 							<input type="hidden" id="tid" class="tid"
-								th:value="${tournament.id}" /> <label th:for="matchType">Match
-								Type:</label> <select id="matchType" name="matchType"
+								th:value="${tournament.id}" /> 
+							<label th:for="matchType">Match
+								Type:</label> 
+							<select id="matchType" name="matchType"
 								class="form-control" onChange="loadTournamentFixture()">
 								<option value="" selected>Choose...</option>
 								<option th:each="matchType: ${matchTypes}"
-									th:value="${matchType.id}" th:text="${matchType.name}"></option>
+									th:value="${matchType.id}" th:text="${matchType.name}" th:selected="${matchTypeId == matchType.id}"></option>
 							</select>
 						</div>
 
@@ -57,5 +61,12 @@
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		<script th:src="@{/js/common.js}"></script>
 		<script th:src="@{/js/tournaments.js}"></script>
+		<div th:if="${matchTypeId != null && matchTypeId != ''}">
+			<script>
+				$(document).ready(function(){
+					$("#matchType").trigger("change");
+				});
+			</script>
+		</div>
 </body>
 </html>

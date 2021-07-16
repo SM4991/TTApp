@@ -1,4 +1,4 @@
-package com.auriga.TTApp1.model;
+package com.auriga.TTApp1.dto;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,46 +37,30 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Entity
-@Table(name = "tournaments")
-public class Tournament {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @Column(nullable = false, length = 100)
+public class TournamentDto {
+	@NotBlank(message = "Name must not be empty.")
+	@Size(min = 3, max = 100, message = "Name must contain characters between 3-100.")
     private String name;
     
-	@Column(nullable = true, name="start_date")
-    private Date startDate;
+	@NotNull(message = "Start Date must not be empty.")
+	@Future(message = "Start Date must be more than today's date.")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date startDate;
     
-	@Column(nullable = true, name="reg_end_date")
-    private Date regEndDate;
+	@NotNull(message = "Registration end date must not be empty.")
+	@Future(message = "Registration end date must be more than today's date.")
+	@JsonFormat(pattern="yyyy-MM-dd")
+	private Date regEndDate;
     
-	@Column(nullable = false, name="max_score")
+	@NotNull(message = "Max Score must not be empty.")
+	@Min(value=1, message = "Max score must have value more than or equal to 1.")
     private Integer maxScore;
     
-    @Column(nullable = true, length = 255)
     private String image;
     
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "tournaments_match_types",
-            joinColumns = @JoinColumn(name = "tournament_id"),
-            inverseJoinColumns = @JoinColumn(name = "match_type_id")
-            )
-    private List<MatchType> matchTypes;
-    
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private User winner;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @NotNull(message="Select atleast one match type")
+    @Transient // Custom column not an entity column
+    private List<String> matchTypeIds;
 
 	public String getName() {
 		return name;
@@ -86,18 +70,16 @@ public class Tournament {
 		this.name = name;
 	}
 
-	public String getStartDate() {
-		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		return dateFormat.format(startDate);
+	public Date getStartDate() {
+		return startDate;
 	}
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
-	public String getRegEndDate() {
-		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		return dateFormat.format(regEndDate);
+	public Date getRegEndDate() {
+		return regEndDate;
 	}
 
 	public void setRegEndDate(Date regEndDate) {
@@ -120,24 +102,11 @@ public class Tournament {
 		this.image = image;
 	}
 
-	public List<MatchType> getMatchTypes() {
-		return matchTypes;
+	public List<String> getMatchTypeIds() {
+		return matchTypeIds;
 	}
 
-	public void setMatchTypes(List<MatchType> matchTypes) {
-		this.matchTypes = matchTypes;
-	}
-
-	public User getWinner() {
-		return winner;
-	}
-
-	public void setWinner(User winner) {
-		this.winner = winner;
-	}
-
-	@Override
-	public String toString() {
-		return "Tournament: " + name;
+	public void setMatchTypeIds(List<String> matchTypeIds) {
+		this.matchTypeIds = matchTypeIds;
 	}
 }

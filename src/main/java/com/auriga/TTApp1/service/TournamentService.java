@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.auriga.TTApp1.constants.MatchStatusEnum;
 import com.auriga.TTApp1.constants.RoundTypeEnum;
 import com.auriga.TTApp1.dto.TournamentDrawDto;
+import com.auriga.TTApp1.dto.TournamentDto;
 import com.auriga.TTApp1.exception.ResourceAlreadyExistsException;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.model.MatchType;
@@ -49,6 +53,9 @@ public class TournamentService {
 	
 	@Autowired
 	private MatchTypeService matchTypeService;
+	
+	@Autowired
+	private TournamentMatchSetService matchSetService;
 
 	@Autowired
 	private PaginationService paginationService;
@@ -72,9 +79,12 @@ public class TournamentService {
 		return paginationService.paginatedItems(pagedResult, page, pageSize, sortBy);
 	}
 
-	public void save(Tournament tournament) {
+	public void save(TournamentDto tournamentDto) {
+		Tournament tournament = new Tournament(); 
+    	BeanUtils.copyProperties(tournamentDto, tournament);
+		
 		List<MatchType> matchTypes = new ArrayList();
-		tournament.getMatchTypeIds().forEach(item -> {
+		tournamentDto.getMatchTypeIds().forEach(item -> {
 			Long id = Long.valueOf(item);
 			matchTypes.add(matchTypeRepo.getById(id));
 		});
@@ -112,9 +122,9 @@ public class TournamentService {
 		
 		Integer totalRound = roundMatchCount.size();
 		
+		AtomicReference<TournamentRound> firstRound = new AtomicReference<>();
 		/* Save Round Entries */
 		roundMatchCount.forEach((order, matchCount) -> {
-			
 			TournamentRound round = new TournamentRound();
 			round.setTournament(tournament);
 			round.setMatchType(matchType);
@@ -125,7 +135,19 @@ public class TournamentService {
 			roundRepo.save(round);
 			
 			createRoundMatches(round, players, matchCount);
+			
+			if(order == 1) {
+				firstRound.set(round);
+			}
 		});
+		
+		/* Find match with bye given for first round, and move them to next round */
+		List<TournamentMatch> matches = matchRepo.findAllByTournamentRoundAndByeGiven(firstRound.get(), true);
+		if(matches.size() > 0) {
+			matches.forEach(match -> {
+				matchSetService.setNextRoundPlayer(tournament, firstRound.get(), match, match.getPlayer1());
+			});
+		}
 	}
 	
 	public void createRoundMatches(TournamentRound round, List<User> players, Integer matchCount) {
@@ -154,7 +176,10 @@ public class TournamentService {
 		}
 		
 		/* Get player1 and player2 for round and save match entries */
-		IntStream.range(0, matchCount).forEach(index -> {
+		List<Integer> range = IntStream.rangeClosed(1, matchCount).boxed().collect(Collectors.toList());
+		Long seed = System.nanoTime();
+		Collections.shuffle(range, new Random(seed));
+		range.forEach(index -> {
 			Integer index2 = (participantCount-1)-index;
 			
 			TournamentMatch tournamentMatch = new TournamentMatch();
@@ -162,28 +187,41 @@ public class TournamentService {
 			User player1 = players.get(index);
 			User player2 = players.get(index2);
 			
-			//give bye
-			if(player1.getId() == player2.getId()) {
-				player2 = null;
-			}
-			
 			tournamentMatch.setTournamentRound(round);
-			tournamentMatch.setName("Match "+(index+1));
-			tournamentMatch.setOrder(index+1);
+			tournamentMatch.setName("Match "+(index));
+			tournamentMatch.setOrder(index);
 			tournamentMatch.setPlayer1(player1);
-			tournamentMatch.setPlayer2(player2);
-			tournamentMatch.setStatus(MatchStatusEnum.PENDING);
+			
+			//give bye & save related data, else save other data
+			if(player1.getId() == player2.getId()) {
+				tournamentMatch.setPlayer2(null);
+				tournamentMatch.setByeGiven(true);
+				tournamentMatch.setWinner(player1);
+				tournamentMatch.setStatus(MatchStatusEnum.COMPLETE);
+			} else {
+				tournamentMatch.setPlayer2(player2);
+				tournamentMatch.setByeGiven(false);
+				tournamentMatch.setStatus(MatchStatusEnum.PENDING);
+			}
 			matchRepo.save(tournamentMatch);
 		});
 	}
 	
 	public void createNonPlayerMatches(TournamentRound round, Integer matchCount) {
 		/* Save match entries  */
-		IntStream.range(0, matchCount).forEach(index -> {
+		IntStream.rangeClosed(1, matchCount).forEach(index -> {
 			TournamentMatch tournamentMatch = new TournamentMatch();
 			tournamentMatch.setTournamentRound(round);
-			tournamentMatch.setName("Match"+(index+1));
-			tournamentMatch.setOrder(index+1);
+			tournamentMatch.setName("Match"+index);
+			tournamentMatch.setOrder(index);
+			/* If match count is odd number & is the last match & round is not final, 
+			 * mark the last match with bye given */
+//			if(matchCount%2 > 0 && index == matchCount && round.getType() != RoundTypeEnum.FINAL) {
+//				tournamentMatch.setByeGiven(true);
+//			} else {
+//				tournamentMatch.setByeGiven(false);
+//			}
+			tournamentMatch.setByeGiven(false);
 			tournamentMatch.setStatus(MatchStatusEnum.INACTIVE);
 			matchRepo.save(tournamentMatch);
 		});

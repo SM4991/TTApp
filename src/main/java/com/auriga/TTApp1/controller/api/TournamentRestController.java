@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.auriga.TTApp1.dto.TournamentDrawDto;
+import com.auriga.TTApp1.dto.TournamentDto;
 import com.auriga.TTApp1.dto.TournamentImageDto;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.model.MatchType;
@@ -68,7 +69,7 @@ public class TournamentRestController {
 	}
 
 	@RequestMapping(value = "/admin/api/tournaments", method = RequestMethod.POST)
-	public ResponseEntity<Object> createTournament(@Valid @RequestBody Tournament tournament,
+	public ResponseEntity<Object> createTournament(@Valid @RequestBody TournamentDto tournamentDto,
 			BindingResult errorResult) {
 		if (errorResult.hasErrors()) {
 			List<FieldError> errors = errorResult.getFieldErrors();
@@ -80,7 +81,7 @@ public class TournamentRestController {
 			}
 			return new ResponseEntity<>(errorMsgs, HttpStatus.BAD_REQUEST);
 		} else {
-			service.save(tournament);
+			service.save(tournamentDto);
 			return new ResponseEntity<>("Tournament is added successfully", HttpStatus.OK);
 		}
 	}
@@ -103,32 +104,49 @@ public class TournamentRestController {
 	}
 	
 	@RequestMapping(value = "/admin/api/tournaments/{id}/{mtId}/fixture", method = RequestMethod.GET)
-	public ResponseEntity<Object> viewFixture(@PathVariable("id") Long id, @PathVariable Long mtId) {
+	public ModelAndView viewFixture(@PathVariable("id") Long id, @PathVariable Long mtId) {
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		MatchType matchType = matchTypeService.get(mtId).orElseThrow(() -> new ResourceNotFoundException("Match Type"));
 		
-		List<TournamentRound> rounds = roundRepo.findByTournamentAndMatchType(tournament, matchType);
-		Map<Long, Map<Integer, List<TournamentMatch>>> matches = new HashMap();
+		List<TournamentRound> rounds = roundRepo.findByTournamentAndMatchTypeOrderByOrderAsc(tournament, matchType);
+		Map<Long, List<TournamentMatch>> matchList = new HashMap();
+		Map<Long, TournamentRound> roundList = new HashMap();
 		
 		rounds.forEach(round -> {
 			List<TournamentMatch> r_matches = matchRepo.findAllByTournamentRound(round);
 			
-			Map<Integer, List<TournamentMatch>> order_matches = new HashMap();
-			r_matches.forEach(match -> {
-				Integer order = (match.getOrder()/2)+(match.getOrder()%2);
-				if(order_matches.containsKey(order)) {
-					order_matches.get(order).add(match);
-				} else {
-					List<TournamentMatch> list = new ArrayList();
-					list.add(match);
-					order_matches.put(order, list);
-				}
-			});
+			List<TournamentMatch> nmatches = new ArrayList();
 			
-			matches.put(round.getId(), order_matches);
+			Integer count = 1;
+			Integer counter = 1;
+			for(TournamentMatch match : r_matches) {
+				String cls = "";
+				if(counter%2 == 1) {
+					cls = "match-block-1";
+					counter++;
+				} else {
+					cls = "match-block-2";
+					counter = 1;
+				}
+				if(count%2 > 0 && count == r_matches.size()) {
+					cls += " match-block-common";
+				}
+				match.setFixtureClass(cls);
+				nmatches.add(match);
+				
+				count++;
+			}
+			
+			matchList.put(round.getId(), nmatches);
+			roundList.put(round.getId(), round);
 		});
 		
-		return new ResponseEntity(matches, HttpStatus.OK);
+		ModelAndView model = new ModelAndView("/admin/tournaments/fixtureBracket");
+		model.addObject("tournament", tournament);
+		model.addObject("rounds", roundList);
+		model.addObject("matches", matchList);
+		
+		return model;
 	}
 	
 	@RequestMapping(value = {"/admin/api/tournaments/{id}/{mtId}/matches", "/api/tournaments/{id}/{mtId}/matches"}, method = RequestMethod.GET)

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.auriga.TTApp1.constants.MatchSetStatusEnum;
 import com.auriga.TTApp1.constants.MatchStatusEnum;
@@ -48,6 +49,7 @@ public class TournamentMatchSetService {
     	return repo.findAllByTournamentMatch(match);
     }
 	
+    @Transactional
 	public void startSet(TournamentMatch match, Integer setNumber) {
 		if (setNumber < 1 && setNumber > 3) throw new ResourceBadRequestException("Invalid set");
 		
@@ -60,10 +62,17 @@ public class TournamentMatchSetService {
         set.setStatus(MatchSetStatusEnum.ONGOING);
         
         repo.save(set);
+        
+        /* Update Match Status as Live */
+        match.setStatus(MatchStatusEnum.LIVE);
+        
+        matchRepo.save(match);
 	}
 	
+	@Transactional
 	public Map<String, Integer> updateScore(TournamentMatchSet set, Integer playerNumber, Boolean state) {
 		if(playerNumber < 1 && playerNumber > 2) throw new ResourceBadRequestException("Invalid request");
+		
 		Integer score;
 		Integer status = 1;
 		if(playerNumber == 1) {
@@ -109,6 +118,7 @@ public class TournamentMatchSetService {
 		return result;
 	}
 	
+	@Transactional
 	public void setMatchWinner(Tournament tournament, TournamentRound round, TournamentMatch match, TournamentMatchSet set) {
 		/* If match set is 2/3 and any of the player's score has exceeded max score, set him/her as winner */
 		if(set.getSetNumber() > 1) {
@@ -124,21 +134,37 @@ public class TournamentMatchSetService {
 		}
 	}
 	
+	@Transactional
 	public void setNextRoundPlayer(Tournament tournament, TournamentRound round, TournamentMatch match, User winner) {
 		if(round.getType() != RoundTypeEnum.FINAL) {
-			TournamentRound nextRound = roundRepo.findByOrder(round.getOrder()+1);
+			TournamentMatch nextMatch = matchRepo.findByTournamentRoundAndOrder(round, (match.getOrder()+1));
+			TournamentRound nextRound = roundRepo.findByTournamentAndOrder(tournament, round.getOrder()+1);
+			System.out.println("nextRound: "+nextRound);
 			if(nextRound != null) {
 				Integer order = (match.getOrder()/2)+(match.getOrder()%2);
 				TournamentMatch nextRoundMatch = matchRepo.findByTournamentRoundAndOrder(nextRound, order);
+				System.out.println("nextRoundMatch: "+nextRoundMatch);
 				if(nextRoundMatch != null) {
-					if(nextRoundMatch.getPlayer1() == null) {
+					/* If next match does not exists & next round is not final, give the next round match bye, mark the player as winner */
+					System.out.println("nextMatch: "+nextMatch);
+					if(nextMatch == null && nextRound.getType() != RoundTypeEnum.FINAL) {
 						nextRoundMatch.setPlayer1(winner);
-					} else if(nextRoundMatch.getPlayer2() == null) {
-						nextRoundMatch.setPlayer2(winner);
-						nextRoundMatch.setStatus(MatchStatusEnum.PENDING);
+						nextRoundMatch.setWinner(winner);
+						nextRoundMatch.setByeGiven(true);
+						nextRoundMatch.setStatus(MatchStatusEnum.COMPLETE);
+						
+						/* Set match winner as next round player*/
+						setNextRoundPlayer(tournament, nextRound, nextRoundMatch, winner);
+					} else {
+						if(nextRoundMatch.getPlayer1() == null) {
+							nextRoundMatch.setPlayer1(winner);
+						} else if(nextRoundMatch.getPlayer2() == null) {
+							nextRoundMatch.setPlayer2(winner);
+							nextRoundMatch.setStatus(MatchStatusEnum.COMPLETE);
+						}
+						
+						matchRepo.save(nextRoundMatch);
 					}
-					
-					matchRepo.save(nextRoundMatch);
 				}
 			}
 		} else {

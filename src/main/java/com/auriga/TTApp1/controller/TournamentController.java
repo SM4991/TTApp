@@ -64,19 +64,16 @@ public class TournamentController {
 		modelView.addObject("tournament", tournament);
 		modelView.addObject("matchTypes", matchTypes);
 	    modelView.addObject("winner", winner);
-	    modelView.addObject("forbidCreateDraw", false);
+	    modelView.addObject("forbidCreateDraw", true);
 	    
 	    if(winner == null) {
 	    	tournament.getMatchTypes().forEach(type -> {
 		    	Long count = roundRepo.countByTournamentAndMatchType(tournament, type);
-		    	if(count > 0) {
-		    		modelView.addObject("forbidCreateDraw", true);
+		    	if(count == 0) {
+		    		modelView.addObject("forbidCreateDraw", false);
 		    		System.out.println("in");
 		    	}
 		    });
-	    } else {
-	    	modelView.addObject("forbidCreateDraw", true);
-	    	System.out.println("in2");
 	    }
 	    
 		return modelView;
@@ -96,26 +93,28 @@ public class TournamentController {
 		return modelView;
 	}
 	
-	@GetMapping("/admin/tournaments/{id}/fixture")
-	public ModelAndView viewFixture(@PathVariable("id") Long id) {
+	@GetMapping(value = {"/admin/tournaments/{id}/fixture", "/admin/tournaments/{id}/fixture/{mi}", "/tournaments/{id}/fixture", "/tournaments/{id}/fixture/{mi}"})
+	public ModelAndView viewFixture(@PathVariable("id") Long id, @PathVariable(required = false) Long mi) {
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		
 		ModelAndView modelView = new ModelAndView("admin/tournaments/fixture");
 		
 		modelView.addObject("tournament", tournament);
 	    modelView.addObject("matchTypes", tournament.getMatchTypes());
+	    modelView.addObject("matchTypeId", mi);
 	    
 		return modelView;
 	}
 	
-	@GetMapping(value = {"/admin/tournaments/{id}/matches", "/tournaments/{id}/matches"})
-	public ModelAndView viewTournamentMatches(@PathVariable("id") Long id) {
+	@GetMapping(value = {"/admin/tournaments/{id}/matches", "/admin/tournaments/{id}/matches/{mi}", "/tournaments/{id}/matches", "/tournaments/{id}/matches/{mi}"})
+	public ModelAndView viewTournamentMatches(@PathVariable("id") Long id, @PathVariable(required = false) Long mi) {
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		
 		ModelAndView modelView = new ModelAndView("admin/tournaments/matches");
 		
 		modelView.addObject("tournament", tournament);
 	    modelView.addObject("matchTypes", tournament.getMatchTypes());
+	    modelView.addObject("matchTypeId", mi);
 	    
 		return modelView;
 	}
