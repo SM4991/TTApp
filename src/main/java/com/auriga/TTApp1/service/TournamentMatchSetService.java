@@ -51,7 +51,19 @@ public class TournamentMatchSetService {
 	
     @Transactional
 	public void startSet(TournamentMatch match, Integer setNumber) {
-		if (setNumber < 1 && setNumber > 3) throw new ResourceBadRequestException("Invalid set");
+		/* Check if set number is valid (only 1-3 allowed) */
+    	if (setNumber < 1 && setNumber > 3) throw new ResourceBadRequestException("Invalid set");
+		
+    	/* check if match is inactive */
+		if(match.getStatus() == MatchStatusEnum.INACTIVE) throw new ResourceBadRequestException("Match is in inactive state.");
+
+		Tournament tournament = match.getTournament();
+		
+		/* Check if tournament match can be started or not */
+		if(!tournament.getCanTournamentStart()) throw new ResourceBadRequestException("Match cannot be started before its start date.");
+		
+		/* Check if match already finished and has winner or not */
+		if(match.getWinner() != null) throw new ResourceBadRequestException("Match is already complete.");
 		
         TournamentMatchSet set = new TournamentMatchSet();
         set.setTournamentMatch(match);
@@ -71,7 +83,19 @@ public class TournamentMatchSetService {
 	
 	@Transactional
 	public Map<String, Integer> updateScore(TournamentMatchSet set, Integer playerNumber, Boolean state) {
+		/* Check if player number is valid (only 1 or 2 allowed) */
 		if(playerNumber < 1 && playerNumber > 2) throw new ResourceBadRequestException("Invalid request");
+		
+		/* Check if set is already completed */
+		if(set.getStatus() == MatchSetStatusEnum.COMPLETE) throw new ResourceBadRequestException("Set is already finished.");
+		
+		TournamentMatch match = set.getTournamentMatch();
+		TournamentRound round = match.getTournamentRound();
+		Tournament tournament = round.getTournament();
+		Integer max_score = tournament.getMaxScore();
+		
+		/* Check if tournament match can be started or not */
+		if(!tournament.getCanTournamentStart()) throw new ResourceBadRequestException("Match cannot be started before its start date.");
 		
 		Integer score;
 		Integer status = 1;
@@ -86,10 +110,6 @@ public class TournamentMatchSetService {
 			score = score < 0 ? 0 : score;
 			set.setPlayer2Score(score);
 		}
-		TournamentMatch match = set.getTournamentMatch();
-		TournamentRound round = match.getTournamentRound();
-		Tournament tournament = round.getTournament();
-		Integer max_score = tournament.getMaxScore();
 		
 		/* If a player reached max score, mark him as winner */
 		Boolean setWinner = false; 
@@ -136,18 +156,25 @@ public class TournamentMatchSetService {
 	
 	@Transactional
 	public void setNextRoundPlayer(Tournament tournament, TournamentRound round, TournamentMatch match, User winner) {
+		/* If round is not final, set current match winner as next round's match player, else set tournament match */
 		if(round.getType() != RoundTypeEnum.FINAL) {
 			TournamentMatch nextMatch = matchRepo.findByTournamentRoundAndOrder(round, (match.getOrder()+1));
 			TournamentRound nextRound = roundRepo.findByTournamentAndOrder(tournament, round.getOrder()+1);
 			System.out.println("nextRound: "+nextRound);
+			
+			/* if next round is not empty, set current match winner as next round's match player */
 			if(nextRound != null) {
 				Integer order = (match.getOrder()/2)+(match.getOrder()%2);
 				TournamentMatch nextRoundMatch = matchRepo.findByTournamentRoundAndOrder(nextRound, order);
 				System.out.println("nextRoundMatch: "+nextRoundMatch);
+				
+				/* if next round's match is not empty, set current match winner as its player */
 				if(nextRoundMatch != null) {
-					/* If next match does not exists & next round is not final, give the next round match bye, mark the player as winner */
+					/* If next match for current match does not exists & next round is not final, give the next round match bye & mark the player as winner */
 					System.out.println("nextMatch: "+nextMatch);
 					if(nextMatch == null && nextRound.getType() != RoundTypeEnum.FINAL) {
+						System.out.println("Give bye");
+						
 						nextRoundMatch.setPlayer1(winner);
 						nextRoundMatch.setWinner(winner);
 						nextRoundMatch.setByeGiven(true);
@@ -156,11 +183,12 @@ public class TournamentMatchSetService {
 						/* Set match winner as next round player*/
 						setNextRoundPlayer(tournament, nextRound, nextRoundMatch, winner);
 					} else {
+						System.out.println("Set Player");
 						if(nextRoundMatch.getPlayer1() == null) {
 							nextRoundMatch.setPlayer1(winner);
 						} else if(nextRoundMatch.getPlayer2() == null) {
 							nextRoundMatch.setPlayer2(winner);
-							nextRoundMatch.setStatus(MatchStatusEnum.COMPLETE);
+							nextRoundMatch.setStatus(MatchStatusEnum.PENDING);
 						}
 						
 						matchRepo.save(nextRoundMatch);

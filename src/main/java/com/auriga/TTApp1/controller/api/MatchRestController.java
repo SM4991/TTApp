@@ -48,8 +48,6 @@ public class MatchRestController {
 		
 		if(match.getStatus() == MatchStatusEnum.INACTIVE) throw new ResourceBadRequestException("Match is in inactive state.");
 
-		ModelAndView modelView = new ModelAndView("admin/matches/score_form");
-		
 		Tournament tournament = match.getTournament();
 		TournamentRound round = match.getTournamentRound();
 		
@@ -57,6 +55,7 @@ public class MatchRestController {
 		
 		Integer diff = 3 - sets.size();
 		
+		ModelAndView modelView = new ModelAndView("admin/matches/score_form");
 		modelView.addObject("tournament", tournament);
 		modelView.addObject("round", round);
 		modelView.addObject("match", match);
@@ -84,11 +83,8 @@ public class MatchRestController {
 	public ResponseEntity<Object> startSet(@PathVariable("id") Long id, @PathVariable("set") Integer set){
 		TournamentMatch match = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Match"));
 		
-		if(match.getStatus() == MatchStatusEnum.INACTIVE) throw new ResourceBadRequestException("Match is in inactive state.");
-
-		if(match.getWinner() != null) throw new ResourceBadRequestException("Match is already complete.");
-		
 		setService.startSet(match, set);
+		
 		return new ResponseEntity<>("Set has started.", HttpStatus.OK);
 	}
 	
@@ -96,8 +92,6 @@ public class MatchRestController {
 	public ResponseEntity<Object> updateScore(@PathVariable("id") Long id, @RequestParam("player") Integer player, @RequestParam("state") Boolean state){
 		TournamentMatchSet set = setService.get(id).orElseThrow(() -> new ResourceNotFoundException("Set"));
 		
-		if(set.getStatus() == MatchSetStatusEnum.COMPLETE) throw new ResourceBadRequestException("Set is already finished.");
-
 		Map<String, Integer> result = setService.updateScore(set, player, state);
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);

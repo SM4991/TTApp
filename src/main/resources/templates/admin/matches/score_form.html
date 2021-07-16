@@ -2,13 +2,13 @@
 	<div class="match-sets-block">
 		<div th:if="${diff < 3}" th:each="set: ${sets}"
 			class="match-set-block">
-			<div th:if="${set.player1Score > set.player2Score}" class="left-winner-icon"><i class="material-icons">emoji_events</i></div>
+			<div class="image-wrapper left-winner-icon-image"><img th:if="${set.player1Score > set.player2Score}" th:src="@{'/images/gold-medal.png'}" class="" /></div>
 			<div class="set-inner-block">
 				<div class="left-score" th:text="${set.player1Score}" th:id="${'set'+set.id+'_player1_score'}"></div>
 				<div class="content" th:text="${set.name}"></div>
 				<div class="right-score" th:text="${set.player2Score}" th:id="${'set'+set.id+'_player2_score'}"></div>
 			</div>
-			<div th:if="${set.player1Score < set.player2Score}" class="right-winner-icon"><i class="material-icons">emoji_events</i></div>
+			<div class="image-wrapper right-winner-icon-image"><img th:if="${set.player1Score < set.player2Score}" th:src="@{'/images/gold-medal.png'}" class="" /></div>
 		</div>
 		<div th:if="${diff > 0}" th:each="i: ${#numbers.sequence(0, diff-1)}"
 			class="match-set-block">
@@ -62,15 +62,24 @@
 	<div th:unless="${actionSet != null}" class="match-status-block">
 		<!-- If match is complete -->
 		<div th:if="${winner != null}" class="match-status-data">
+			<div class="image-wrapper medal-image">
+				<img th:src="@{'/images/gold-medal.png'}" class="" />
+			</div>
 			<div class="text-content">
 				<span th:text="${winner.name}"></span> 
 				won 
 				<span th:if="${round.type == T(com.auriga.TTApp1.constants.RoundTypeEnum).FINAL}" th:text="${tournament.name}"></span> 
 				<span th:unless="${round.type == T(com.auriga.TTApp1.constants.RoundTypeEnum).FINAL}" th:text="${match.name+ ' of ' +round.name}"></span>.
-				</div>
+			</div>
+			<div class="sub-content" th:if="${match.getByeGiven()}">
+				Won by Bye....
+			</div>
 		</div>
 		<!-- If one of the set is complete and next one should start -->
 		<div th:if="${completeSet != null && winner == null}" class="match-status-data">
+			<div class="image-wrapper medal-image">
+				<img th:src="@{'/images/gold-medal.png'}" class="" />
+			</div>
 			<div class="text-content">
 				<span th:text="${completeSet.getWinner().name}"></span> 
 				won  

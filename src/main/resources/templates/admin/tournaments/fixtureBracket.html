@@ -14,10 +14,10 @@
 			</li>
 			<li th:unless="${match.getPlayer1() == null}" class="player player1">
 				<span class="image-wrapper"> <img
-					th:if="${match.getPlayer1().image == null}"
+					th:if="${match.getPlayer1().image == '' || match.getPlayer1().image == null}"
 					th:src="@{${@environment.getProperty('tournaments.image.default.path')}}"
 					id="default-form-image" class="default-form-image" /> <img
-					th:unless="${match.getPlayer1().image == null}"
+					th:unless="${match.getPlayer1().image == '' || match.getPlayer1().image == null}"
 					th:src="@{${match.getPlayer1().image}}" id="default-form-image"
 					class="default-form-image" />
 			</span> <span class="text-content" th:text="${match.getPlayer1().name}"></span>
@@ -30,10 +30,10 @@
 			</li>
 			<li th:unless="${match.getPlayer2() == null}" class="player player2">
 				<span class="image-wrapper"> <img
-					th:if="${match.getPlayer2().image == null}"
+					th:if="${match.getPlayer2().image == '' || match.getPlayer2().image == null}"
 					th:src="@{${@environment.getProperty('tournaments.image.default.path')}}"
 					id="default-form-image" class="default-form-image" /> <img
-					th:unless="${match.getPlayer2().image == null}"
+					th:unless="${match.getPlayer2().image == '' || match.getPlayer2().image == null}"
 					th:src="@{${match.getPlayer2().image}}" id="default-form-image"
 					class="default-form-image" />
 			</span> <span class="text-content" th:text="${match.getPlayer2().name}"></span>

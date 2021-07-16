@@ -262,6 +262,19 @@ a.footer-icon:hover, a.footer-icon.active {
 	text-align: center;
 	margin-bottom: 40px;
 }
+.match-scorer-wrapper .match-players-block ul.match-players-list-block{
+	display: flex;
+	text-align: center;
+	padding: 0;
+}
+.match-scorer-wrapper .match-players-block ul.match-players-list-block li{
+	list-style: none;
+	display: inline-block;
+	margin: 0 auto;
+}
+.match-scorer-wrapper .match-players-block ul.match-players-list-block li.match-player-vs{
+	padding: 60px 0;
+}
 .match-scorer-wrapper .match-players-block .title{
 	margin-bottom: 20px
 }
@@ -269,9 +282,10 @@ a.footer-icon:hover, a.footer-icon.active {
 	color: #5d5959;
     border-radius: 50%;
     background: #e4e6e7;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
 }
 .match-scorer-wrapper .match-players-block .image-wrapper img{
 	box-shadow: none;
@@ -301,20 +315,19 @@ a.footer-icon:hover, a.footer-icon.active {
 .match-scorer-wrapper .match-set-block .set-inner-block .right-score{
 	margin-right: 10px;
 }
-.match-scorer-wrapper .match-set-block .left-winner-icon,
-.match-scorer-wrapper .match-set-block .right-winner-icon{
-	font-size: 18px;
-    vertical-align: middle;
+.match-scorer-wrapper .match-set-block .image-wrapper{
+	margin-bottom: 0;
+	width: 25px;
+    height: 20px;
 }
-.match-scorer-wrapper .match-set-block .left-winner-icon i,
-.match-scorer-wrapper .match-set-block .right-winner-icon i{
-	font-size: 18px;
-    vertical-align: middle;
+.match-scorer-wrapper .match-set-block .image-wrapper img{
+	width: 15px;
+	height: 20px;
 }
-.match-scorer-wrapper .match-set-block .right-winner-icon{
+.match-scorer-wrapper .match-set-block .right-winner-icon-image{
 	padding-left: 10px;	
 }
-.match-scorer-wrapper .match-set-block .left-winner-icon{
+.match-scorer-wrapper .match-set-block .left-winner-icon-image{
 	padding-right: 10px;
 }
 .match-scorer-wrapper .match-points-block{
@@ -358,6 +371,10 @@ a.footer-icon:hover, a.footer-icon.active {
 	font-size: 20px;
 	margin-bottom: 10px;
 	color: #675f5f
+}
+.match-status-data .image-wrapper.medal-image img{
+	width: 50px;
+	height: 70px;
 }
 /* Match Scorer Screen CSS ends */
 /* Tournament Match List Css starts */

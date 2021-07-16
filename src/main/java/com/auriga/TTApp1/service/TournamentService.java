@@ -179,7 +179,8 @@ public class TournamentService {
 		List<Integer> range = IntStream.rangeClosed(1, matchCount).boxed().collect(Collectors.toList());
 		Long seed = System.nanoTime();
 		Collections.shuffle(range, new Random(seed));
-		range.forEach(index -> {
+		Integer counter = 1;
+		for(Integer index : range) {
 			Integer index2 = (participantCount-1)-index;
 			
 			TournamentMatch tournamentMatch = new TournamentMatch();
@@ -188,8 +189,8 @@ public class TournamentService {
 			User player2 = players.get(index2);
 			
 			tournamentMatch.setTournamentRound(round);
-			tournamentMatch.setName("Match "+(index));
-			tournamentMatch.setOrder(index);
+			tournamentMatch.setName("Match "+counter);
+			tournamentMatch.setOrder(counter);
 			tournamentMatch.setPlayer1(player1);
 			
 			//give bye & save related data, else save other data
@@ -204,7 +205,9 @@ public class TournamentService {
 				tournamentMatch.setStatus(MatchStatusEnum.PENDING);
 			}
 			matchRepo.save(tournamentMatch);
-		});
+			
+			counter++;
+		}
 	}
 	
 	public void createNonPlayerMatches(TournamentRound round, Integer matchCount) {

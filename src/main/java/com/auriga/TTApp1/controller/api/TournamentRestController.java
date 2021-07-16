@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.validation.Valid;
 
@@ -108,7 +109,7 @@ public class TournamentRestController {
 		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 		MatchType matchType = matchTypeService.get(mtId).orElseThrow(() -> new ResourceNotFoundException("Match Type"));
 		
-		List<TournamentRound> rounds = roundRepo.findByTournamentAndMatchTypeOrderByOrderAsc(tournament, matchType);
+		List<TournamentRound> rounds = roundRepo.findByTournamentAndMatchType(tournament, matchType);
 		Map<Long, List<TournamentMatch>> matchList = new HashMap();
 		Map<Long, TournamentRound> roundList = new HashMap();
 		
@@ -141,10 +142,12 @@ public class TournamentRestController {
 			roundList.put(round.getId(), round);
 		});
 		
+		Map<Long, List<TournamentMatch>> sortedMatchList = new TreeMap<Long, List<TournamentMatch>>(matchList);
+		
 		ModelAndView model = new ModelAndView("/admin/tournaments/fixtureBracket");
 		model.addObject("tournament", tournament);
 		model.addObject("rounds", roundList);
-		model.addObject("matches", matchList);
+		model.addObject("matches", sortedMatchList);
 		
 		return model;
 	}

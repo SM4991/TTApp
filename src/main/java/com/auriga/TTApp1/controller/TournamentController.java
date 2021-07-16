@@ -71,7 +71,6 @@ public class TournamentController {
 		    	Long count = roundRepo.countByTournamentAndMatchType(tournament, type);
 		    	if(count == 0) {
 		    		modelView.addObject("forbidCreateDraw", false);
-		    		System.out.println("in");
 		    	}
 		    });
 	    }

@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.auriga.TTApp1.util.DateUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -85,19 +86,25 @@ public class Tournament {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+//	public Date getStartDate() {
+//		return startDate;
+//	}
 
 	public String getStartDate() {
-		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		return dateFormat.format(startDate);
+		return DateUtil.convertToAppDateFormatString(startDate);
 	}
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
+//	public Date getRegEndDate() {
+//		return regEndDate;
+//	}
+	
 	public String getRegEndDate() {
-		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		return dateFormat.format(regEndDate);
+		return DateUtil.convertToAppDateFormatString(regEndDate);
 	}
 
 	public void setRegEndDate(Date regEndDate) {
@@ -134,6 +141,18 @@ public class Tournament {
 
 	public void setWinner(User winner) {
 		this.winner = winner;
+	}
+	
+	/* Check if tournament can be started or not */
+	public Boolean getCanTournamentStart() {
+		Date startDate = DateUtil.convertToAppDateFormat(this.startDate);
+		Date today = DateUtil.formattedToday();
+		Integer result = today.compareTo(startDate);
+		/* start date greator than or queal to today */
+		if(result >= 0) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
