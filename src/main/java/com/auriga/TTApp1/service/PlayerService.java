@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.auriga.TTApp1.dto.PlayerDto;
 import com.auriga.TTApp1.exception.ResourceBadRequestException;
@@ -48,7 +49,8 @@ public class PlayerService{
          
         return paginationService.paginatedItems(pagedResult, page, pageSize, sortBy);
     }
-     
+    
+    @Transactional
     public void save(PlayerDto playerForm) {
     	//Let's check if user already registered with us
         if(cUserDetailsService.checkIfUserExist(playerForm.getEmail())){

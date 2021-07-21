@@ -20,11 +20,11 @@ import com.auriga.TTApp1.constants.MatchSetStatusEnum;
 import com.auriga.TTApp1.constants.MatchStatusEnum;
 import com.auriga.TTApp1.exception.ResourceBadRequestException;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
-import com.auriga.TTApp1.model.MatchType;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatch;
 import com.auriga.TTApp1.model.TournamentMatchSet;
 import com.auriga.TTApp1.model.TournamentRound;
+import com.auriga.TTApp1.model.TournamentType;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.TournamentMatchRepository;
 import com.auriga.TTApp1.service.TournamentMatchService;
@@ -44,12 +44,13 @@ public class MatchRestController {
 	
 	@RequestMapping(value = {"/admin/api/matches/{id}", "/api/matches/{id}"}, method = RequestMethod.GET)
 	public ModelAndView viewMatch(@PathVariable("id") Long id){
-		TournamentMatch match = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Match"));
+		TournamentMatch match = service.get(id);
 		
 		if(match.getStatus() == MatchStatusEnum.INACTIVE) throw new ResourceBadRequestException("Match is in inactive state.");
 
-		Tournament tournament = match.getTournament();
 		TournamentRound round = match.getTournamentRound();
+		TournamentType tournamentType = round.getTournamentType();
+		Tournament tournament = tournamentType.getTournament();
 		
 		List<TournamentMatchSet> sets = setService.listAllByMatch(match);
 		
@@ -57,6 +58,7 @@ public class MatchRestController {
 		
 		ModelAndView modelView = new ModelAndView("admin/matches/score_form");
 		modelView.addObject("tournament", tournament);
+		modelView.addObject("tournamentType", tournamentType);
 		modelView.addObject("round", round);
 		modelView.addObject("match", match);
 		modelView.addObject("sets", sets);
@@ -81,7 +83,7 @@ public class MatchRestController {
 	
 	@RequestMapping(value = {"/admin/api/matches/startSet/{id}/{set}"}, method = RequestMethod.POST)
 	public ResponseEntity<Object> startSet(@PathVariable("id") Long id, @PathVariable("set") Integer set){
-		TournamentMatch match = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Match"));
+		TournamentMatch match = service.get(id);
 		
 		setService.startSet(match, set);
 		
@@ -90,7 +92,7 @@ public class MatchRestController {
 	
 	@RequestMapping(value = {"/admin/api/matches/updateScore/{id}"}, method = RequestMethod.POST)
 	public ResponseEntity<Object> updateScore(@PathVariable("id") Long id, @RequestParam("player") Integer player, @RequestParam("state") Boolean state){
-		TournamentMatchSet set = setService.get(id).orElseThrow(() -> new ResourceNotFoundException("Set"));
+		TournamentMatchSet set = setService.get(id);
 		
 		Map<String, Integer> result = setService.updateScore(set, player, state);
 		

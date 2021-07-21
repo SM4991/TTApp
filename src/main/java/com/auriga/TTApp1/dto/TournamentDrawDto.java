@@ -9,15 +9,19 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import com.auriga.TTApp1.model.MatchType;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.User;
+import com.sun.istack.NotNull;
 
 public class TournamentDrawDto implements Serializable {
+	
+	@NotNull
     private Long tournamentId;
      
-	private Long matchTypeId;
+	@NotNull
+	private Long tournamentTypeId;
     
+	@NotNull
     private List<Long> playerIds;
 
 	public Long getTournamentId() {
@@ -28,12 +32,12 @@ public class TournamentDrawDto implements Serializable {
 		this.tournamentId = Long.valueOf(tournamentId);
 	}
 
-	public Long getMatchTypeId() {
-		return matchTypeId;
+	public Long getTournamentTypeId() {
+		return tournamentTypeId;
 	}
 
-	public void setMatchTypeId(String matchTypeId) {
-		this.matchTypeId = Long.valueOf(matchTypeId);
+	public void setTournamentTypeId(String tournamentTypeId) {
+		this.tournamentTypeId = Long.valueOf(tournamentTypeId);
 	}
 
 	public List<Long> getPlayerIds() {

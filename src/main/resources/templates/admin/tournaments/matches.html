@@ -25,11 +25,11 @@
 							<div class="form-group">
 								<label th:for="matchType">Match Type:</label> 
 								<select
-									id="matchType" name="matchType" class="form-control"
+									id="tournamentType" name="tournamentType" class="form-control"
 									onChange="getTournamentMatches($(this), 'list-view')">
 									<option value="" selected>Choose...</option>
-									<option th:each="matchType: ${matchTypes}"
-										th:value="${matchType.id}" th:text="${matchType.name}" th:selected="${matchTypeId == matchType.id}"></option>
+									<option th:each="tournamentType: ${tournamentTypes}"
+										th:value="${tournamentType.id}" th:text="${tournamentType.getTypeText()}" th:selected="${tournamentTypeId == tournamentType.id}"></option>
 								</select>
 							</div>
 							<div class="list-view tournament-matches-list" id="list-view">
@@ -95,10 +95,10 @@
 	</div>
 	<script th:src="@{/js/common.js}"></script>
 	<script th:src="@{/js/tournaments.js}"></script>
-	<div th:if="${matchTypeId != null && matchTypeId != ''}">
+	<div th:if="${tournamentTypeId != null && tournamentTypeId != ''}">
 		<script>
 			$(document).ready(function() {
-				$("#matchType").trigger("change");
+				$("#tournamentType").trigger("change");
 			});
 		</script>
 	</div>

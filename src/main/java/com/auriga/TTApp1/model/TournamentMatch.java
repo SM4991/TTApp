@@ -128,10 +128,10 @@ public class TournamentMatch {
 	public void setByeGiven(Boolean byeGiven) {
 		this.byeGiven = byeGiven;
 	}
-
+	
 	public Tournament getTournament() {
-		return getTournamentRound().getTournament();
-	} 
+		return getTournamentRound().getTournamentType().getTournament();
+	}
 	
 	public String getFixtureClass() {
 		return fixtureClass;

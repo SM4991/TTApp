@@ -49,9 +49,10 @@
 							</div>
 							<div class="form-group">
 								<label th:for="max_score">Matches in the tournament</label>
-								<div class="checkbox-group" th:each="matchType : ${matchTypes}">
-									<input type="checkbox" th:value="${matchType.id}"
-										name="matchTypeIds" /> <label th:text="${matchType.name}"></label>
+								<div class="checkbox-group" th:each="tournamentTypeOpt : ${T(com.auriga.TTApp1.constants.TournamentTypeEnum).values()}">
+									<input type="checkbox" th:value="${tournamentTypeOpt}"
+										name="types" />
+									<label th:text="${tournamentTypeOpt.displayValue}"></label>
 								</div>
 
 							</div>

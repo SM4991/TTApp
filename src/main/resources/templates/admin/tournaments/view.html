@@ -24,32 +24,28 @@
 							th:text="${tournament.regEndDate}"></span></li>
 						<li class="sub-content"><span class="label">Max Score:
 						</span> <span class="content" th:text="${tournament.maxScore}"></span></li>
-						<li class="sub-content" th:if="${tournament.getWinner() != null}">
-							<span class="label">Winner: </span> <span class="content"
-							th:text="${tournament.getWinner().name}"></span>
-						</li>
 					</ul>
 					<ul class="tournament-matches-content">
 						<li class="main-content">Matches in tournament</li>
-						<li class="sub-content" th:each="matchType : ${matchTypes}">
+						<li class="sub-content" th:each="tournamentType : ${tournamentTypes}">
 							<ul>
-								<li class="text-content" th:text="${matchType.name}"></li>
+								<li class="text-content" th:text="${tournamentType.getTypeText()}"></li>
 								<li class="match-icon icon-content">
 									<a sec:authorize="isAuthenticated()"
-									th:href="@{'/admin/tournaments/' + ${tournament.id} + '/matches/' + ${matchType.id}}">
+									th:href="@{'/admin/tournaments/' + ${tournament.id} + '/matches/' + ${tournamentType.id}}">
 										<i class="material-icons">remove_red_eye</i></a> 
 									<a sec:authorize="isAnonymous()"
-									th:href="@{'/tournaments/' + ${tournament.id} + '/matches/' + ${matchType.id}}">
+									th:href="@{'/tournaments/' + ${tournament.id} + '/matches/' + ${tournamentType.id}}">
 										<i class="material-icons">remove_red_eye</i>
 									</a>
 								</li>
 								<li class="fixture-icon icon-content">
 									<a sec:authorize="isAuthenticated()"
-									th:href="@{'/admin/tournaments/' + ${tournament.id} + '/fixture/' + ${matchType.id}}">
+									th:href="@{'/admin/tournaments/' + ${tournament.id} + '/fixture/' + ${tournamentType.id}}">
 										<i class="material-icons">track_changes</i>
 									</a> 
 									<a sec:authorize="isAnonymous()"
-									th:href="@{'/tournaments/' + ${tournament.id} + '/fixture/' + ${matchType.id}}">
+									th:href="@{'/tournaments/' + ${tournament.id} + '/fixture/' + ${tournamentType.id}}">
 										<i class="material-icons">track_changes</i>
 									</a>
 								</li>

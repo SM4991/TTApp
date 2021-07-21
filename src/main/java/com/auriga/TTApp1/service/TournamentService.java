@@ -17,20 +17,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.auriga.TTApp1.constants.MatchStatusEnum;
+import com.auriga.TTApp1.constants.TournamentTypeEnum;
 import com.auriga.TTApp1.constants.RoundTypeEnum;
 import com.auriga.TTApp1.dto.TournamentDrawDto;
 import com.auriga.TTApp1.dto.TournamentDto;
 import com.auriga.TTApp1.exception.ResourceAlreadyExistsException;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
-import com.auriga.TTApp1.model.MatchType;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatch;
 import com.auriga.TTApp1.model.TournamentRound;
+import com.auriga.TTApp1.model.TournamentType;
 import com.auriga.TTApp1.model.User;
-import com.auriga.TTApp1.repository.MatchTypeRepository;
 import com.auriga.TTApp1.repository.TournamentMatchRepository;
+import com.auriga.TTApp1.repository.TournamentTypeRepository;
 import com.auriga.TTApp1.repository.TournamentRepository;
 import com.auriga.TTApp1.repository.TournamentRoundRepository;
 
@@ -40,19 +42,19 @@ public class TournamentService {
 	private TournamentRepository repo;
 	
 	@Autowired
+	private TournamentTypeRepository tournamentTypeRepo;
+	
+	@Autowired
 	private TournamentRoundRepository roundRepo;
 	
 	@Autowired
 	private TournamentMatchRepository matchRepo;
 
 	@Autowired
-	private MatchTypeRepository matchTypeRepo;
-
-	@Autowired
 	private PlayerService playerService;
 	
 	@Autowired
-	private MatchTypeService matchTypeService;
+	private TournamentTypeService tournamentTypeService;
 	
 	@Autowired
 	private TournamentMatchSetService matchSetService;
@@ -79,22 +81,24 @@ public class TournamentService {
 		return paginationService.paginatedItems(pagedResult, page, pageSize, sortBy);
 	}
 
+	@Transactional
 	public void save(TournamentDto tournamentDto) {
 		Tournament tournament = new Tournament(); 
     	BeanUtils.copyProperties(tournamentDto, tournament);
 		
-		List<MatchType> matchTypes = new ArrayList();
-		tournamentDto.getMatchTypeIds().forEach(item -> {
-			Long id = Long.valueOf(item);
-			matchTypes.add(matchTypeRepo.getById(id));
-		});
-		
-		tournament.setMatchTypes(matchTypes);
 		repo.save(tournament);
+		
+		List<TournamentTypeEnum> tournamentTypes = new ArrayList();
+		tournamentDto.getTypes().forEach(item -> {
+			TournamentType tournamentType = new TournamentType();
+			tournamentType.setType(item);
+			tournamentType.setTournament(tournament);
+			tournamentTypeRepo.save(tournamentType);
+		});
 	}
 
-	public Optional<Tournament> get(Long id) {
-		return repo.findById(id);
+	public Tournament get(Long id) {
+		return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
 	}
 
 	public void delete(Tournament tournament) {
@@ -102,9 +106,9 @@ public class TournamentService {
 	}
 	
 	public void createDrawRounds(TournamentDrawDto dto) {
-		Tournament tournament = get(dto.getTournamentId()).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
-		MatchType matchType = matchTypeService.get(dto.getMatchTypeId()).orElseThrow(() -> new ResourceNotFoundException("Match Type"));
-		if(roundRepo.countByTournamentAndMatchType(tournament, matchType) > 0) {
+		TournamentType tournamentType = tournamentTypeService.getByTournamentId(dto.getTournamentTypeId(), dto.getTournamentId());
+		Tournament tournament = tournamentType.getTournament();
+		if(roundRepo.countByTournamentType(tournamentType) > 0) {
 			throw new ResourceAlreadyExistsException("Draw");
 		}
 		
@@ -126,8 +130,7 @@ public class TournamentService {
 		/* Save Round Entries */
 		roundMatchCount.forEach((order, matchCount) -> {
 			TournamentRound round = new TournamentRound();
-			round.setTournament(tournament);
-			round.setMatchType(matchType);
+			round.setTournamentType(tournamentType);
 			round.setOrder(order);
 			round.setName(getRoundName(order, totalRound));
 			round.setType(getRoundType(order, totalRound));
@@ -145,7 +148,7 @@ public class TournamentService {
 		List<TournamentMatch> matches = matchRepo.findAllByTournamentRoundAndByeGiven(firstRound.get(), true);
 		if(matches.size() > 0) {
 			matches.forEach(match -> {
-				matchSetService.setNextRoundPlayer(tournament, firstRound.get(), match, match.getPlayer1());
+				matchSetService.setNextRoundPlayer(tournament, tournamentType, firstRound.get(), match, match.getPlayer1());
 			});
 		}
 	}
@@ -217,13 +220,6 @@ public class TournamentService {
 			tournamentMatch.setTournamentRound(round);
 			tournamentMatch.setName("Match"+index);
 			tournamentMatch.setOrder(index);
-			/* If match count is odd number & is the last match & round is not final, 
-			 * mark the last match with bye given */
-//			if(matchCount%2 > 0 && index == matchCount && round.getType() != RoundTypeEnum.FINAL) {
-//				tournamentMatch.setByeGiven(true);
-//			} else {
-//				tournamentMatch.setByeGiven(false);
-//			}
 			tournamentMatch.setByeGiven(false);
 			tournamentMatch.setStatus(MatchStatusEnum.INACTIVE);
 			matchRepo.save(tournamentMatch);

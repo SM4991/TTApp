@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatch;
 import com.auriga.TTApp1.repository.TournamentMatchRepository;
@@ -37,8 +38,8 @@ public class TournamentMatchService {
 		return paginationService.paginatedItems(pagedResult, page, pageSize, sortBy);
 	}
 	
-	public Optional<TournamentMatch> get(Long id) {
-		return repo.findById(id);
+	public TournamentMatch get(Long id) {
+		return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tournament Match"));
 	}
 
 	public void delete(TournamentMatch tournamentMatch) {

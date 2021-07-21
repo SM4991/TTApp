@@ -23,7 +23,7 @@ public class MatchController {
 	
 	@RequestMapping(value = {"/admin/matches/{id}", "/matches/{id}"}, method = RequestMethod.GET)
 	public ModelAndView viewMatch(@PathVariable("id") Long id){
-		TournamentMatch match = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Match"));
+		TournamentMatch match = service.get(id);
 		
 		if(match.getStatus() == MatchStatusEnum.INACTIVE) throw new ResourceBadRequestException("Match is in inactive state.");
 		

@@ -12,7 +12,7 @@ $(document).ready(function() {
 
 	$("form#create-form").on("submit", function(event) {
 		event.preventDefault();
-		formSubmit(event, "/admin/api/tournaments", ["name", "startDate", "regEndDate", "maxScore", "image", "matchTypeIds"], "/admin/tournaments");
+		formSubmit(event, "/admin/api/tournaments", ["name", "startDate", "regEndDate", "maxScore", "image", "types"], "/admin/tournaments");
 	});
 
 	$("#upload_link").on('click', function(e) {
@@ -123,7 +123,7 @@ function removeSelectedDrawPlayer(object) {
 
 function generateDraw(event, list_parent_id) {
 	$(".field-error").remove();
-	if ($("#matchType").val() != "") {
+	if ($("#tournamentType").val() != "") {
 		if ($("#" + list_parent_id + " li.list-view-card").length && $("#" + list_parent_id + " li.list-view-card").length >= 2) {
 			let t_id = $("#tid").val();
 			let request_url = "/admin/api/tournaments/draw";
@@ -136,7 +136,7 @@ function generateDraw(event, list_parent_id) {
 			var form_data = {};
 			form_data["tournamentId"] = t_id;
 			form_data["playerIds"] = p_ids;
-			form_data["matchTypeId"] = $("#matchType").val();
+			form_data["tournamentTypeId"] = $("#tournamentType").val();
 
 			/* Show overlay */
 			showLoadingOverlay();
@@ -166,15 +166,18 @@ function generateDraw(event, list_parent_id) {
 			$("#players").parent().append('<span class="field-error">Select atleast 2 players</span>');
 		}
 	} else {
-		$("#matchType").parent().append('<span class="field-error">Select a match type</span>');
+		$("#tournamentType").parent().append('<span class="field-error">Select a match type</span>');
 	}
 }
 
 function loadTournamentFixture() {
 	$(".field-error").remove();
-	if ($("#matchType").val() != "") {
-		let t_id = $("#tid").val();
-		let request_url = "/admin/api/tournaments/" + t_id + "/" + $("#matchType").val() + "/fixture/";
+	if ($("#tournamentType").val() != "") {
+		if (authorized == 1) {
+			request_url = "/admin/api/tournaments/" + $("#tournamentType").val() + "/fixture/";
+		} else {
+			request_url = "/api/tournaments/" + $("#tournamentType").val() + "/fixture/";
+		}
 
 		$.ajax({
 			url: request_url,
@@ -195,7 +198,7 @@ function loadTournamentFixture() {
 			}
 		});
 	} else {
-		$("#matchType").parent().append('<span class="field-error">Select a match type</span>');
+		$("#tournamentType").parent().append('<span class="field-error">Select a match type</span>');
 	}
 }
 
@@ -203,9 +206,9 @@ function getTournamentMatches(object, list_parent_id) {
 	if ($(object).val() != "") {
 		tid = $("#tid").val();
 		if (authorized == 1) {
-			request_url = "/admin/api/tournaments/" + tid + "/" + $(object).val() + "/matches";
+			request_url = "/admin/api/tournaments/" + $(object).val() + "/matches";
 		} else {
-			request_url = "/api/tournaments/" + tid + "/" + $(object).val() + "/matches";
+			request_url = "/api/tournaments/" + $(object).val() + "/matches";
 		}
 		/* Show overlay */
 		showLoadingOverlay();

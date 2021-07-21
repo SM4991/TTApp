@@ -9,18 +9,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.auriga.TTApp1.model.MatchType;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentRound;
+import com.auriga.TTApp1.model.TournamentType;
 
 @Repository
 public interface TournamentRoundRepository extends JpaRepository<TournamentRound, Long> {
+	long countByTournamentType(TournamentType tournamentType);
 	
-	long countByTournamentAndMatchType(Tournament tournament, MatchType matchType);
-
-	List<TournamentRound> findByTournamentAndMatchType(Tournament tournament, MatchType matchType);
+	List<TournamentRound> findByTournamentType(TournamentType tournamentType);
 	
-	List<TournamentRound> findByTournamentAndMatchTypeOrderByOrderAsc(Tournament tournament, MatchType matchType);
+	List<TournamentRound> findByTournamentTypeOrderByOrderAsc(TournamentType tournamentType);
 	
-	TournamentRound findByTournamentAndOrder(Tournament tournament, Integer order);
+	TournamentRound findByTournamentTypeAndOrder(TournamentType tournamentType, Integer order);	
 }

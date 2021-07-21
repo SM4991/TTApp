@@ -23,6 +23,9 @@
 			</li>
 		</ul>
 		<th:block th:replace="fragments/authenticated :: paginationFragment (paginator=${paginatedItems})"/>
+		<div sec:authorize="isAuthenticated()" class="floating-btn-group">
+			<a th:href="@{/admin/tournaments/create}"><i class="material-icons">add_circle</i></a>
+		</div>
 	</div>
 </th:block>
 <th:block th:unless="${paginatedItems.items.size() > 0}">

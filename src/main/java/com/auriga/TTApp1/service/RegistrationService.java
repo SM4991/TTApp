@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.auriga.TTApp1.dto.RegistrationDto;
 import com.auriga.TTApp1.exception.ResourceBadRequestException;
@@ -33,6 +34,7 @@ public class RegistrationService {
 	
 	@Autowired UserOtpService userOtpService;
 
+	@Transactional
 	public User register(RegistrationDto registrationForm) throws UnsupportedEncodingException, MessagingException {
 		//Let's check if user already registered with us
         if(cUserDetailsService.checkIfUserExist(registrationForm.getEmail())){

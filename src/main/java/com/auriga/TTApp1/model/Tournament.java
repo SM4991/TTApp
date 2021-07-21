@@ -1,6 +1,8 @@
 package com.auriga.TTApp1.model;
 
+import java.security.KeyStore.Entry;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +18,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.Valid;
@@ -36,6 +39,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.auriga.TTApp1.constants.TournamentTypeEnum;
 import com.auriga.TTApp1.util.DateUtil;
 import com.auriga.TTApp1.util.FileUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -45,34 +49,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "tournaments")
 public class Tournament {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @Column(nullable = false, length = 100)
-    private String name;
-    
-	@Column(nullable = true, name="start_date")
-    private Date startDate;
-    
-	@Column(nullable = true, name="reg_end_date")
-    private Date regEndDate;
-    
-	@Column(nullable = false, name="max_score")
-    private Integer maxScore;
-    
-    @Column(nullable = true, length = 255)
-    private String image;
-    
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "tournaments_match_types",
-            joinColumns = @JoinColumn(name = "tournament_id"),
-            inverseJoinColumns = @JoinColumn(name = "match_type_id")
-            )
-    private List<MatchType> matchTypes;
-    
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private User winner;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(nullable = false, length = 100)
+	private String name;
+
+	@Column(nullable = true, name = "start_date")
+	private Date startDate;
+
+	@Column(nullable = true, name = "reg_end_date")
+	private Date regEndDate;
+
+	@Column(nullable = false, name = "max_score")
+	private Integer maxScore;
+
+	@Column(nullable = true, length = 255)
+	private String image;
 
 	public Long getId() {
 		return id;
@@ -89,7 +82,7 @@ public class Tournament {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 //	public Date getStartDate() {
 //		return startDate;
 //	}
@@ -105,7 +98,7 @@ public class Tournament {
 //	public Date getRegEndDate() {
 //		return regEndDate;
 //	}
-	
+
 	public String getRegEndDate() {
 		return DateUtil.convertToAppDateFormatString(regEndDate);
 	}
@@ -130,34 +123,18 @@ public class Tournament {
 		this.image = image;
 	}
 
-	public List<MatchType> getMatchTypes() {
-		return matchTypes;
-	}
-
-	public void setMatchTypes(List<MatchType> matchTypes) {
-		this.matchTypes = matchTypes;
-	}
-
-	public User getWinner() {
-		return winner;
-	}
-
-	public void setWinner(User winner) {
-		this.winner = winner;
-	}
-	
 	/* Check if tournament can be started or not */
 	public Boolean getCanTournamentStart() {
 		Date startDate = DateUtil.convertToAppDateFormat(this.startDate);
 		Date today = DateUtil.formattedToday();
 		Integer result = today.compareTo(startDate);
 		/* start date greator than or queal to today */
-		if(result >= 0) {
+		if (result >= 0) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public String getImageUrl() {
 		return FileUtil.getTournamentImageUrl(this.getImage());
 	}

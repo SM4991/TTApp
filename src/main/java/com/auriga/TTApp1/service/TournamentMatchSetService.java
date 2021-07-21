@@ -17,18 +17,21 @@ import com.auriga.TTApp1.constants.MatchStatusEnum;
 import com.auriga.TTApp1.constants.RoundTypeEnum;
 import com.auriga.TTApp1.dto.PlayerDto;
 import com.auriga.TTApp1.exception.ResourceBadRequestException;
+import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
 import com.auriga.TTApp1.model.Role;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatch;
 import com.auriga.TTApp1.model.TournamentMatchSet;
 import com.auriga.TTApp1.model.TournamentRound;
+import com.auriga.TTApp1.model.TournamentType;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.RoleRepository;
 import com.auriga.TTApp1.repository.TournamentMatchRepository;
 import com.auriga.TTApp1.repository.TournamentMatchSetRepository;
 import com.auriga.TTApp1.repository.TournamentRepository;
 import com.auriga.TTApp1.repository.TournamentRoundRepository;
+import com.auriga.TTApp1.repository.TournamentTypeRepository;
 import com.auriga.TTApp1.repository.UserRepository;
 
 @Service
@@ -44,6 +47,9 @@ public class TournamentMatchSetService {
 	
 	@Autowired
 	private TournamentRepository tournamentRepo;
+	
+	@Autowired
+	private TournamentTypeRepository tournamentTypeRepo;
      
     public List<TournamentMatchSet> listAllByMatch(TournamentMatch match) {
     	return repo.findAllByTournamentMatch(match);
@@ -91,7 +97,8 @@ public class TournamentMatchSetService {
 		
 		TournamentMatch match = set.getTournamentMatch();
 		TournamentRound round = match.getTournamentRound();
-		Tournament tournament = round.getTournament();
+		TournamentType tournamentType = round.getTournamentType();
+		Tournament tournament = tournamentType.getTournament();
 		Integer max_score = tournament.getMaxScore();
 		
 		/* Check if tournament match can be started or not */
@@ -128,7 +135,7 @@ public class TournamentMatchSetService {
 		
 		/* Set match winner */
 		if(setWinner) {
-			setMatchWinner(tournament, round, match, set);
+			setMatchWinner(tournament, tournamentType, round, match, set);
 		}
 		
 		Map<String, Integer> result = new HashMap<>(); 
@@ -139,7 +146,7 @@ public class TournamentMatchSetService {
 	}
 	
 	@Transactional
-	public void setMatchWinner(Tournament tournament, TournamentRound round, TournamentMatch match, TournamentMatchSet set) {
+	public void setMatchWinner(Tournament tournament, TournamentType tournamentType, TournamentRound round, TournamentMatch match, TournamentMatchSet set) {
 		/* If match set is 2/3 and any of the player's score has exceeded max score, set him/her as winner */
 		if(set.getSetNumber() > 1) {
 			User winner = getMatchWinner(match);
@@ -149,17 +156,17 @@ public class TournamentMatchSetService {
 				matchRepo.save(match);
 				
 				/* Set match winner as next round player */
-				setNextRoundPlayer(tournament, round, match, winner);
+				setNextRoundPlayer(tournament, tournamentType, round, match, winner);
 			}
 		}
 	}
 	
 	@Transactional
-	public void setNextRoundPlayer(Tournament tournament, TournamentRound round, TournamentMatch match, User winner) {
+	public void setNextRoundPlayer(Tournament tournament, TournamentType tournamentType, TournamentRound round, TournamentMatch match, User winner) {
 		/* If round is not final, set current match winner as next round's match player, else set tournament match */
 		if(round.getType() != RoundTypeEnum.FINAL) {
 			TournamentMatch nextMatch = matchRepo.findByTournamentRoundAndOrder(round, (match.getOrder()+1));
-			TournamentRound nextRound = roundRepo.findByTournamentAndOrder(tournament, round.getOrder()+1);
+			TournamentRound nextRound = roundRepo.findByTournamentTypeAndOrder(tournamentType, round.getOrder()+1);
 			System.out.println("nextRound: "+nextRound);
 			
 			/* if next round is not empty, set current match winner as next round's match player */
@@ -170,9 +177,14 @@ public class TournamentMatchSetService {
 				
 				/* if next round's match is not empty, set current match winner as its player */
 				if(nextRoundMatch != null) {
-					/* If next match for current match does not exists & next round is not final, give the next round match bye & mark the player as winner */
-					System.out.println("nextMatch: "+nextMatch);
-					if(nextMatch == null && nextRound.getType() != RoundTypeEnum.FINAL) {
+					/* If next match for current match does not exists 
+					 	* & next round is not final 
+					 	* & next round id is equal or greater than the round with odd matches, 
+					 * give the next round match bye & mark the player as winner */
+					Long oddRoundId = matchRepo.findOddMatchRoundId(tournamentType.getId());
+					
+					System.out.println("nextMatch: "+nextMatch+", next round id: "+nextRound.getId()+", odd round:"+oddRoundId);
+					if(nextMatch == null && nextRound.getType() != RoundTypeEnum.FINAL && (oddRoundId == null || nextRound.getId() > oddRoundId)) {
 						System.out.println("Give bye");
 						
 						nextRoundMatch.setPlayer1(winner);
@@ -181,7 +193,7 @@ public class TournamentMatchSetService {
 						nextRoundMatch.setStatus(MatchStatusEnum.COMPLETE);
 						
 						/* Set match winner as next round player*/
-						setNextRoundPlayer(tournament, nextRound, nextRoundMatch, winner);
+						setNextRoundPlayer(tournament, tournamentType, nextRound, nextRoundMatch, winner);
 					} else {
 						System.out.println("Set Player");
 						if(nextRoundMatch.getPlayer1() == null) {
@@ -196,8 +208,8 @@ public class TournamentMatchSetService {
 				}
 			}
 		} else {
-			tournament.setWinner(winner);
-			tournamentRepo.save(tournament);
+			tournamentType.setWinner(winner);
+			tournamentTypeRepo.save(tournamentType);
 		}
 	}
 	
@@ -207,7 +219,7 @@ public class TournamentMatchSetService {
 		return winner;
 	}
      
-    public Optional<TournamentMatchSet> get(Long id) {
-        return repo.findById(id);
+    public TournamentMatchSet get(Long id) {
+        return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Match Set"));
     }
 }

@@ -29,14 +29,14 @@ import com.auriga.TTApp1.dto.TournamentDrawDto;
 import com.auriga.TTApp1.dto.TournamentDto;
 import com.auriga.TTApp1.dto.TournamentImageDto;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
-import com.auriga.TTApp1.model.MatchType;
 import com.auriga.TTApp1.model.Tournament;
 import com.auriga.TTApp1.model.TournamentMatch;
 import com.auriga.TTApp1.model.TournamentRound;
+import com.auriga.TTApp1.model.TournamentType;
 import com.auriga.TTApp1.repository.TournamentMatchRepository;
 import com.auriga.TTApp1.repository.TournamentRoundRepository;
 import com.auriga.TTApp1.service.FileUploadService;
-import com.auriga.TTApp1.service.MatchTypeService;
+import com.auriga.TTApp1.service.TournamentTypeService;
 import com.auriga.TTApp1.service.PaginationService;
 import com.auriga.TTApp1.service.TournamentService;
 
@@ -46,7 +46,7 @@ public class TournamentRestController {
 	private TournamentService service;
 	
 	@Autowired
-	private MatchTypeService matchTypeService;
+	private TournamentTypeService tournamentTypeService;
 	
 	@Autowired
 	private TournamentRoundRepository roundRepo;
@@ -71,8 +71,6 @@ public class TournamentRestController {
 		model.addObject("paginatedItems", paginatedItems);
 		
 		return model;
-		
-//		return new ResponseEntity<>(paginatedItems, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/admin/api/tournaments", method = RequestMethod.POST)
@@ -110,12 +108,12 @@ public class TournamentRestController {
 		}
 	}
 	
-	@RequestMapping(value = "/admin/api/tournaments/{id}/{mtId}/fixture", method = RequestMethod.GET)
-	public ModelAndView viewFixture(@PathVariable("id") Long id, @PathVariable Long mtId) {
-		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
-		MatchType matchType = matchTypeService.get(mtId).orElseThrow(() -> new ResourceNotFoundException("Match Type"));
+	@RequestMapping(value = {"/admin/api/tournaments/{ttId}/fixture", "/api/tournaments/{ttId}/fixture"}, method = RequestMethod.GET)
+	public ModelAndView viewFixture(@PathVariable Long ttId) {
+		TournamentType tournamentType = tournamentTypeService.get(ttId);
+		Tournament tournament = tournamentType.getTournament();
 		
-		List<TournamentRound> rounds = roundRepo.findByTournamentAndMatchType(tournament, matchType);
+		List<TournamentRound> rounds = roundRepo.findByTournamentType(tournamentType);
 		Map<Long, List<TournamentMatch>> matchList = new HashMap();
 		Map<Long, TournamentRound> roundList = new HashMap();
 		
@@ -152,18 +150,19 @@ public class TournamentRestController {
 		
 		ModelAndView model = new ModelAndView("/admin/tournaments/fixtureBracket");
 		model.addObject("tournament", tournament);
+		model.addObject("tournamentType", tournamentType);
 		model.addObject("rounds", roundList);
 		model.addObject("matches", sortedMatchList);
 		
 		return model;
 	}
 	
-	@RequestMapping(value = {"/admin/api/tournaments/{id}/{mtId}/matches", "/api/tournaments/{id}/{mtId}/matches"}, method = RequestMethod.GET)
-	public ResponseEntity<Object> viewMatches(@PathVariable("id") Long id, @PathVariable Long mtId) {
-		Tournament tournament = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Tournament"));
-		MatchType matchType = matchTypeService.get(mtId).orElseThrow(() -> new ResourceNotFoundException("Match Type"));
+	@RequestMapping(value = {"/admin/api/tournaments/{ttId}/matches", "/api/tournaments/{ttId}/matches"}, method = RequestMethod.GET)
+	public ResponseEntity<Object> viewMatches(@PathVariable Long ttId) {
+		TournamentType tournamentType = tournamentTypeService.get(ttId);
+		Tournament tournament = tournamentType.getTournament();
 		
-		List<TournamentMatch> matches = matchRepo.findAllActiveTournamentMatch(tournament, matchType);
+		List<TournamentMatch> matches = matchRepo.findAllActiveTournamentMatch(tournamentType);
 		
 		ModelAndView model = new ModelAndView("/admin/tournaments/matches");
 		model.addObject("matches", matches);

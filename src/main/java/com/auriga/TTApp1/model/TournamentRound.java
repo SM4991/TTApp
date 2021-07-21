@@ -29,10 +29,7 @@ public class TournamentRound {
     private Long id;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Tournament tournament;
-	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private MatchType matchType;
+	private TournamentType tournamentType;
 	
 	@Column(nullable=false, length = 50)
 	private String name;
@@ -43,10 +40,6 @@ public class TournamentRound {
 	
 	@Column(name="round_order", nullable=false)
 	private Integer order;
-	
-//	@Transient
-//	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//	private List<TournamentMatch> matches;
 
 	public Long getId() {
 		return id;
@@ -56,20 +49,12 @@ public class TournamentRound {
 		this.id = id;
 	}
 
-	public Tournament getTournament() {
-		return tournament;
+	public TournamentType getTournamentType() {
+		return tournamentType;
 	}
 
-	public void setTournament(Tournament tournament) {
-		this.tournament = tournament;
-	}
-
-	public MatchType getMatchType() {
-		return matchType;
-	}
-
-	public void setMatchType(MatchType matchType) {
-		this.matchType = matchType;
+	public void setTournamentType(TournamentType tournamentType) {
+		this.tournamentType = tournamentType;
 	}
 
 	public String getName() {
@@ -95,14 +80,10 @@ public class TournamentRound {
 	public void setOrder(Integer order) {
 		this.order = order;
 	}
-
-//	public List<TournamentMatch> getMatches() {
-//		return matches;
-//	}
-//
-//	public void setMatches(List<TournamentMatch> matches) {
-//		this.matches = matches;
-//	}
+	
+	public Tournament getTournament() {
+		return getTournamentType().getTournament();
+	}
 	
 	@Override
 	public String toString() {

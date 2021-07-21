@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.auriga.TTApp1.constants.TournamentTypeEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -60,7 +61,7 @@ public class TournamentDto {
     
     @NotNull(message="Select atleast one match type")
     @Transient // Custom column not an entity column
-    private List<String> matchTypeIds;
+    private List<TournamentTypeEnum> types;
 
 	public String getName() {
 		return name;
@@ -102,11 +103,11 @@ public class TournamentDto {
 		this.image = image;
 	}
 
-	public List<String> getMatchTypeIds() {
-		return matchTypeIds;
+	public List<TournamentTypeEnum> getTypes() {
+		return types;
 	}
 
-	public void setMatchTypeIds(List<String> matchTypeIds) {
-		this.matchTypeIds = matchTypeIds;
+	public void setTypes(List<TournamentTypeEnum> types) {
+		this.types = types;
 	}
 }

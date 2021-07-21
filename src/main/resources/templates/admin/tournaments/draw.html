@@ -19,12 +19,12 @@
 						<form action="javascript:void(0)" id="create-draw-form" method="post">
 							<input type="hidden" id="tid" th:value="${tournament.id}" />
 							<div class="form-group">
-								<label th:for="matchType">Match Type:</label> <select
-									id="matchType" name="matchType" class="form-control">
+								<label th:for="tournamentType">Match Type:</label> <select
+									id="tournamentType" name="tournamentType" class="form-control">
 									<option value="" selected>Choose...</option>
-									<option th:each="matchType: ${matchTypes}"
-										th:value="${matchType.id}"
-										th:text="${matchType.name}"></option>
+									<option th:each="tournamentType: ${tournamentTypes}"
+										th:value="${tournamentType.id}"
+										th:text="${tournamentType.getTypeText()}"></option>
 								</select>
 							</div>
 							<div class="form-group">

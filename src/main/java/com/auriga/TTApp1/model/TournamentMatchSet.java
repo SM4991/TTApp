@@ -106,6 +106,10 @@ public class TournamentMatchSet {
 		this.status = status;
 	}
 	
+	public Tournament getTournament() {
+		return getTournamentMatch().getTournamentRound().getTournamentType().getTournament();
+	}
+	
 	@Override
 	public String toString() {
 		return "Match Set: " + name;

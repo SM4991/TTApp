@@ -68,7 +68,7 @@
 			<div class="text-content">
 				<span th:text="${winner.name}"></span> 
 				won 
-				<span th:if="${round.type == T(com.auriga.TTApp1.constants.RoundTypeEnum).FINAL}" th:text="${tournament.name}"></span> 
+				<span th:if="${round.type == T(com.auriga.TTApp1.constants.RoundTypeEnum).FINAL}" th:text="${tournamentType.getTypeText()+' of '+tournament.name}"></span> 
 				<span th:unless="${round.type == T(com.auriga.TTApp1.constants.RoundTypeEnum).FINAL}" th:text="${match.name+ ' of ' +round.name}"></span>.
 			</div>
 			<div class="sub-content" th:if="${match.getByeGiven()}">
@@ -83,8 +83,7 @@
 			<div class="text-content">
 				<span th:text="${completeSet.getWinner().name}"></span> 
 				won  
-				<span th:if="${round.type == 'FINAL'}" th:text="${tournament.name}"></span>
-				<span th:unless="${round.type == 'FINAL'}" th:text="${completeSet.name}"></span>.
+				<span th:text="${completeSet.name}"></span>.
 			</div>
 			<button sec:authorize="isAuthenticated()" class="btn btn-primary" th:text="${'Start Set '+nextSet}" th:attr="onclick=|startSet($(this), '${nextSet}')|"></button> 
 		</div>

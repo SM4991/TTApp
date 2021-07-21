@@ -48,17 +48,17 @@
 	<div class="match-block match-block-1 match-block-common">
 		<ul class="match-player-list">
 			<li class="player player1 inactive"
-				th:if="${tournament.getWinner() == null}"><span
+				th:if="${tournamentType.getWinner() == null}"><span
 				class="image-wrapper"> <img
 					th:src="@{${@environment.getProperty('tournaments.image.default.path')}}"
 					id="default-form-image" class="default-form-image" />
 			</span> <span class="text-content">-</span></li>
 			<li class="player player1"
-				th:unless="${tournament.getWinner() == null}"><span
+				th:unless="${tournamentType.getWinner() == null}"><span
 				class="image-wrapper"> <img
 					th:src="@{${@environment.getProperty('tournaments.image.default.path')}}"
 					id="default-form-image" class="default-form-image" />
-			</span> <span class="text-content" th:text="${tournament.getWinner().name}"></span>
+			</span> <span class="text-content" th:text="${tournamentType.getWinner().name}"></span>
 			</li>
 		</ul>
 	</div>
