@@ -9,10 +9,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.auriga.TTApp1.constants.MatchSetStatusEnum;
+import com.auriga.TTApp1.constants.TournamentStatusEnum;
 @Entity
 @Table(name="tournament_match_sets")
 public class TournamentMatchSet {
@@ -21,6 +23,7 @@ public class TournamentMatchSet {
     private Long id;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="tournament_match_id", nullable=false)
 	private TournamentMatch tournamentMatch;
 	
 	@Column(nullable = false, length = 20)
@@ -29,18 +32,26 @@ public class TournamentMatchSet {
 	@Column(name = "set_number", nullable = false)
 	private Integer setNumber;
 	
-	@Column(name="player1_score", nullable = true)
+	@Column(name="player1_score", nullable = false)
 	private Integer player1Score;
 	
-	@Column(name="player2_score", nullable = true)
+	@Column(name="player2_score", nullable = false)
 	private Integer player2Score;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private User winner;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "status", nullable = false)
+	@Column(nullable = false)
 	private MatchSetStatusEnum status;
+	
+	/* Constructor */
+	public TournamentMatchSet(){
+		super();
+		this.player1Score = 0;
+		this.player2Score = 0;
+		this.status = MatchSetStatusEnum.PENDING;
+	}
 
 	public Long getId() {
 		return id;

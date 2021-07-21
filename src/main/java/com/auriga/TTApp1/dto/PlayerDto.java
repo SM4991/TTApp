@@ -12,16 +12,16 @@ import javax.validation.constraints.Size;
 import com.auriga.TTApp1.constants.GenderEnum;
 
 public class PlayerDto{
-	@NotEmpty(message = "Name can not be empty")
+	@NotEmpty(message = "Name can not be empty.")
 	@Size(min=2, max=100, message = "Name length should be between 2 to 100 characters.")
     private String name;
      
-	@NotEmpty(message = "Email can not be empty")
+	@NotEmpty(message = "Email can not be empty.")
 	@Email(message = "Please provide a valid email id")
 	@Size(max=255, message = "Email length should not exceed 255 characters.")
     private String email;
 	
-//	@NotNull(message = "Gender can not be empty.")
+	@NotNull(message = "Gender can not be empty.")
 	@Enumerated(EnumType.STRING)
 	private GenderEnum gender; 
 	

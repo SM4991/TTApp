@@ -108,6 +108,9 @@ div.tournament>div>div>ul>li.player1 {
 	background: #f3f3f3;
 	border-bottom: 0;
 }
+div.tournament>div.round.winner>div>ul>li.player1 {
+	border-bottom: 1px solid #919292;
+}
 div.tournament>div>div>ul>li.player2 {
 	border-top: 0;
 }
@@ -143,7 +146,7 @@ p.match-status{
     list-style-position: inside;
     padding-top: 10px;
 }
-p.match-status.status-LIVE{
+p.match-status.status-ONGOING{
 	color: red;
 }
 p.match-status.status-COMPLETE{

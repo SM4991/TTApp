@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.auriga.TTApp1.dto.PlayerDto;
 import com.auriga.TTApp1.exception.ResourceBadRequestException;
+import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
 import com.auriga.TTApp1.model.Role;
 import com.auriga.TTApp1.model.User;
@@ -66,8 +67,8 @@ public class PlayerService{
         repo.save(player);
     }
      
-    public Optional<User> get(Long id) {
-        return repo.findPlayerById(id, getPlayerRole());
+    public User get(Long id) {
+        return repo.findPlayerById(id, getPlayerRole()).orElseThrow(() -> new ResourceNotFoundException("Player"));
     }
     
     public User getById(Long id) {

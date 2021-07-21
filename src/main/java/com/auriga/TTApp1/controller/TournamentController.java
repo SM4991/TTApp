@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -53,7 +52,7 @@ public class TournamentController {
 		return modelView;
 	}
 	
-	@RequestMapping(value = {"/admin/tournaments/{id}", "/tournaments/{id}"}, method = RequestMethod.GET)
+	@GetMapping(value = {"/admin/tournaments/{id}", "/tournaments/{id}"})
 	public ModelAndView viewTournament(@PathVariable("id") Long id){
 		Tournament tournament = service.get(id);
 		List<TournamentType> tournamentTypes = tournamentTypeRepo.findByTournament(tournament);

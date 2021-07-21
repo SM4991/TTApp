@@ -65,7 +65,7 @@ function formSubmit(event, url, fields, redirect_url) {
 			});
 			form_data[field] = form_data[field].length > 0 ? form_data[field] : null;
 		} else {
-			form_data[field] = ele.val();
+			form_data[field] = ele.val() != "" ? ele.val() : null;
 		}
 	});
 
@@ -100,7 +100,7 @@ function formSubmit(event, url, fields, redirect_url) {
 function loadListHtml(element_id, request_url, page = 0) {
 	page_url = "";
 	if (page > 0) {
-		page_url = url.indexOf('?') > -1 ? "&page=" + page : "?page=" + page;	
+		page_url = request_url.indexOf('?') > -1 ? "&page=" + page : "?page=" + page;	
 	}
 	var request_url = request_url + page_url;
 

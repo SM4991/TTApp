@@ -9,6 +9,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,6 +41,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.auriga.TTApp1.constants.TournamentStatusEnum;
 import com.auriga.TTApp1.constants.TournamentTypeEnum;
 import com.auriga.TTApp1.util.DateUtil;
 import com.auriga.TTApp1.util.FileUtil;
@@ -55,10 +58,10 @@ public class Tournament {
 	@Column(nullable = false, length = 100)
 	private String name;
 
-	@Column(nullable = true, name = "start_date")
+	@Column(nullable = false, name = "start_date")
 	private Date startDate;
 
-	@Column(nullable = true, name = "reg_end_date")
+	@Column(nullable = false, name = "reg_end_date")
 	private Date regEndDate;
 
 	@Column(nullable = false, name = "max_score")
@@ -66,6 +69,16 @@ public class Tournament {
 
 	@Column(nullable = true, length = 255)
 	private String image;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", nullable = false)
+	private TournamentStatusEnum status;
+	
+	/* Constructor */
+	public Tournament(){
+		super();
+		this.status = TournamentStatusEnum.PENDING;
+	}
 
 	public Long getId() {
 		return id;
@@ -121,6 +134,14 @@ public class Tournament {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public TournamentStatusEnum getStatus() {
+		return status;
+	}
+
+	public void setStatus(TournamentStatusEnum status) {
+		this.status = status;
 	}
 
 	/* Check if tournament can be started or not */

@@ -15,4 +15,7 @@ public interface TournamentTypeRepository extends JpaRepository<TournamentType, 
 	
 	@Query(nativeQuery=true, value="SELECT * FROM tournament_types tt WHERE tt.id=:id AND tt.tournament_id=:tournament_id")
 	TournamentType findByIdAndTournamentId(Long id, Long tournament_id);
+	
+	@Query("select count(*) from TournamentType tt WHERE tt.tournament=:tournament AND tt.winner IS NULL GROUP BY tt.tournament")
+	Long countNotCompletedByTournament(Tournament tournament);
 }

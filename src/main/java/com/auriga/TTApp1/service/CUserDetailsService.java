@@ -46,12 +46,6 @@ public class CUserDetailsService implements UserDetailsService {
 	public Optional<User> get(Long id) {
         return userRepo.findById(id);
     }
-
-	protected void encodePassword(User user) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String encodedPassword = passwordEncoder.encode(user.getPassword());
-		user.setPassword(encodedPassword);
-	}
 	
 	public Boolean isAuthenticated() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

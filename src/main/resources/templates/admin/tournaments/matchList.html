@@ -1,0 +1,77 @@
+<th:block th:if="${matches.size() > 0}" th:each="match: ${matches}">
+	<li class="list-title">
+		<a sec:authorize="isAuthenticated()" th:href="@{${'/admin/matches/'+match.id}}" th:text="${match.getTournamentRound().name+ ' - ' + match.name}"></a>
+		<a sec:authorize="isAnonymous()" th:href="@{${'/matches/'+match.id}}" th:text="${match.getTournamentRound().name+ ' - ' + match.name}"></a>
+	</li>
+	<li class="list-view-card">
+		<ul>
+			<li class="list-block list-left-block">
+				<ul class="list-view-card-content" th:if="${match.getPlayer1() != null}">
+					<li class="list-image-content">
+						<img th:src="${match.getPlayer1().getImageUrl()}" class="list-image" />
+					</li>
+					<li class="list-detail-content">
+						<ul class="">
+							<li class="main-content" th:text="${match.getPlayer1().name}"></li>
+							<li class="sub-content">
+								<span class="age-detail" th:text="${match.getPlayer1().age+' years'}"></span>
+								 - 
+								<span class="gender-detail" th:text="${match.getPlayer1().getGenderText()}"></span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="list-view-card-content" th:unless="${match.getPlayer1() != null}">
+					<li class="list-image-content">
+						<img th:src="${userDefaultImage}" class="list-image" />
+					</li>
+					<li class="list-detail-content">
+						<ul class="">
+							<li class="main-content" th:text="${match.getPlayer1().name}"></li>
+							<li class="sub-content">
+								<span class="age-detail">-</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li class="list-block list-center-block">
+				<div class="content">V/S</div>
+			</li>
+			<li class="list-block list-right-block">
+				<ul class="list-view-card-content" th:if="${match.getPlayer2() != null}">
+					<li class="list-image-content">
+						<img th:src="${match.getPlayer2().getImageUrl()}" class="list-image" />
+					</li>
+					<li class="list-detail-content">
+						<ul class="">
+							<li class="main-content" th:text="${match.getPlayer2().name}"></li>
+							<li class="sub-content">
+								<span class="age-detail" th:text="${match.getPlayer2().age+' years'}"></span>
+								 - 
+								<span class="gender-detail" th:text="${match.getPlayer2().getGenderText()}"></span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="list-view-card-content" th:unless="${match.getPlayer2() != null}">
+					<li class="list-image-content">
+						<img th:src="${userDefaultImage}" class="list-image" />
+					</li>
+					<li class="list-detail-content">
+						<ul class="">
+							<li class="main-content">-</li>
+							<li class="sub-content">
+								<span class="age-detail">-</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+
+	</li>
+</th:block>
+<th:block th:unless="${matches.size() > 0}">
+	<h5>No Matches Found</h5>
+</th:block>

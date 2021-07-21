@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,7 @@ import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.TournamentMatchRepository;
 import com.auriga.TTApp1.service.TournamentMatchService;
 import com.auriga.TTApp1.service.TournamentMatchSetService;
+import com.auriga.TTApp1.util.FileUtil;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 
 @RestController
@@ -42,7 +44,7 @@ public class MatchRestController {
 	@Autowired
 	private TournamentMatchSetService setService;
 	
-	@RequestMapping(value = {"/admin/api/matches/{id}", "/api/matches/{id}"}, method = RequestMethod.GET)
+	@GetMapping(value = {"/admin/api/matches/{id}", "/api/matches/{id}"})
 	public ModelAndView viewMatch(@PathVariable("id") Long id){
 		TournamentMatch match = service.get(id);
 		
@@ -81,7 +83,7 @@ public class MatchRestController {
 		return modelView;
 	}
 	
-	@RequestMapping(value = {"/admin/api/matches/startSet/{id}/{set}"}, method = RequestMethod.POST)
+	@PostMapping(value = {"/admin/api/matches/startSet/{id}/{set}"})
 	public ResponseEntity<Object> startSet(@PathVariable("id") Long id, @PathVariable("set") Integer set){
 		TournamentMatch match = service.get(id);
 		
@@ -90,7 +92,7 @@ public class MatchRestController {
 		return new ResponseEntity<>("Set has started.", HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = {"/admin/api/matches/updateScore/{id}"}, method = RequestMethod.POST)
+	@PostMapping(value = {"/admin/api/matches/updateScore/{id}"})
 	public ResponseEntity<Object> updateScore(@PathVariable("id") Long id, @RequestParam("player") Integer player, @RequestParam("state") Boolean state){
 		TournamentMatchSet set = setService.get(id);
 		

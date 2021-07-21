@@ -217,43 +217,7 @@ function getTournamentMatches(object, list_parent_id) {
 			method: "get",
 			contentType: "application/json",
 			success: function(response) {
-				li_dom = $("#sample-list-card").clone();
-
-				html = "";
-				if (response.length > 0) {
-					$.each(response, function(k, match) {
-						let player1 = match.player1 != null ? match.player1 : { name: "-", image: "-", age: "-", gender: "-" };
-						if(authorized == 1) {
-							li_dom.find(".list-title").html("<a href='/admin/matches/" + match.id + "'>" + match.tournamentRound.name + " - " + match.name + "</a>");
-						} else {
-							li_dom.find(".list-title").html("<a href='/matches/" + match.id + "'>" + match.tournamentRound.name + " - " + match.name + "</a>");
-						}
-						li_dom.find(".list-view-card .list-left-block .main-content").text(player1.name);
-						li_dom.find(".list-view-card .list-left-block .sub-content .age-detail").text(player1.age);
-						li_dom.find(".list-view-card .list-left-block .sub-content .gender-detail").text(player1.gender);
-						if (player1.image != null && player1.image != "") {
-							li_dom.find(".list-image-content .list-left-block img").attr("src", player1.image);
-						} else {
-							li_dom.find(".list-image-content .list-left-block img").attr("src", "/images/blank-profile-picture.png");
-						}
-
-						let player2 = match.player2 != null ? match.player2 : { name: "-", image: "", age: "-", gender: "-" };
-						li_dom.find(".list-view-card .list-right-block .main-content").text(player2.name);
-						li_dom.find(".list-view-card .list-right-block .sub-content .age-detail").text(player2.age);
-						li_dom.find(".list-view-card .list-right-block .sub-content .gender-detail").text(player2.gender);
-						if (player2.image != null && player2.image != "") {
-							li_dom.find(".list-image-content .list-right-block img").attr("src", player2.image);
-						} else {
-							li_dom.find(".list-image-content .list-right-block img").attr("src", "/images/blank-profile-picture.png");
-						}
-
-						html += li_dom.html();
-					});
-				} else {
-					html = "<h5>No Matches Found</h5>";
-				}
-
-				$("#" + list_parent_id + " .list-view-wrapper").html(html);
+				$("#" + list_parent_id + " .list-view-wrapper").html(response);
 
 				/* Hide overlay */
 				hideLoadingOverlay();
@@ -262,4 +226,13 @@ function getTournamentMatches(object, list_parent_id) {
 			}
 		});
 	}
+}
+
+function redirectToMatch(id) {
+	if (authorized == 1) {
+		url = "/admin/matches/"+id;
+	} else {
+		url = "/matches/"+id;
+	}
+	redirectToUrl(url);
 }

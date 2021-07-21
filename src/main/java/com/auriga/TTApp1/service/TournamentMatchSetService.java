@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.auriga.TTApp1.constants.MatchSetStatusEnum;
 import com.auriga.TTApp1.constants.MatchStatusEnum;
 import com.auriga.TTApp1.constants.RoundTypeEnum;
+import com.auriga.TTApp1.constants.TournamentStatusEnum;
 import com.auriga.TTApp1.dto.PlayerDto;
 import com.auriga.TTApp1.exception.ResourceBadRequestException;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
@@ -82,9 +83,12 @@ public class TournamentMatchSetService {
         repo.save(set);
         
         /* Update Match Status as Live */
-        match.setStatus(MatchStatusEnum.LIVE);
-        
+        match.setStatus(MatchStatusEnum.ONGOING);
         matchRepo.save(match);
+        
+        /* Update Tournament Status as Ongoing */
+        tournament.setStatus(TournamentStatusEnum.ONGOING);
+        tournamentRepo.save(tournament);
 	}
 	
 	@Transactional
@@ -210,6 +214,14 @@ public class TournamentMatchSetService {
 		} else {
 			tournamentType.setWinner(winner);
 			tournamentTypeRepo.save(tournamentType);
+			
+			/* Update Tournament Status as Complete, if all tournament type are completed */
+			System.out.println(tournamentTypeRepo.countNotCompletedByTournament(tournament));
+			Long count = tournamentTypeRepo.countNotCompletedByTournament(tournament);
+			if(count == null || count == 0) {
+		        tournament.setStatus(TournamentStatusEnum.COMPLETE);
+		        tournamentRepo.save(tournament);
+			}
 		}
 	}
 	

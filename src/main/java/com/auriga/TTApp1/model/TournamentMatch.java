@@ -10,12 +10,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import org.springframework.data.annotation.Transient;
-
+import com.auriga.TTApp1.constants.MatchSetStatusEnum;
 import com.auriga.TTApp1.constants.MatchStatusEnum;
 
 @Entity
@@ -26,6 +27,7 @@ public class TournamentMatch {
     private Long id;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="tournament_round_id", nullable=false)
 	private TournamentRound tournamentRound;
 	
 	@Column(nullable = false, length = 255)
@@ -41,17 +43,24 @@ public class TournamentMatch {
 	private User winner;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "status", nullable = true)
+	@Column(nullable = false)
 	private MatchStatusEnum status;
 	
 	@Column(name="match_order", nullable = false)
 	private Integer order;
 	
-	@Column(name="bye_given")
+	@Column(name="bye_given", nullable=false)
 	private Boolean byeGiven;
 	
 	@Transient
 	private String fixtureClass;
+	
+	/* Constructor */
+	public TournamentMatch(){
+		super();
+		this.byeGiven = false;
+		this.status = MatchStatusEnum.INACTIVE;
+	}
 
 	public Long getId() {
 		return id;
@@ -108,10 +117,6 @@ public class TournamentMatch {
 	public void setStatus(MatchStatusEnum status) {
 		this.status = status;
 	}
-	
-	public String getStatusText() {
-		return MatchStatusEnum.getEnumText(this.status);
-	}
 
 	public Integer getOrder() {
 		return order;
@@ -131,6 +136,10 @@ public class TournamentMatch {
 	
 	public Tournament getTournament() {
 		return getTournamentRound().getTournamentType().getTournament();
+	}
+
+	public String getStatusText() {
+		return status.getDisplayValue();
 	}
 	
 	public String getFixtureClass() {

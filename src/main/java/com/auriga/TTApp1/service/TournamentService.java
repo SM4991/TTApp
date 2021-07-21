@@ -204,7 +204,6 @@ public class TournamentService {
 				tournamentMatch.setStatus(MatchStatusEnum.COMPLETE);
 			} else {
 				tournamentMatch.setPlayer2(player2);
-				tournamentMatch.setByeGiven(false);
 				tournamentMatch.setStatus(MatchStatusEnum.PENDING);
 			}
 			matchRepo.save(tournamentMatch);
@@ -214,14 +213,12 @@ public class TournamentService {
 	}
 	
 	public void createNonPlayerMatches(TournamentRound round, Integer matchCount) {
-		/* Save match entries  */
+		/* Save inactive match entries  */
 		IntStream.rangeClosed(1, matchCount).forEach(index -> {
 			TournamentMatch tournamentMatch = new TournamentMatch();
 			tournamentMatch.setTournamentRound(round);
-			tournamentMatch.setName("Match"+index);
+			tournamentMatch.setName("Match "+index);
 			tournamentMatch.setOrder(index);
-			tournamentMatch.setByeGiven(false);
-			tournamentMatch.setStatus(MatchStatusEnum.INACTIVE);
 			matchRepo.save(tournamentMatch);
 		});
 	}

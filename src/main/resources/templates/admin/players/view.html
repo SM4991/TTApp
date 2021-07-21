@@ -23,7 +23,7 @@
 							<ul>
 								<li class="main-content" th:text="${player.name}"></li>
 								<li class="sub-content"><span th:text="${player.age}"></span> years</li>
-								<li class="sub-content" th:text="${player.gender}"></li>
+								<li class="sub-content" th:text="${player.getGenderText()}"></li>
 							</ul>
 						</li>
 					</ul>

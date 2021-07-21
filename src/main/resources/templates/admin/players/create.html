@@ -36,9 +36,8 @@
 							<div class="form-group inline-form-group">
 								<label th:for="gender">Gender</label> <select name="gender"
 									class="form-control" id="gender">
-									<option value="FEMALE" selected>Female</option>
-									<option value="MALE">Male</option>
-									<option value="OTHER">Other</option>
+									<option value="">Choose...</option>
+									<option th:each="gender: ${T(com.auriga.TTApp1.constants.GenderEnum).values()}" th:value="${gender}" th:text="${gender.getDisplayValue()}"></option>
 								</select>
 							</div>
 							<div class="form-group inline-form-group">

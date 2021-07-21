@@ -8,9 +8,9 @@
 	<div class="app-wrapper">
 		<div class="page-wrapper">
 			<div class="page-header">
-				<a sec:authorize="isAuthenticated()" th:href="@{'/admin/tournaments/'+${tournament.id}}" class="back-link"><i
+				<a sec:authorize="isAuthenticated()" th:href="@{'/admin/tournaments/'+${tournament.id}+'/fixture/'+${tournamentType.id}}" class="back-link"><i
 					class="material-icons">arrow_back</i></a>
-				<a sec:authorize="isAnonymous()" th:href="@{'/tournaments/'+${tournament.id}}" class="back-link"><i
+				<a sec:authorize="isAnonymous()" th:href="@{'/tournaments/'+${tournament.id}+'/fixture/'+${tournamentType.id}}" class="back-link"><i
 					class="material-icons">arrow_back</i></a>
 				<h3 class="page-title">Scorer</h3>
 			</div>
@@ -22,11 +22,7 @@
 							<li class="match-player">
 								<div class="title" th:text="${player1.name}"></div>
 								<div class="image-wrapper">
-									<img th:if="${player1.image != '' && player1.image != null}" th:src="@{${player1.image}}"
-										id="default-form-image" class="default-form-image" /> <img
-										th:unless="${player1.image != '' && player1.image != null}"
-										th:src="@{${@environment.getProperty('players.image.default.path')}}"
-										id="default-form-image" class="default-form-image" />
+									<img th:src="@{${player1.getImageUrl()}}" id="default-form-image" class="default-form-image" /> 
 								</div>
 							</li>
 							<li class="match-player-vs">
@@ -35,17 +31,13 @@
 							<li class="match-player" th:if="${player2 != null && player2.name != null}">
 								<div class="title" th:text="${player2.name}"></div>
 								<div class="image-wrapper">
-									<img th:if="${player2.image != '' && player2.image != null}" th:src="@{${player2.image}}"
-										id="default-form-image" class="default-form-image" /> <img
-										th:unless="${player2.image != '' && player2.image != null}"
-										th:src="@{${@environment.getProperty('players.image.default.path')}}"
-										id="default-form-image" class="default-form-image" />
+									<img th:src="@{${player2.getImageUrl()}}" id="default-form-image" class="default-form-image" />
 								</div>
 							</li>
 							<li class="match-player" th:unless="${player2 != null && player2.name != null}">
 								<div class="title">-</div>
 								<div class="image-wrapper">
-									<img th:src="@{${@environment.getProperty('players.image.default.path')}}"
+									<img th:src="@{${userDefaultImage}}"
 										id="default-form-image" class="default-form-image" />
 								</div>
 							</li>

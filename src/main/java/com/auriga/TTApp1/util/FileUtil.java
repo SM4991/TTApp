@@ -6,10 +6,10 @@ import org.springframework.core.env.Environment;
 
 public class FileUtil {
 	private static String tournamentDefaultImage = "/images/blank-profile-picture.png";
-	private static String playerDefaultImage = "/images/blank-profile-picture.png";
+	private static String userDefaultImage = "/images/blank-profile-picture.png";
 	
 	public static String getTournamentImageUrl(String image) {
-		if(!image.isEmpty() && image != null) {
+		if(image != null && !image.isEmpty()) {
 			return image;
 		} else {
 			return getTournamentDefaultImage();
@@ -20,15 +20,15 @@ public class FileUtil {
 		return tournamentDefaultImage;
 	}
 	
-	public static String getPlayerImageUrl(String image) {
-		if(!image.isEmpty() && image != null) {
+	public static String getUserImageUrl(String image) {
+		if(image != null && !image.isEmpty()) {
 			return image;
 		} else {
-			return getTournamentDefaultImage();
+			return getUserDefaultImage();
 		}
 	}
 	
-	public static String getPlayerDefaultImage() {
-		return playerDefaultImage;
+	public static String getUserDefaultImage() {
+		return userDefaultImage;
 	}
 }

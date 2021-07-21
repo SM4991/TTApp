@@ -1,6 +1,7 @@
 package com.auriga.TTApp1.model;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -8,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -21,9 +23,11 @@ public class TournamentType {
     private Long id;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="tournament_id", nullable=false)
 	private Tournament tournament;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private TournamentTypeEnum type;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -48,10 +52,6 @@ public class TournamentType {
 	public TournamentTypeEnum getType() {
 		return type;
 	}
-	
-	public String getTypeText() {
-		return type.getDisplayValue();
-	}
 
 	public void setType(TournamentTypeEnum type) {
 		this.type = type;
@@ -63,6 +63,10 @@ public class TournamentType {
 
 	public void setWinner(User winner) {
 		this.winner = winner;
+	}
+	
+	public String getTypeText() {
+		return type.getDisplayValue();
 	}
 
 	@Override

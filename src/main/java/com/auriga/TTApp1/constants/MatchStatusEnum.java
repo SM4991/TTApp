@@ -1,30 +1,18 @@
 package com.auriga.TTApp1.constants;
 
 public enum MatchStatusEnum {
-	INACTIVE,
-	PENDING,
-	LIVE,
-	COMPLETE;
+	INACTIVE("Inactive"),
+	PENDING("Pending"),
+	ONGOING("Live"),
+	COMPLETE("Complete");
 	
-	public static String getEnumText(MatchStatusEnum value) {
-		String text = "";
-		switch (value) {
-		case INACTIVE:
-			text = "Inactive";
-			break;
-		case PENDING:
-			text = "Pending";
-			break;
-		case LIVE:
-			text = "Live";
-			break;
-		case COMPLETE:
-			text = "Complete";
-			break;
-		default:
-			text = "";
-			break;
-		}
-		return text;
-	}
+	private String value;
+	
+	private MatchStatusEnum(String value) {
+        this.value = value;
+    }
+
+    public String getDisplayValue() {
+        return value;
+    }
 }

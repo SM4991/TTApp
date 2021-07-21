@@ -18,8 +18,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +37,7 @@ import com.auriga.TTApp1.repository.TournamentMatchRepository;
 import com.auriga.TTApp1.repository.TournamentRoundRepository;
 import com.auriga.TTApp1.service.FileUploadService;
 import com.auriga.TTApp1.service.TournamentTypeService;
+import com.auriga.TTApp1.util.FileUtil;
 import com.auriga.TTApp1.service.PaginationService;
 import com.auriga.TTApp1.service.TournamentService;
 
@@ -63,17 +64,17 @@ public class TournamentRestController {
 	@Value("${spring.list.page.size}")
 	Integer defaultPageSize;
 
-	@RequestMapping(value = {"/admin/api/tournaments", "/api/tournaments"}, method = RequestMethod.GET)
+	@GetMapping(value = {"/admin/api/tournaments", "/api/tournaments"})
 	public ModelAndView getTournaments(@RequestParam(defaultValue = "1") Integer status, @RequestParam(defaultValue = "1") Integer page) {
 		PaginationService paginatedItems = service.getAllItems(status, page, defaultPageSize, "name");
 		
-		ModelAndView model = new ModelAndView("/admin/tournaments/partialList");
+		ModelAndView model = new ModelAndView("/admin/tournaments/tournamentList");
 		model.addObject("paginatedItems", paginatedItems);
 		
 		return model;
 	}
 
-	@RequestMapping(value = "/admin/api/tournaments", method = RequestMethod.POST)
+	@PostMapping(value = "/admin/api/tournaments")
 	public ResponseEntity<Object> createTournament(@Valid @RequestBody TournamentDto tournamentDto,
 			BindingResult errorResult) {
 		if (errorResult.hasErrors()) {
@@ -91,7 +92,7 @@ public class TournamentRestController {
 		}
 	}
 
-	@RequestMapping(value = "/admin/api/tournaments/draw", method = RequestMethod.POST)
+	@PostMapping(value = "/admin/api/tournaments/draw")
 	public ResponseEntity<Object> createDraw(@Valid @RequestBody TournamentDrawDto dto, BindingResult errorResult) {
 		if(errorResult.hasErrors()) {
 			List<FieldError> errors = errorResult.getFieldErrors();
@@ -108,7 +109,7 @@ public class TournamentRestController {
 		}
 	}
 	
-	@RequestMapping(value = {"/admin/api/tournaments/{ttId}/fixture", "/api/tournaments/{ttId}/fixture"}, method = RequestMethod.GET)
+	@GetMapping(value = {"/admin/api/tournaments/{ttId}/fixture", "/api/tournaments/{ttId}/fixture"})
 	public ModelAndView viewFixture(@PathVariable Long ttId) {
 		TournamentType tournamentType = tournamentTypeService.get(ttId);
 		Tournament tournament = tournamentType.getTournament();
@@ -153,23 +154,26 @@ public class TournamentRestController {
 		model.addObject("tournamentType", tournamentType);
 		model.addObject("rounds", roundList);
 		model.addObject("matches", sortedMatchList);
+		model.addObject("userDefaultImage", FileUtil.getUserDefaultImage());
 		
 		return model;
 	}
 	
-	@RequestMapping(value = {"/admin/api/tournaments/{ttId}/matches", "/api/tournaments/{ttId}/matches"}, method = RequestMethod.GET)
-	public ResponseEntity<Object> viewMatches(@PathVariable Long ttId) {
+	@GetMapping(value = {"/admin/api/tournaments/{ttId}/matches", "/api/tournaments/{ttId}/matches"})
+	public ModelAndView viewMatches(@PathVariable Long ttId) {
 		TournamentType tournamentType = tournamentTypeService.get(ttId);
 		Tournament tournament = tournamentType.getTournament();
 		
 		List<TournamentMatch> matches = matchRepo.findAllActiveTournamentMatch(tournamentType);
 		
-		ModelAndView model = new ModelAndView("/admin/tournaments/matches");
+		ModelAndView model = new ModelAndView("/admin/tournaments/matchList");
 		model.addObject("matches", matches);
-		return new ResponseEntity<>(matches, HttpStatus.OK);
+		model.addObject("userDefaultImage", FileUtil.getUserDefaultImage());
+		
+		return model;
 	}
 
-	@RequestMapping(value = "/admin/api/tournaments/upload", method = RequestMethod.POST)
+	@PostMapping(value = "/admin/api/tournaments/upload")
 	public ResponseEntity<Object> uploadTournamentImage(@ModelAttribute TournamentImageDto tournamentImage) {
 		String image = null;
 		try {

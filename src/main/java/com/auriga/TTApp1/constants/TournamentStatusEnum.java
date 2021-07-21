@@ -1,14 +1,13 @@
 package com.auriga.TTApp1.constants;
 
-public enum RoundTypeEnum {
-	PRE("Pre"),
-	QUATERFINAL("Quater Final"),
-	SEMIFINAL("Semi Final"),
-	FINAL("Final");
+public enum TournamentStatusEnum {
+	PENDING("Pending"),
+	ONGOING("On going"),
+	COMPLETE("Complete");
 	
 	private String value;
 	
-	private RoundTypeEnum(String value) {
+	private TournamentStatusEnum(String value) {
         this.value = value;
     }
 

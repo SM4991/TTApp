@@ -1,0 +1,34 @@
+<th:block th:if="${paginatedItems.items.size() > 0}">
+	<div class="list-view" id="list-view">
+		<ul class="list-view-wrapper">
+			<li class="list-view-card" th:each="player: ${paginatedItems.items}">
+				<ul>
+					<li class="list-image-content"><img th:src="${player.getImageUrl()}" class="list-image" /></li>
+					<li class="list-detail-content">
+						<ul class="">
+							<li class="main-content"><a th:href="@{'/admin/players/'+${player.id}}" th:text="${player.name}"></a></li>
+							<li class="sub-content">
+								<span class="age-detail" th:text="${player.age}"></span>
+								 - 
+								<span class="gender-detail" th:text="${player.getGenderText()}"></span></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+		<th:block th:replace="fragments/authenticated :: paginationFragment (paginator=${paginatedItems})"/>
+		<div class="floating-btn-group">
+			<a th:href="@{/admin/players/create}"><i class="material-icons">add_circle</i></a>
+		</div>
+	</div>
+</th:block>
+
+<th:block th:unless="${paginatedItems.items.size() > 0}">
+	<div class="inner-content first-list-view">
+		<h4>You have not added players</h4>
+		<div class="btn-group">
+			<a th:href="@{/admin/players/create}" class="btn btn-primary">Add
+				players</a>
+		</div>
+	</div>
+</th:block>

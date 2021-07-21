@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,14 +56,18 @@ public class PlayerRestController {
 	@Value("${spring.list.page.size}")
     Integer defaultPageSize;
 
-	@RequestMapping(value = "/admin/api/players", method = RequestMethod.GET)
-	public ResponseEntity<Object> getPlayers(@RequestParam(defaultValue = "1") Integer page) {
+	@GetMapping(value = "/admin/api/players")
+	public ModelAndView getPlayers(@RequestParam(defaultValue = "1") Integer page) {
 		PaginationService paginatedItems = service.getAllItems(page, defaultPageSize, "name");
-		return new ResponseEntity<>(paginatedItems, HttpStatus.OK);
+		
+		ModelAndView model = new ModelAndView("/admin/players/playerList");
+		model.addObject("paginatedItems", paginatedItems);
+		
+		return model;
 	}
 
 	
-	@RequestMapping(value = "/admin/api/players", method = RequestMethod.POST)
+	@PostMapping(value = "/admin/api/players")
 	public ResponseEntity<Object> createPlayer(@Valid @RequestBody PlayerDto playerForm, BindingResult errorResult) {
 		HashMap<String, String> errorMsgs = new HashMap<String, String>();
 		if(errorResult.hasErrors()) {
@@ -79,21 +83,44 @@ public class PlayerRestController {
 			try {
 				service.save(playerForm);
 				return new ResponseEntity<>("Player added successfully", HttpStatus.OK);
-	        }catch (UserAlreadyExistsException e){
+	        } catch (UserAlreadyExistsException e){
 	        	errorMsgs.put("email", "An account already exists for this email.");
 	            return new ResponseEntity<>(errorMsgs, HttpStatus.BAD_REQUEST);
 	        }
 		}
 	}
 	
-	@RequestMapping(value = "/admin/api/players/{id}", method = RequestMethod.GET)
+//	@PostMapping(value = "/admin/api/player/{id}/edit")
+//	public ResponseEntity<Object> editPlayer(@PathVariable("id") Long id, @Valid @RequestBody PlayerDto playerForm, BindingResult errorResult) {
+//		HashMap<String, String> errorMsgs = new HashMap<String, String>();
+//		if(errorResult.hasErrors()) {
+//			List<FieldError> errors = errorResult.getFieldErrors();
+//			
+//	        for (FieldError e : errors){
+//	        	if(!errorMsgs.containsKey(e.getField())) {
+//	        		errorMsgs.put(e.getField(), e.getDefaultMessage());
+//	        	}
+//	        }
+//	        return new ResponseEntity<>(errorMsgs, HttpStatus.BAD_REQUEST);
+//		} else {
+//			try {
+//				service.save(playerForm);
+//				return new ResponseEntity<>("Player added successfully", HttpStatus.OK);
+//	        } catch (UserAlreadyExistsException e){
+//	        	errorMsgs.put("email", "An account already exists for this email.");
+//	            return new ResponseEntity<>(errorMsgs, HttpStatus.BAD_REQUEST);
+//	        }
+//		}
+//	}
+	
+	@GetMapping(value = "/admin/api/players/{id}")
 	public ResponseEntity<Object> viewPlayer(@PathVariable("id") Long id){
-		User player = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Player"));
+		User player = service.get(id);
 		
 		return new ResponseEntity<>(player, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/admin/api/players/upload", method = RequestMethod.POST)
+	@PostMapping(value = "/admin/api/players/upload")
 	public ResponseEntity<Object> uploadImage(@ModelAttribute UserImageDto playerImage) {
         String image = null;
         try {

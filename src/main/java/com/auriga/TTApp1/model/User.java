@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.auriga.TTApp1.constants.GenderEnum;
+import com.auriga.TTApp1.util.FileUtil;
 
 @Entity
 @Table(name="users")
@@ -23,15 +24,12 @@ public class User {
      
 	@Column(nullable = false, unique = true, length = 255)
     private String email;
-    
-    @Column(nullable = true, length = 100)
-    private String password;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "gender", nullable = true)
+	@Column(nullable = true)
 	private GenderEnum gender; 
 	
-	@Column(name = "age", nullable = true)
+	@Column(nullable = true)
 	private Integer age;
 	
 	@Column(nullable = true, length = 255)
@@ -73,14 +71,6 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getName() {
@@ -171,6 +161,14 @@ public class User {
 
 	public void setSeed(Integer seed) {
 		this.seed = seed;
+	}
+	
+	public String getImageUrl() {
+		return FileUtil.getUserImageUrl(this.getImage());
+	}
+	
+	public String getGenderText() {
+		return gender.getDisplayValue();
 	}
 
 	@Override

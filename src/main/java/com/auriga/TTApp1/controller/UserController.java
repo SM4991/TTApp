@@ -5,7 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,7 +19,7 @@ public class UserController {
 	@Autowired
     private CUserDetailsService service;
 	
-	@RequestMapping(value = "/admin/users/profile", method = RequestMethod.GET)
+	@GetMapping(value = "/admin/users/profile")
 	public ModelAndView viewPlayer(){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		

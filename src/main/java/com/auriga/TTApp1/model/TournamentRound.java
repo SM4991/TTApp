@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -19,6 +20,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.auriga.TTApp1.constants.MatchStatusEnum;
 import com.auriga.TTApp1.constants.RoundTypeEnum;
 
 @Entity
@@ -29,17 +31,24 @@ public class TournamentRound {
     private Long id;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="tournament_type_id", nullable=false)
 	private TournamentType tournamentType;
 	
 	@Column(nullable=false, length = 50)
 	private String name;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "type", nullable = true)
+	@Column(nullable = false)
 	private RoundTypeEnum type;
 	
 	@Column(name="round_order", nullable=false)
 	private Integer order;
+	
+	/* Constructor */
+	public TournamentRound(){
+		super();
+		this.type = RoundTypeEnum.PRE;
+	}
 
 	public Long getId() {
 		return id;

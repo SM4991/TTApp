@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,9 +36,19 @@ public class PlayerController extends EntityNotFoundException{
 		return "admin/players/create";
 	}
 	
-	@RequestMapping(value = "/admin/players/{id}", method = RequestMethod.GET)
+//	@GetMapping(value = "/admin/players/{id}/edit")
+//	public ModelAndView editPlayer(@PathVariable("id") Long id){
+//		User player = service.get(id);
+//		
+//		ModelAndView modelView = new ModelAndView("admin/players/edit");
+//	    modelView.addObject("player", player);
+//	    
+//		return modelView;
+//	}
+	
+	@GetMapping(value = "/admin/players/{id}")
 	public ModelAndView viewPlayer(@PathVariable("id") Long id){
-		User player = service.get(id).orElseThrow(() -> new ResourceNotFoundException("Player"));
+		User player = service.get(id);
 		
 		ModelAndView modelView = new ModelAndView("admin/players/view");
 	    modelView.addObject("player", player);
