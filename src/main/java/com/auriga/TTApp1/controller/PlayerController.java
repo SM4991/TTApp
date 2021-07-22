@@ -48,6 +48,12 @@ public class PlayerController extends EntityNotFoundException{
 //		return modelView;
 //	}
 	
+	@GetMapping(value = "/admin/players/import")
+	public ModelAndView importPlayers(){
+		ModelAndView modelView = new ModelAndView("admin/players/import");
+		return modelView;
+	}
+	
 	@GetMapping(value = "/admin/players/{id}")
 	public ModelAndView viewPlayer(@PathVariable("id") Long id){
 		User player = service.get(id);

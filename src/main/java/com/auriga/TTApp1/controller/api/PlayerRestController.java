@@ -32,12 +32,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.auriga.TTApp1.dto.PlayerDto;
 import com.auriga.TTApp1.dto.UserImageDto;
+import com.auriga.TTApp1.exception.ResourceBadRequestException;
 import com.auriga.TTApp1.exception.ResourceNotFoundException;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
 import com.auriga.TTApp1.model.User;
+import com.auriga.TTApp1.service.FileImportService;
 import com.auriga.TTApp1.service.FileUploadService;
 import com.auriga.TTApp1.service.PaginationService;
 import com.auriga.TTApp1.service.PlayerService;
+import com.auriga.TTApp1.util.FileUtil;
 
 import javassist.NotFoundException;
 
@@ -53,7 +56,7 @@ public class PlayerRestController {
 	@Value("${spring.list.page.size}")
     Integer defaultPageSize;
 
-	@GetMapping(value = "/admin/api/players")
+	@GetMapping("/admin/api/players")
 	public ModelAndView getPlayers(@RequestParam(defaultValue = "1") Integer page) {
 		PaginationService paginatedItems = service.getAllItems(page, defaultPageSize, "name");
 		
@@ -64,7 +67,7 @@ public class PlayerRestController {
 	}
 
 	
-	@PostMapping(value = "/admin/api/players")
+	@PostMapping("/admin/api/players")
 	public ResponseEntity<Object> createPlayer(@Valid @RequestBody PlayerDto playerForm, BindingResult errorResult) {
 		HashMap<String, String> errorMsgs = new HashMap<String, String>();
 		if(errorResult.hasErrors()) {
@@ -87,7 +90,7 @@ public class PlayerRestController {
 		}
 	}
 	
-//	@PostMapping(value = "/admin/api/player/{id}/edit")
+//	@PostMapping("/admin/api/player/{id}/edit")
 //	public ResponseEntity<Object> editPlayer(@PathVariable("id") Long id, @Valid @RequestBody PlayerDto playerForm, BindingResult errorResult) {
 //		HashMap<String, String> errorMsgs = new HashMap<String, String>();
 //		if(errorResult.hasErrors()) {
@@ -110,14 +113,26 @@ public class PlayerRestController {
 //		}
 //	}
 	
-	@GetMapping(value = "/admin/api/players/{id}")
+	@GetMapping("/admin/api/players/{id}")
 	public ResponseEntity<Object> viewPlayer(@PathVariable("id") Long id){
 		User player = service.get(id);
 		
 		return new ResponseEntity<>(player, HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/admin/api/players/upload")
+	@PostMapping("/admin/api/players/import")
+	public ModelAndView importPlayers(MultipartFile file) throws IOException{
+		if(!FileUtil.hasCSVFormat(file)) throw new ResourceBadRequestException("Uploaded file should be in csv or excel format");
+		
+		List importResponse = service.saveBulkPlayers(service.importPlayers(file));
+		
+		ModelAndView model = new ModelAndView("/admin/players/importResponse");
+		model.addObject("importResponse", importResponse);
+		
+		return model;
+	}
+	
+	@PostMapping("/admin/api/players/upload")
 	public ResponseEntity<Object> uploadImage(@ModelAttribute UserImageDto playerImage) {
         String image = null;
         try {

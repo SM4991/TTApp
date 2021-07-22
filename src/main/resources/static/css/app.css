@@ -413,3 +413,18 @@ a.footer-icon:hover, a.footer-icon.active {
 	margin-bottom: 10px;
 }
 /* Tournament Match List Css ends */
+/* Import response list css starts */
+.import-response h4 {
+	margin: 0 10px;
+}
+.import-response .error-content{
+	color: red;
+}
+.import-response .success-content{
+	color: #649464;
+}
+
+.import-response .label-content{
+	color: #636363;
+}
+/* Import response list css ends */

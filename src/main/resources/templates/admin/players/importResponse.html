@@ -1,0 +1,21 @@
+<th:block th:if="${importResponse.size() > 0}">
+	<div class="list-view import-response" id="list-view">
+		<h4>Import response: </h4>
+		<ul class="list-view-wrapper">
+			<li class="list-view-card" th:each="response: ${importResponse}">
+				<ul>
+					<li class="list-detail-content">
+						<ul class="">
+							<li class=""><span class="label-content">Name: </span><span th:text="${response.get('record').get('name')}"></span></li>
+							<li class=""><span class="label-content">Email: </span><span th:text="${response.get('record').get('email')}"></span></li>
+							<li class=""><span class="label-content">Gender: </span><span th:text="${response.get('record').get('gender')}"></span></li>
+							<li class=""><span class="label-content">Age: </span><span th:text="${response.get('record').get('age')}"></span></li>
+							<li class="success-content" th:if="${response.get('status')}"><span class="label-content">Success: </span><span th:text="${response.get('message')}"></span></li>
+							<li class="error-content" th:unless="${response.get('status')}"><span class="label-content">Error: </span><span th:text="${response.get('message')}"></span></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</th:block>
