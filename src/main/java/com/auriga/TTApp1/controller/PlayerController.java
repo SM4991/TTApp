@@ -32,8 +32,10 @@ public class PlayerController extends EntityNotFoundException{
 	}
 
 	@GetMapping("/admin/players/create")
-	public String createPlayer() {
-		return "admin/players/create";
+	public ModelAndView createPlayer() {
+		ModelAndView model = new ModelAndView("admin/players/create");
+		model.addObject("player", new User());
+		return model;
 	}
 	
 //	@GetMapping(value = "/admin/players/{id}/edit")

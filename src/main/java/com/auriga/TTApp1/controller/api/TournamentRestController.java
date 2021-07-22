@@ -58,9 +58,6 @@ public class TournamentRestController {
 	@Autowired
 	private FileUploadService fileUploadService;
 
-	@Value("${tournaments.image.upload.path}")
-	String uploadPath;
-
 	@Value("${spring.list.page.size}")
 	Integer defaultPageSize;
 
@@ -177,8 +174,7 @@ public class TournamentRestController {
 	public ResponseEntity<Object> uploadTournamentImage(@ModelAttribute TournamentImageDto tournamentImage) {
 		String image = null;
 		try {
-			MultipartFile file = tournamentImage.getFile();
-			image = fileUploadService.saveUploadedFile(tournamentImage.getFile(), uploadPath);
+			image = fileUploadService.saveUploadedFile(tournamentImage.getFile(), tournamentImage.getFilesUploadPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 			return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);

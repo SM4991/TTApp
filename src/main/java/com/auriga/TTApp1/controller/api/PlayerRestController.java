@@ -50,9 +50,6 @@ public class PlayerRestController {
 	@Autowired
     private FileUploadService fileUploadService;
 	
-	@Value("${players.image.upload.path}")
-    String uploadPath;
-	
 	@Value("${spring.list.page.size}")
     Integer defaultPageSize;
 
@@ -124,8 +121,7 @@ public class PlayerRestController {
 	public ResponseEntity<Object> uploadImage(@ModelAttribute UserImageDto playerImage) {
         String image = null;
         try {
-        	MultipartFile file = playerImage.getFile();
-        	image = fileUploadService.saveUploadedFile(playerImage.getFile(), uploadPath);
+        	image = fileUploadService.saveUploadedFile(playerImage.getFile(), playerImage.getFilesUploadPath());
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);

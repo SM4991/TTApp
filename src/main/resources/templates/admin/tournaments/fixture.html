@@ -40,24 +40,6 @@
 			<th:block th:replace="fragments/common :: successResponseModalFragment" />
 			<th:block th:replace="fragments/common :: errorResponseModalFragment" />
 		</div>
-		<div class="hide" id="single-match-block">
-			<div class="matchup">
-				<div class="participants">
-					<div class="participant first-player">
-						<span class="image-wrapper"> <img
-							th:src="@{${@environment.getProperty('players.image.default.path')}}"
-							id="default-form-image" class="default-form-image" />
-						</span> <span class="content"></span>
-					</div>
-					<div class="participant second-player">
-						<span class="image-wrapper"> <img
-							th:src="@{${@environment.getProperty('players.image.default.path')}}"
-							id="default-form-image" class="default-form-image" />
-						</span> <span class="content"></span>
-					</div>
-				</div>
-			</div>
-		</div>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		<script th:src="@{/js/common.js}"></script>
 		<script th:src="@{/js/tournaments.js}"></script>

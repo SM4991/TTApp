@@ -44,55 +44,6 @@
 		<th:block th:replace="fragments/common :: successResponseModalFragment" />
 		<th:block th:replace="fragments/common :: errorResponseModalFragment" />
 	</div>
-	<div class="hide" id="sample-list-card">
-		<li class="list-title">Round - Match</li>
-		<li class="list-view-card">
-			<ul>
-				<li class="list-block list-left-block">
-					<ul class="list-view-card-content">
-						<li class="list-image-content"><img
-							th:src="@{${@environment.getProperty('players.image.default.path')}}"
-							class="list-image" /></li>
-						<li class="list-detail-content">
-							<ul class="">
-								<li class="main-content">Player 1</li>
-								<li class="sub-content"><span class="age-detail">26
-										years</span> - <span class="gender-detail">Male</span></li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-				<li class="list-block list-center-block">
-					<div class="content">V/S</div>
-				</li>
-				<li class="list-block list-right-block">
-					<ul class="list-view-card-content">
-						<li class="list-image-content"><img
-							th:src="@{${@environment.getProperty('players.image.default.path')}}"
-							class="list-image" /></li>
-						<li class="list-detail-content">
-							<ul class="">
-								<li class="main-content">Player 1</li>
-								<li class="sub-content"><span class="age-detail">26
-										years</span> - <span class="gender-detail">Male</span></li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-			</ul>
-
-		</li>
-	</div>
-	<div sec:authorize="isAuthenticated()">
-		<script>
-			var authorized = 1;
-		</script>
-	</div>
-	<div sec:authorize="isAnonymous">
-		<script>
-			var authorized = 0;
-		</script>
-	</div>
 	<script th:src="@{/js/common.js}"></script>
 	<script th:src="@{/js/tournaments.js}"></script>
 	<div th:if="${tournamentTypeId != null && tournamentTypeId != ''}">

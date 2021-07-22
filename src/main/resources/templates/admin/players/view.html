@@ -14,10 +14,7 @@
 				<div class="detail-content">
 					<ul class="view-top-content">
 						<li class="view-img-content">
-							<img th:if="${player.image != ''}" th:src="@{${player.image}}"
-										id="image" class="image" />
-							<img th:unless="${player.image != ''}" th:src="@{${@environment.getProperty('players.image.default.path')}}"
-										id="image" class="image" />
+							<img th:src="@{${player.getImageUrl()}}" id="image" class="image" />
 						</li>
 						<li class="view-detail-content">
 							<ul>

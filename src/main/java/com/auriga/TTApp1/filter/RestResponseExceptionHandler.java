@@ -1,7 +1,10 @@
 package com.auriga.TTApp1.filter;
 
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +19,9 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
 	@ExceptionHandler(value = { 
 			IllegalArgumentException.class, 
 			IllegalStateException.class,
-			SQLIntegrityConstraintViolationException.class
+			DataIntegrityViolationException.class,
+			SQLException.class,
+			DataAccessException.class
 	})
     public ResponseEntity<Object> handleRunTimeExceptions(RuntimeException ex, WebRequest request) {
 		/* Log the exception message */

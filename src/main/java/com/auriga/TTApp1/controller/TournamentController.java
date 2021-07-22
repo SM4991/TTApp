@@ -49,6 +49,7 @@ public class TournamentController {
 	@GetMapping("/admin/tournaments/create")
 	public ModelAndView createTournaments() {
 		ModelAndView modelView = new ModelAndView("admin/tournaments/create");
+		modelView.addObject("tournament", new Tournament());
 		return modelView;
 	}
 	

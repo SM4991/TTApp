@@ -12,27 +12,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.auriga.TTApp1.util.FileUtil;
+
 @Service
 public class FileUploadService {
-	@Value("${spring.public.upload.path}")
-	private String publicUploadPath;
-	
-	@Value("${spring.public.upload.folder}")
-	private String uploadFolder;
-	
+	/* Save uploaded file to destination folder */
 	public String saveUploadedFile(MultipartFile file, String uploadPath) throws IOException {
-        uploadPath = "/"+uploadFolder+uploadPath;
-		String fullUploadPath = publicUploadPath+uploadPath;
+        uploadPath = "/"+FileUtil.getUploadFolder()+uploadPath;
+		String fullUploadPath = FileUtil.getPublicFilesUploadPath()+uploadPath;
         
 		// Make sure directory exists!
         File uploadDir = new File(fullUploadPath);
         uploadDir.mkdirs();
   
         if (!file.isEmpty()) {
-        	String fileName = file.getOriginalFilename();
-        	fileName = fileName.replaceAll(" ", "_");
-        	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-        	fileName = timeStamp+fileName;
+        	String fileName = getFileName(file);
+
         	String uploadFullFilePath = fullUploadPath + "/" + fileName;
         	String uploadFilePath = uploadPath + "/" + fileName;
 
@@ -44,4 +39,14 @@ public class FileUploadService {
         
         return "";
     }
+	
+	/* Get file name to save file as in folder */
+	public String getFileName(MultipartFile file) {
+		String fileName = file.getOriginalFilename();
+    	fileName = fileName.replaceAll(" ", "_");
+    	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+    	fileName = timeStamp+fileName;
+    	
+    	return fileName;
+	}
 }

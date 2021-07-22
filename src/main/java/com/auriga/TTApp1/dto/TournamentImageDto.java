@@ -1,15 +1,10 @@
 package com.auriga.TTApp1.dto;
 
-import org.springframework.web.multipart.MultipartFile;
+import com.auriga.TTApp1.util.FileUtil;
 
-public class TournamentImageDto {
-	private MultipartFile file;
-
-	public MultipartFile getFile() {
-		return file;
-	}
-
-	public void setFile(MultipartFile file) {
-		this.file = file;
+public class TournamentImageDto extends ImageDto {
+	/* Get files upload path */
+	public String getFilesUploadPath() {
+		return FileUtil.getTournamentFilesUploadPath();
 	}
 }

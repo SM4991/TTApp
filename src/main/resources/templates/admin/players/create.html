@@ -18,7 +18,7 @@
 							<div class="form-group form-image-wrapper">
 								<div class="image-wrapper">
 									<img
-										th:src="@{${@environment.getProperty('players.image.default.path')}}"
+										th:src="@{${player.getImageUrl()}}"
 										id="default-form-image" class="default-form-image" />
 								</div>
 								<a href="javascript:void(0)" id="upload_link">Choose Photo</a> 
