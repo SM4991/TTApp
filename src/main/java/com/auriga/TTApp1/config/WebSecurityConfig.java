@@ -99,7 +99,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	            .successHandler(loginSuccessHandler)
 	            .failureHandler(loginFailureHandler)
 	            .usernameParameter("email")
-	            .passwordParameter("otp")
 	            .defaultSuccessUrl("/admin/tournaments")
 	            .permitAll()
 	            .and()

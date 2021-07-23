@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.auriga.TTApp1.dto.DefaultRegistrationDto;
 import com.auriga.TTApp1.dto.RegistrationDto;
 import com.auriga.TTApp1.exception.ResourceBadRequestException;
 import com.auriga.TTApp1.exception.UserAlreadyExistsException;
@@ -34,6 +35,29 @@ public class RegistrationService {
 	
 	@Autowired UserOtpService userOtpService;
 
+	/* Function to register a user via email and password */
+	@Transactional
+	public User defaultRegister(DefaultRegistrationDto registrationForm) throws UnsupportedEncodingException, MessagingException {
+		//Let's check if user already registered with us
+        if(cUserDetailsService.checkIfUserExist(registrationForm.getEmail())){
+            throw new UserAlreadyExistsException("User already exists for this email");
+        }	
+        
+		Role role = getAdminRole();
+		
+		User user = new User();
+    	BeanUtils.copyProperties(registrationForm, user);
+
+    	user.setPassword(encodeString(user.getPassword()));
+    	user.setIsLoginActive(true);
+		user.setRole(role);
+
+		userRepo.save(user);
+		
+		return user;
+	}
+	
+	/* Function to register a user via email and otp */
 	@Transactional
 	public User register(RegistrationDto registrationForm) throws UnsupportedEncodingException, MessagingException {
 		//Let's check if user already registered with us
@@ -45,8 +69,7 @@ public class RegistrationService {
 		
 		User user = new User();
     	BeanUtils.copyProperties(registrationForm, user);
-    	
-    	user.setIsLoginActive(false);
+
 		user.setRole(role);
 
 		userRepo.save(user);
@@ -57,6 +80,8 @@ public class RegistrationService {
 		return user;
 	}
 	
+	/* Function to complete registration of user by verifying email otp */
+	@Transactional
 	public void completeRegistration(User user, String otp) {
 		Boolean valid = validateOtp(user, otp);
 		
@@ -71,8 +96,9 @@ public class RegistrationService {
 		}
 	}
 	
+	/* Function to validate otp sent to user email */
 	public Boolean validateOtp(User user, String otp) {
-		String encoded_otp = encodeOtp(otp);
+		String encoded_otp = encodeString(otp);
 		
 		CUserDetails userDetail = new CUserDetails(user);
 		
@@ -84,18 +110,21 @@ public class RegistrationService {
     	}
 	}
 	
-	protected String encodeOtp(String otp) {
+	/* Encode string using bcrypt password encoder */
+	protected String encodeString(String value) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String encodedPassword = passwordEncoder.encode(otp);
+		String encodedPassword = passwordEncoder.encode(value);
 		return encodedPassword;
 	}
 	
+	/* Get admin role Object */
 	public Role getAdminRole() {
     	Role role =  roleRepo.findByName("ADMIN");
     	if(role == null) throw new ResourceBadRequestException("User role is missing, Please contact the administrator.");
     	return role;
 	}
 
+	/* Reset registration request session data */
 	public void resetRegisterRequestSessionData(HttpSession session) {
     	session.setAttribute("ruser", null);
     }

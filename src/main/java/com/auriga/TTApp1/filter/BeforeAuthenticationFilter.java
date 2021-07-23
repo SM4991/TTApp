@@ -25,6 +25,7 @@ import com.auriga.TTApp1.model.CUserDetails;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.repository.UserRepository;
 import com.auriga.TTApp1.service.UserOtpService;
+import com.auriga.TTApp1.util.SecurityUtil;
 
 @Component
 public class BeforeAuthenticationFilter
@@ -65,42 +66,47 @@ public class BeforeAuthenticationFilter
     public Authentication attemptAuthentication(
             HttpServletRequest request, HttpServletResponse response)
                     throws AuthenticationException {
-    	HttpSession session = request.getSession();
-    	
-    	/* Reset session attributes for login request */
-    	resetLoginRequestSessionData(session);
-    	
-    	String email = request.getParameter("email");
-    	
-    	session.setAttribute("lemail", email);
-        
-        User user_obj = userRepo.findActiveByEmail(email);
-        
-        CUserDetails user_details = new CUserDetails(user_obj);
-        
-        User user = user_details.getUser();
-         
-        if (user != null) {
-        	session.setAttribute("luser", user);
+    	/* If login, signin via otp enabled, 
+    	 * then attempt authentication via email and otp, 
+    	 * else attempt authentication via email and password */
+    	if(SecurityUtil.isLoginSigninViaOtpEnabled()) {
+    		HttpSession session = request.getSession();
         	
-        	/* If otp is set, attempt authentication */
-        	String otp = request.getParameter("password");
-            if (otp != null) {
-            	session.setAttribute("lotp", otp);
-            	
-                return super.attemptAuthentication(request, response);            	
-            }
-             
+        	/* Reset session attributes for login request */
+        	resetLoginRequestSessionData(session);
+        	
+        	String email = request.getParameter("email");
+        	
+        	session.setAttribute("lemail", email);
             
-            try {
-            	/* Send otp if user found by email */
-            	userOtpService.generateOneTimePassword(user);
-                throw new InsufficientAuthenticationException("Insufficient OTP");
-            } catch (MessagingException | UnsupportedEncodingException ex) {
-                throw new AuthenticationServiceException(
-                            "Error while sending OTP email.");
+            User user_obj = userRepo.findActiveByEmail(email);
+            
+            CUserDetails user_details = new CUserDetails(user_obj);
+            
+            User user = user_details.getUser();
+             
+            if (user != null) {
+            	session.setAttribute("luser", user);
+            	
+            	/* If otp is set, attempt authentication */
+            	String otp = request.getParameter("password");
+                if (otp != null) {
+                	session.setAttribute("lotp", otp);
+                	
+                    return super.attemptAuthentication(request, response);            	
+                }
+                 
+                
+                try {
+                	/* Send otp if user found by email */
+                	userOtpService.generateOneTimePassword(user);
+                    throw new InsufficientAuthenticationException("Insufficient OTP");
+                } catch (MessagingException | UnsupportedEncodingException ex) {
+                    throw new AuthenticationServiceException(
+                                "Error while sending OTP email.");
+                }
             }
-        }
+    	}
          
         return super.attemptAuthentication(request, response);
     }

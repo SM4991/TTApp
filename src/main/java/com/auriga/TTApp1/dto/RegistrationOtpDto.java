@@ -1,4 +1,4 @@
-package com.auriga.TTApp1.model;
+package com.auriga.TTApp1.dto;
 
 import javax.validation.constraints.NotEmpty;
 

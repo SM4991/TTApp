@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.auriga.TTApp1.constants.GenderEnum;
 import com.auriga.TTApp1.util.FileUtil;
+import com.auriga.TTApp1.util.SecurityUtil;
 
 @Entity
 @Table(name="users")
@@ -24,6 +25,9 @@ public class User {
      
 	@Column(nullable = false, unique = true, length = 255)
     private String email;
+	
+	@Column(nullable = true, length = 255)
+    private String password;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = true)
@@ -78,6 +82,14 @@ public class User {
 		this.email = email;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -100,10 +112,6 @@ public class User {
 
 	public void setOtpRequestedTime(Date otpRequestedTime) {
 		this.otpRequestedTime = otpRequestedTime;
-	}
-	
-	public boolean isOTPRequired() {
-		return true;
 	}
 	
 	public boolean isOTPExpired() {

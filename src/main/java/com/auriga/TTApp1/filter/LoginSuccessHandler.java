@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.auriga.TTApp1.model.CUserDetails;
 import com.auriga.TTApp1.model.User;
 import com.auriga.TTApp1.service.UserOtpService;
+import com.auriga.TTApp1.util.SecurityUtil;
 
 @Component
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
@@ -31,7 +32,9 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
                  
         User user = userDetails.getUser();
          
-        if (user.isOTPRequired()) {
+        /* If login, signin via otp enabled, 
+    	 * clear otp used in login */
+        if (SecurityUtil.isLoginSigninViaOtpEnabled()) {
             userOtpService.clearOTP(user);
         }
          

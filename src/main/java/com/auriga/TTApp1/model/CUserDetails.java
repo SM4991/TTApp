@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.auriga.TTApp1.exception.ResourceBadRequestException;
+import com.auriga.TTApp1.util.SecurityUtil;
 
 public class CUserDetails implements UserDetails {
  
@@ -31,10 +32,14 @@ public class CUserDetails implements UserDetails {
  
     @Override
     public String getPassword() {
-    	if (user.isOTPExpired()) throw new AuthenticationServiceException("OTP is expired");
-        
-        return user.getOneTimePassword();
-        
+    	/* If login, signin via otp enabled, return otp, else password */
+        if (SecurityUtil.isLoginSigninViaOtpEnabled()) {
+    		if (user.isOTPExpired()) throw new AuthenticationServiceException("OTP is expired");
+            
+            return user.getOneTimePassword();
+    	} else {
+    		return user.getPassword();
+    	}
     }
  
     @Override
