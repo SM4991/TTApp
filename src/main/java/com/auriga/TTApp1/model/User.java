@@ -56,6 +56,11 @@ public class User {
      
     @Column(name = "otp_requested_time")
     private Date otpRequestedTime;
+    
+    public User() {
+    	super();
+    	this.isLoginActive = false;
+    }
 
 	public Long getId() {
 		return id;

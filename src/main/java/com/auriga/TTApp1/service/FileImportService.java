@@ -16,30 +16,25 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FileImportService {
-	
+
 	/* Function to fetch csv records & return them */
-	public List<Map<String, String>> csvToRecords(String[] headers, InputStream is) {
-	    try {
-	    	BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-	    	CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT
-	    														.withFirstRecordAsHeader()
-	    														.withIgnoreHeaderCase()
-	    														.withTrim());
-	    	List<Map<String, String>> records = new ArrayList();
+	public List<Map<String, String>> csvToRecords(String[] headers, InputStream is) throws IOException {
+		BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+		CSVParser csvParser = new CSVParser(fileReader,
+				CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
 
-	    	Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+		List<Map<String, String>> records = new ArrayList();
 
-	    	for (CSVRecord csvRecord : csvRecords) {
-	    		Map<String, String> record = new HashMap();
-	    	  	for (String header : headers) {
-	    		  	record.put(header, (String) csvRecord.get(header));
-	    	  	}
-	    	  	records.add(record);
-	    	}
+		Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
-	    	return records;
-	    } catch (IOException e) {
-	    	throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
-	    }
+		for (CSVRecord csvRecord : csvRecords) {
+			Map<String, String> record = new HashMap();
+			for (String header : headers) {
+				record.put(header, (String) csvRecord.get(header));
+			}
+			records.add(record);
+		}
+
+		return records;
 	}
 }

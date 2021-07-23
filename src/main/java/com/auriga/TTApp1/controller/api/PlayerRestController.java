@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -23,9 +24,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,6 +44,7 @@ import com.auriga.TTApp1.service.FileUploadService;
 import com.auriga.TTApp1.service.PaginationService;
 import com.auriga.TTApp1.service.PlayerService;
 import com.auriga.TTApp1.util.FileUtil;
+import org.springframework.http.MediaType;
 
 import javassist.NotFoundException;
 
@@ -121,7 +125,7 @@ public class PlayerRestController {
 	}
 	
 	@PostMapping("/admin/api/players/import")
-	public ModelAndView importPlayers(MultipartFile file) throws IOException{
+	public ModelAndView importPlayers(MultipartFile file) throws Exception{
 		if(!FileUtil.hasCSVFormat(file)) throw new ResourceBadRequestException("Uploaded file should be in csv or excel format");
 		
 		List importResponse = service.saveBulkPlayers(service.importPlayers(file));
@@ -130,6 +134,25 @@ public class PlayerRestController {
 		model.addObject("importResponse", importResponse);
 		
 		return model;
+	}
+	
+	@PostMapping("/admin/api/players/importAsync")
+	public @ResponseBody ResponseEntity importAsyncPlayers(@RequestParam("files") MultipartFile[] files) throws IOException{
+		for(MultipartFile file: files) {
+			CompletableFuture<List<User>> players = service.savePlayers(file);
+			System.out.println(players);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+	
+	@GetMapping("/admin/api/players/asyncList")
+	public CompletableFuture<ResponseEntity> findAllPlayers(){
+		CompletableFuture<List<User>> cars1=service.findAllPlayers();
+        CompletableFuture<List<User>> cars2=service.findAllPlayers();
+        CompletableFuture<List<User>> cars3=service.findAllPlayers();
+
+        CompletableFuture.allOf(cars1, cars2, cars3).join();
+		return service.findAllPlayers().thenApply(ResponseEntity::ok);
 	}
 	
 	@PostMapping("/admin/api/players/upload")

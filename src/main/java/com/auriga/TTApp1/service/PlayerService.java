@@ -1,12 +1,16 @@
 package com.auriga.TTApp1.service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
@@ -14,6 +18,11 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +30,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -44,7 +54,7 @@ import com.auriga.TTApp1.util.FileUtil;
 @Service
 public class PlayerService {
 	private static Validator validator;
-	
+
 	@Autowired
 	private UserRepository repo;
 
@@ -59,11 +69,13 @@ public class PlayerService {
 
 	@Autowired
 	private FileImportService fileImportService;
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(PlayerService.class);
+
 	public PlayerService() {
 		super();
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+		validator = factory.getValidator();
 	}
 
 	public List<User> listAll() {
@@ -89,7 +101,6 @@ public class PlayerService {
 		User player = new User();
 		BeanUtils.copyProperties(playerForm, player);
 
-		player.setIsLoginActive(false);
 		player.setRole(role);
 		repo.save(player);
 	}
@@ -106,45 +117,45 @@ public class PlayerService {
 		repo.delete(player);
 	}
 
-	public List importPlayers(MultipartFile file) throws IOException {
-    	String[] headers = {"name", "email", "gender", "age"};
-    	List<Map<String, String>> records = fileImportService.csvToRecords(headers, file.getInputStream());
-    	return records;
-    }
-	
+	public List<Map<String, String>> importPlayers(MultipartFile file) throws IOException {
+		String[] headers = { "name", "email", "gender", "age" };
+		List<Map<String, String>> records = fileImportService.csvToRecords(headers, file.getInputStream());
+		return records;
+	}
+
 	@Transactional
 	public List saveBulkPlayers(List<Map<String, String>> records) {
 		List response = new ArrayList();
-		
-		for(Map<String, String> record : records) {
+
+		for (Map<String, String> record : records) {
 			Map playerResponse = new HashMap();
 			List all_errors = new ArrayList();
-			
+
 			PlayerDto player = new PlayerDto();
-    		
-    		if(!record.get("name").isEmpty()) {
-    			player.setName(record.get("name"));
-    		}
-    		if(!record.get("email").isEmpty()) {
-    			player.setEmail(record.get("email"));
-    		}
-    		if(!record.get("gender").isEmpty()) {
-    			try{
-    				player.setGender(GenderEnum.valueOf(record.get("gender")));
-    			} catch(IllegalArgumentException ex) {
-    				// all_errors.add("Gender is invalid");
-    			}
-    		}
-    		if(!record.get("age").isEmpty()) {
-    			try {
-    				player.setAge(Integer.parseInt(record.get("age")));
-    			} catch (NumberFormatException ex) {
-    				// all_errors.add("Age is invalid");
-    			} 			
-    		}
-			
+
+			if (!record.get("name").isEmpty()) {
+				player.setName(record.get("name"));
+			}
+			if (!record.get("email").isEmpty()) {
+				player.setEmail(record.get("email"));
+			}
+			if (!record.get("gender").isEmpty()) {
+				try {
+					player.setGender(GenderEnum.valueOf(record.get("gender")));
+				} catch (IllegalArgumentException ex) {
+					// all_errors.add("Gender is invalid");
+				}
+			}
+			if (!record.get("age").isEmpty()) {
+				try {
+					player.setAge(Integer.parseInt(record.get("age")));
+				} catch (NumberFormatException ex) {
+					// all_errors.add("Age is invalid");
+				}
+			}
+
 			Set<ConstraintViolation<PlayerDto>> violations = validator.validate(player);
-			if(violations.isEmpty()) {
+			if (violations.isEmpty()) {
 				try {
 					save(player);
 					playerResponse.put("record", record);
@@ -156,10 +167,10 @@ public class PlayerService {
 					playerResponse.put("message", "Email already exists.");
 				}
 			} else {
-				for(ConstraintViolation violation: violations) {
-					if(violation.getPropertyPath().toString().equals("age")) {
+				for (ConstraintViolation violation : violations) {
+					if (violation.getPropertyPath().toString().equals("age")) {
 						all_errors.add("Age is invalid");
-					} else if(violation.getPropertyPath().toString().equals("gender")) {
+					} else if (violation.getPropertyPath().toString().equals("gender")) {
 						all_errors.add("Gender is invalid");
 					} else {
 						all_errors.add(violation.getMessage());
@@ -172,6 +183,78 @@ public class PlayerService {
 			response.add(playerResponse);
 		}
 		return response;
+	}
+
+	public List<User> saveAllBulkPlayers(List<Map<String, String>> records) {
+		Role role = getPlayerRole();
+		List response = new ArrayList();
+		List<User> players = new ArrayList();
+
+		for (Map<String, String> record : records) {
+			Map playerResponse = new HashMap();
+			List all_errors = new ArrayList();
+
+			User player = new User();
+
+			if (!record.get("name").isEmpty()) {
+				player.setName(record.get("name"));
+			}
+			if (!record.get("email").isEmpty()) {
+				player.setEmail(record.get("email"));
+			}
+			if (!record.get("gender").isEmpty()) {
+				try {
+					player.setGender(GenderEnum.valueOf(record.get("gender")));
+				} catch (IllegalArgumentException ex) {
+					// all_errors.add("Gender is invalid");
+				}
+			}
+			if (!record.get("age").isEmpty()) {
+				try {
+					player.setAge(Integer.parseInt(record.get("age")));
+				} catch (NumberFormatException ex) {
+					// all_errors.add("Age is invalid");
+				}
+			}
+
+			player.setRole(role);
+			players.add(player);
+		}
+		repo.saveAll(players);
+		return players;
+	}
+
+	@Async
+	public CompletableFuture<List<User>> savePlayers(MultipartFile file) throws IOException {
+		logger.info("Completable future");
+		long start = System.currentTimeMillis();
+
+		List<Map<String, String>> records = importPlayers(file);
+		
+		logger.info("saving list of players of size {} " + Thread.currentThread().getName(), records.size());
+		List<User> players = saveAllBulkPlayers(records);
+
+		long end = System.currentTimeMillis();
+		logger.info("Total Time: {}", (end - start));
+		return CompletableFuture.completedFuture(players);
+	}
+
+	public List savePlayers1(MultipartFile file) throws Exception {
+		logger.info("Non Completable future");
+		long start = System.currentTimeMillis();
+		List<Map<String, String>> records = importPlayers(file);
+		logger.info("saving list of players of size {}", records.size());
+		List players = saveAllBulkPlayers(records);
+		long end = System.currentTimeMillis();
+		logger.info("Total Time: {}", (end - start));
+		return players;
+	}
+
+	@Async
+	public CompletableFuture<List<User>> findAllPlayers() {
+		logger.info("Get list of users by " + Thread.currentThread().getName());
+		List<User> users = repo.findAll();
+		return CompletableFuture.completedFuture(users);
 	}
 
 	public Role getPlayerRole() {
