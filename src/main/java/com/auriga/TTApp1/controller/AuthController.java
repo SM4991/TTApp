@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.auriga.TTApp1.dto.DefaultRegistrationDto;
 import com.auriga.TTApp1.dto.RegistrationDto;
@@ -129,10 +130,12 @@ public class AuthController {
 		try {
 			User user = registrationService.defaultRegister(registrationForm);
 			
-			HttpSession session = request.getSession();
-			session.setAttribute("ruser", user);
-			
-			return "redirect:/login";
+			if(user.getIsUsing2FA()) {
+				model.addAttribute("qr", cUserDetailsService.generateQRUrl(user));
+	            return "auth/qrcode";
+			} else {
+				return "redirect:/login";
+			}
 		} catch (UserAlreadyExistsException e) {
 			bindingResult.rejectValue("email", "registrationForm.email", "An account already exists for this email.");
 			model.addAttribute("registrationForm", registrationForm);
@@ -213,7 +216,6 @@ public class AuthController {
 			
 			return "redirect:/login";
 		} catch (AuthenticationServiceException e) {
-			System.out.println(e.getMessage());
 			bindingResult.rejectValue("otp", "registrationOtp.otp", e.getMessage());
 			model.addAttribute("registrationOtp", registrationOtp);
 			return "auth/signin_otp_form";

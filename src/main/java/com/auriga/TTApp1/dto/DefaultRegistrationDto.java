@@ -15,8 +15,15 @@ public class DefaultRegistrationDto {
     private String email;
     
 	@NotEmpty(message = "Password can not be empty")
-	@Size(min=6, message="Password should contain atleast 6 characters.")
+	@Size(min=6, max=20, message="Password length should be between 6 to 20 characters.")
     private String password;
+
+    private boolean isUsing2FA;
+    
+    public DefaultRegistrationDto() {
+    	super();
+    	this.isUsing2FA = false;
+    }
 
 	public String getName() {
 		return name;
@@ -40,5 +47,13 @@ public class DefaultRegistrationDto {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public boolean getIsUsing2FA() {
+		return isUsing2FA;
+	}
+
+	public void setIsUsing2FA(boolean isUsing2FA) {
+		this.isUsing2FA = isUsing2FA;
 	}
 }

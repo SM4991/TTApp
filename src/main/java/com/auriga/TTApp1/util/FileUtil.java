@@ -23,7 +23,6 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 public class FileUtil {
-	private static String publicFilesUploadPath = "/home/auriga/ttapp1";
 	private static String uploadFolder = "upload";
 	private static String userFilesUploadPath = "/users";
 	private static String tournamentFilesUploadPath = "/tournaments";
@@ -31,10 +30,6 @@ public class FileUtil {
 	private static String userDefaultImage = "/images/blank-profile-picture.png";
 	public static String[] csvTypes = {"text/csv", "application/vnd.ms-excel"};
 	public static String[] imageTypes = {"png", "jpeg", "jpg"};
-	
-	public static String getPublicFilesUploadPath() {
-		return publicFilesUploadPath;
-	}
 	
 	public static String getUploadFolder() {
 		return uploadFolder;

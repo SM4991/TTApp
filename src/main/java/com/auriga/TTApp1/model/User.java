@@ -7,6 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.jboss.aerogear.security.otp.api.Base32;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.auriga.TTApp1.constants.GenderEnum;
@@ -16,6 +17,9 @@ import com.auriga.TTApp1.util.SecurityUtil;
 @Entity
 @Table(name="users")
 public class User {
+    
+    private static final long OTP_VALID_DURATION = 5 * 60 * 1000;   // 5 minutes
+    
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,28 +54,42 @@ public class User {
             )
     private Role role;
     
-    @Transient
-	private Integer seed;
-    
-    private static final long OTP_VALID_DURATION = 5 * 60 * 1000;   // 5 minutes
-    
-    @Column(name = "one_time_password")
+    @Column(name = "one_time_password", length = 255)
     private String oneTimePassword;
      
     @Column(name = "otp_requested_time")
     private Date otpRequestedTime;
     
+    @Column(name = "is_using_2factor_auth", nullable = false, columnDefinition="boolean default 1")
+    private boolean isUsing2FA;
+    
+    @Column(name = "2factor_auth_secret", length = 255)
+    private String secret2FA;
+    
+    @Transient
+	private Integer seed;
+    
     public User() {
     	super();
     	this.isLoginActive = false;
+    	this.isUsing2FA = false;
+    	this.secret2FA = Base32.random();
     }
-
+	
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getEmail() {
@@ -88,52 +106,6 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getOneTimePassword() {
-		return oneTimePassword;
-	}
-
-	public void setOneTimePassword(String oneTimePassword) {
-		this.oneTimePassword = oneTimePassword;
-	}
-
-	public Date getOtpRequestedTime() {
-		return otpRequestedTime;
-	}
-
-	public void setOtpRequestedTime(Date otpRequestedTime) {
-		this.otpRequestedTime = otpRequestedTime;
-	}
-	
-	public boolean isOTPExpired() {
-		if(this.otpRequestedTime == null) return false;
-		
-    	long currentTimeInMillis = System.currentTimeMillis();
-        long otpRequestedTimeInMillis = this.otpRequestedTime.getTime();
-         
-        if (otpRequestedTimeInMillis + OTP_VALID_DURATION < currentTimeInMillis) {
-            // OTP expires
-            return true;
-        }
-         
-        return false;
-    }
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
 	}
 
 	public GenderEnum getGender() {
@@ -168,6 +140,46 @@ public class User {
 		this.isLoginActive = isLoginActive;
 	}
 
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public String getOneTimePassword() {
+		return oneTimePassword;
+	}
+
+	public void setOneTimePassword(String oneTimePassword) {
+		this.oneTimePassword = oneTimePassword;
+	}
+
+	public Date getOtpRequestedTime() {
+		return otpRequestedTime;
+	}
+
+	public void setOtpRequestedTime(Date otpRequestedTime) {
+		this.otpRequestedTime = otpRequestedTime;
+	}
+
+	public boolean getIsUsing2FA() {
+		return isUsing2FA;
+	}
+
+	public void setIsUsing2FA(boolean isUsing2FA) {
+		this.isUsing2FA = isUsing2FA;
+	}
+
+	public String getSecret2FA() {
+		return secret2FA;
+	}
+
+	public void setSecret(String secret2FA) {
+		this.secret2FA = secret2FA;
+	}
+
 	public Integer getSeed() {
 		return seed;
 	}
@@ -175,14 +187,31 @@ public class User {
 	public void setSeed(Integer seed) {
 		this.seed = seed;
 	}
-	
+
+	/* Function to get image url if exists, else return default user image */
 	public String getImageUrl() {
 		return FileUtil.getUserImageUrl(this.getImage());
 	}
 	
+	/* Function to get gender enum display text */
 	public String getGenderText() {
-		return gender.getDisplayValue();
+		return gender != null ? gender.getDisplayValue() : null;
 	}
+	
+	/* Function to check is otp expired or not */
+	public boolean isOTPExpired() {
+		if(this.otpRequestedTime == null) return false;
+		
+    	long currentTimeInMillis = System.currentTimeMillis();
+        long otpRequestedTimeInMillis = this.otpRequestedTime.getTime();
+         
+        if (otpRequestedTimeInMillis + OTP_VALID_DURATION < currentTimeInMillis) {
+            // OTP expires
+            return true;
+        }
+         
+        return false;
+    }
 
 	@Override
 	public String toString() {

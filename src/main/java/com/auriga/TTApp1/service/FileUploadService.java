@@ -16,10 +16,14 @@ import com.auriga.TTApp1.util.FileUtil;
 
 @Service
 public class FileUploadService {
+	
+	@Value("${public.files.upload.path}")
+	private String publicFilesUploadPath;
+	
 	/* Save uploaded file to destination folder */
 	public String saveUploadedFile(MultipartFile file, String uploadPath) throws IOException {
         uploadPath = "/"+FileUtil.getUploadFolder()+uploadPath;
-		String fullUploadPath = FileUtil.getPublicFilesUploadPath()+uploadPath;
+		String fullUploadPath = publicFilesUploadPath+uploadPath;
         
 		// Make sure directory exists!
         File uploadDir = new File(fullUploadPath);

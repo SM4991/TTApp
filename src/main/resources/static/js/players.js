@@ -14,12 +14,12 @@ $(document).ready(function() {
 		formSubmit(event, "/admin/api/players", ["name", "age", "email", "gender", "image"], "/admin/players");
 	});
 
-	$("#upload_link").on('click', function(e) {
+	$("#create-form #upload_link").on('click', function(e) {
 		e.preventDefault();
-		$("#file").trigger('click');
+		$("#create-form #file").trigger('click');
 	});
 
-	$("#uploadfile").on("change", function(e) {
+	$("#create-form #file").on("change", function(e) {
 		var file = $(this)[0].files[0];
 		var data = new FormData();
 		data.append("file", file);

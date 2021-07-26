@@ -15,12 +15,12 @@ $(document).ready(function() {
 		formSubmit(event, "/admin/api/tournaments", ["name", "startDate", "regEndDate", "maxScore", "image", "types"], "/admin/tournaments");
 	});
 
-	$("#upload_link").on('click', function(e) {
+	$("#create-form #upload_link").on('click', function(e) {
 		e.preventDefault();
-		$("#file").trigger('click');
+		$("#create-form #file").trigger('click');
 	});
 
-	$("#file").on("change", function(e) {
+	$("#create-form #file").on("change", function(e) {
 		var file = $(this)[0].files[0];
 		var data = new FormData();
 		data.append("file", file);

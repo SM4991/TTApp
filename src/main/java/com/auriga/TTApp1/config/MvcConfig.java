@@ -10,6 +10,9 @@ import com.auriga.TTApp1.util.FileUtil;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
+	@Value("${public.files.upload.path}")
+	private String publicFilesUploadPath;
+	
 //    @Override
 //    public void addViewControllers(ViewControllerRegistry registry) {
 //        registry.addViewController("/login").setViewName("auth/login_form");
@@ -19,7 +22,7 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
           .addResourceHandler("/"+ FileUtil.getUploadFolder() +"/**")
-          .addResourceLocations("file:"+FileUtil.getPublicFilesUploadPath()+"/"+FileUtil.getUploadFolder()+"/");
+          .addResourceLocations("file:"+publicFilesUploadPath+"/"+FileUtil.getUploadFolder()+"/");
         
     }
 }
