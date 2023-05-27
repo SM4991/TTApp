@@ -1,0 +1,7 @@
+tasks:
+  - name: TTApp
+    init: bash ./install.gitpod.sh
+
+ports:
+  - port: 8080 # TTApp
+    onOpen: ignore
