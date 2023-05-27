@@ -1,23 +1,23 @@
 version: "3"
 
 services:
-  postgresqldb:
-    container_name: pgdb
-    hostname: pgdb
-    image: postgres:14.1-alpine
+  mysqldb:
+    container_name: mysqldb
+    hostname: mysqldb
+    image: mysql/mysql-server:latest
     environment:
       POSTGRES_PASSWORD: password
-      POSTGRES_USER: postgres
-      POSTGRES_DB: cruddemo
+      POSTGRES_USER: root
+      POSTGRES_DB: ttapp
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - postgresqldb-data:/var/lib/postgresql/data
+      - mysqldb-data:/var/lib/mysqldb/data
     networks:
       - mynetwork
 
-  springboot-crud:
-    container_name: springboot-crud
+  ttapp:
+    container_name: ttapp
     build:
       context: .
       dockerfile: Dockerfile
@@ -29,7 +29,7 @@ services:
       - mynetwork
 
 volumes:
-  postgresqldb-data:
+  mysqldb-data:
 
 networks:
   mynetwork:
